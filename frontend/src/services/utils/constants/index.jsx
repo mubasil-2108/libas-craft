@@ -175,3 +175,85 @@ export const imageTilesData = [
   },
 ];
 
+export const purchases = [
+    {
+      id: 1,
+      product: 'Lorem Ipsum',
+      orderId: '#25426',
+      date: 'Nov 8th,2023',
+      customerName: 'Kavin',
+      customerAvatar: '/avatar.png', // Placeholder avatar
+      status: 'Delivered',
+      amount: '₹200.00',
+    },
+    {
+      id: 2,
+      product: 'Lorem Ipsum',
+      orderId: '#25425',
+      date: 'Nov 7th,2023',
+      customerName: 'Komael',
+      customerAvatar: '/avatar.png',
+      status: 'Canceled',
+      amount: '₹200.00',
+    },
+    {
+      id: 3,
+      product: 'Lorem Ipsum',
+      orderId: '#25424',
+      date: 'Nov 6th,2023',
+      customerName: 'Nikhil',
+      customerAvatar: '/avatar.png',
+      status: 'Delivered',
+      amount: '₹200.00',
+    },
+    {
+      id: 4,
+      product: 'Lorem Ipsum',
+      orderId: '#25423',
+      date: 'Nov 5th,2023',
+      customerName: 'Shivam',
+      customerAvatar: '/avatar.png',
+      status: 'Canceled',
+      amount: '₹200.00',
+    },
+    {
+      id: 5,
+      product: 'Lorem Ipsum',
+      orderId: '#25422',
+      date: 'Nov 4th,2023',
+      customerName: 'Shadab',
+      customerAvatar: '/avatar.png',
+      status: 'Delivered',
+      amount: '₹200.00',
+    },
+    {
+      id: 6,
+      product: 'Lorem Ipsum',
+      orderId: '#25421',
+      date: 'Nov 2nd,2023',
+      customerName: 'Yogesh',
+      customerAvatar: '/avatar.png',
+      status: 'Delivered',
+      amount: '₹200.00',
+    },
+    {
+      id: 7,
+      product: 'Lorem Ipsum',
+      orderId: '#25423', // Assuming a typo and this is meant to be unique
+      date: 'Nov 1st,2023',
+      customerName: 'Sunita',
+      customerAvatar: '/avatar.png',
+      status: 'Canceled',
+      amount: '₹200.00',
+    },
+    {
+      id: 8,
+      product: 'Lorem Ipsum',
+      orderId: '#25421', // Assuming a typo and this is meant to be unique
+      date: 'Nov 1st,2023', // Assuming a different date for distinctness
+      customerName: 'John Doe', // Example
+      customerAvatar: '/avatar.png',
+      status: 'Delivered',
+      amount: '₹200.00',
+    },
+  ];

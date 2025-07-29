@@ -1,10 +1,12 @@
 import { Box, Button, Icon, Link, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { AdminFooter } from '../../../components/admin'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom';
+import { AdminFooter } from '../../../components/admin';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 
-const Products = () => {
+
+const Orders = () => {
     const location = useLocation();
     const [isProductDetail, setIsProductDetail] = useState(false);
     const [isAddNewProduct, setIsAddNewProduct] = useState(false);
@@ -29,8 +31,7 @@ const Products = () => {
 
     const breadcrumb = pathSegments.map((segment, index) => {
         if (segment === 'admin') return 'Home';
-        if (segment === 'products') return 'All Products';
-        if (segment === 'add-new-product') return 'Add New Product';
+        if (segment === 'orders') return 'Orders List';
 
         // Handle custom "product=ID" segment
         if (segment.startsWith('product=')) {
@@ -45,7 +46,6 @@ const Products = () => {
 
         return capitalize(segment);
     }).join(' > ');
-
 
     return (
         <>
@@ -66,6 +66,7 @@ const Products = () => {
                         display: 'flex',
                         flexDirection: 'row',
                         m: '0px 15px',
+                        alignItems: 'end',
                         justifyContent: 'space-between',
                     }}>
                         <Box component='div'
@@ -85,27 +86,24 @@ const Products = () => {
                                 fontSize: '16px'
                             }}>{breadcrumb}</Typography>
                         </Box>
-                        {
-                            !isProductDetail && !isAddNewProduct &&
-                            <Box component={Link} href='/admin/products/add-new-product'>
-                                <Button variant='contained' startIcon={<Icon component={AddCircleOutlineOutlinedIcon} />}
-                                    sx={{
-                                        color: '#fff',
-                                        backgroundColor: '#000000',
-                                        padding: '10px 15px',
-                                        fontSize: '14px',
-                                        fontWeight: 'bold',
-                                        borderRadius: '8px',
-                                        border: '1px solid #000000',
-                                        '&:hover': {
-                                            border: '1px solid #000000',
-                                        }
-                                    }}
-                                >
-                                    ADD NEW PRODUCT
-                                </Button>
+                        <Box component='div' sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            maxWidth: '228px',
+                            justifyContent: 'end',
+                            alignItems: 'center',
+                        }}>
+                            <Box>
+                                <Icon component={CalendarMonthOutlinedIcon} sx={{ color: '#232321', }} />
                             </Box>
-                        }
+                            <Box>
+                                <Typography component='p' sx={{
+                                    color: '#000000',
+                                    fontSize: '16px',
+                                    fontWeight: 500,
+                                }}>Feb 16,2022 - Feb 20,2022</Typography>
+                            </Box>
+                        </Box>
 
                     </Box>
                     <Box component='main' sx={{
@@ -120,4 +118,4 @@ const Products = () => {
     )
 }
 
-export default Products
+export default Orders

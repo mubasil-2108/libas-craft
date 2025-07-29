@@ -4,7 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const ImageTile = ({imageTile}) => {
+const ImageTile = ({ imageTile }) => {
     return (
         <Box component='div' sx={{
             background: '#FAFAFA',
@@ -44,7 +44,7 @@ const ImageTile = ({imageTile}) => {
                     opacity: 0.2
                 }}
             />
-            <Box component='div' sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: '0px 15px' }}>
+            <Box component='div' sx={{ display: 'flex', width: '300px', flexDirection: 'column', gap: 2, p: '0px 15px' }}>
                 <Typography variant='body1' component='p' sx={{
                     fontSize: '16px',
                     fontWeight: 600,
@@ -52,16 +52,17 @@ const ImageTile = ({imageTile}) => {
                 }}>{imageTile.name}</Typography>
                 <LinearProgress variant="determinate" value={imageTile.progress} color='inherit' sx={{
                     color: '#003F62',
-                    width: '300px',
+                    // width: '300px',
+                    // minWidth:'200px',
                     background: '#4A69E2',
                     borderRadius: '8px'
                 }} />
             </Box>
             {
-                imageTile.status === 'uploaded'?
-                <Icon component={CheckCircleIcon} sx={{ color: '#003F62', fontSize: '30px' }} />
-                :
-                <Icon component={CancelIcon} sx={{ color: '#FF4D4D', fontSize: '30px' }} />
+                imageTile.status === 'uploaded' ?
+                    <Icon component={CheckCircleIcon} sx={{ color: '#003F62', fontSize: '30px' }} />
+                    :
+                    <Icon component={CancelIcon} sx={{ color: '#FF4D4D', fontSize: '30px' }} />
             }
         </Box>
     )
