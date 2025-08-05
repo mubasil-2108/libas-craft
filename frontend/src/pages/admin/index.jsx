@@ -5,6 +5,7 @@ import AllProducts from "./all-products";
 import ProductDetail from "./product-detail";
 import Orders from "./orders";
 import OrderList from "./order-list";
+import OrderDetail from "./order-detail";
 
 export {
     Dashboard,
@@ -13,5 +14,6 @@ export {
     AllProducts,
     ProductDetail,
     Orders,
-    OrderList
+    OrderList,
+    OrderDetail
 }

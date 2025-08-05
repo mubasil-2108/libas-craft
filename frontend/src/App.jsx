@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
-import { AddProduct, AllProducts, Dashboard, OrderList, Orders, ProductDetail, Products } from './pages/admin'
+import { AddProduct, AllProducts, Dashboard, OrderDetail, OrderList, Orders, ProductDetail, Products } from './pages/admin'
 
 function App() {
 
@@ -9,7 +9,7 @@ function App() {
     <>
       <Routes>
         <Route path='/admin' element={<AdminLayout />} >
-          <Route path='dashboard' element={<Dashboard />} />
+          <Route index element={<Dashboard />} />
           {/* Products */}
           <Route path='products' element={<Products />}>
             <Route index element={<AllProducts />} />
@@ -20,6 +20,7 @@ function App() {
           {/* Orders */}
           <Route path='orders' element={<Orders />}>
             <Route index element={<OrderList />} />
+            <Route path=':id' element={<OrderDetail />} />
           </Route>
 
         </Route>
