@@ -417,3 +417,37 @@ export const purchases = [
     amount: '₹250.00',
   },
   ];
+
+export const CARD_BRANDS = [
+  { type: 'visa',        label: 'Visa' },
+  { type: 'mastercard',  label: 'Mastercard' },
+  { type: 'amex',        label: 'American Express' },
+  { type: 'diners',      label: 'Diners Club' },
+  { type: 'discover',    label: 'Discover' },
+  { type: 'jcb',         label: 'JCB' },
+  { type: 'unionpay',    label: 'UnionPay' },
+  { type: 'maestro',     label: 'Maestro' },
+  { type: 'mir',         label: 'Mir' },
+  { type: 'elo',         label: 'Elo' },
+  { type: 'hiper',       label: 'Hiper' },
+  { type: 'hipercard',   label: 'Hipercard' },
+  { type: 'verve',       label: 'Verve' },
+];
+
+export const productOrders = [
+  { product: 'Wireless Headphones', orderId: 'ORD-1001', qty: 2, total: '120.00' },
+  { product: 'Smartphone', orderId: 'ORD-1002', qty: 1, total: '699.00' },
+  { product: 'Gaming Mouse', orderId: 'ORD-1003', qty: 3, total: '150.00' },
+  { product: 'Mechanical Keyboard', orderId: 'ORD-1004', qty: 1, total: '89.00' },
+  { product: 'Laptop Stand', orderId: 'ORD-1005', qty: 2, total: '60.00' },
+  { product: '4K Monitor', orderId: 'ORD-1006', qty: 1, total: '350.00' },
+  { product: 'USB-C Hub', orderId: 'ORD-1007', qty: 4, total: '80.00' },
+  { product: 'Bluetooth Speaker', orderId: 'ORD-1008', qty: 1, total: '45.00' },
+  { product: 'External Hard Drive', orderId: 'ORD-1009', qty: 2, total: '150.00' },
+  { product: 'Fitness Tracker', orderId: 'ORD-1010', qty: 1, total: '99.00' },
+  { product: 'Tablet', orderId: 'ORD-1011', qty: 1, total: '299.00' },
+  { product: 'Webcam', orderId: 'ORD-1012', qty: 2, total: '140.00' },
+  { product: 'Ergonomic Chair', orderId: 'ORD-1013', qty: 1, total: '220.00' },
+  { product: 'Desk Lamp', orderId: 'ORD-1014', qty: 2, total: '60.00' },
+  { product: 'Smartwatch', orderId: 'ORD-1015', qty: 1, total: '199.00' },
+];
