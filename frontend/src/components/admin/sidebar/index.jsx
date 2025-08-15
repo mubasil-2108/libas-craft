@@ -1,11 +1,12 @@
 import { Box, Icon, Link, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { adminBar, categories } from '../../../services/utils/constants'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
 const AdminSidebar = () => {
     const location = useLocation()
+    const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [showCategories, setShowCategories] = useState(true)
 
@@ -23,10 +24,11 @@ const AdminSidebar = () => {
             backgroundColor: '#FAFAFA',
             padding: '20px',
         }}>
-            <Box component='img' src='/Group.png' sx={{
+            <Box component='img' src='/Group.png' onClick={()=> navigate('/admin/')} sx={{
                 objectFit: 'contain',
                 maxWidth: '190px',
                 alignSelf: 'center',
+                cursor: 'pointer',
                 mb: '50px',
                 mt: '10px'
             }} />
@@ -72,6 +74,7 @@ const AdminSidebar = () => {
                         textDecoration: 'none',
                         borderRadius: '10px',
                         background: '#FAFAFA',
+                        cursor: 'pointer',
                     }}
                 >
                     <Typography variant='body1' fontSize={'20px'} fontWeight={'bold'}>Categories</Typography>

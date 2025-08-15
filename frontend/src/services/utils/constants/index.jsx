@@ -451,3 +451,16 @@ export const productOrders = [
   { product: 'Desk Lamp', orderId: 'ORD-1014', qty: 2, total: '60.00' },
   { product: 'Smartwatch', orderId: 'ORD-1015', qty: 1, total: '199.00' },
 ];
+
+export const notifications = [
+    { id: 1, title: 'Product Sold', price: 140, date: 'Nov 15, 2023', status: 'Sold' },
+    { id: 2, title: 'Order Dispatched', price: 250, date: 'Nov 16, 2023', status: 'Dispatched' },
+    { id: 3, title: 'New Review Added', price: null, date: 'Nov 17, 2023', status: 'Review' },
+    { id: 4, title: 'Low Stock Alert', price: 99, date: 'Nov 18, 2023', status: 'Stock Low' },
+    { id: 5, title: 'Refund Processed', price: 500, date: 'Nov 19, 2023', status: 'Refund' },
+    { id: 6, title: 'Product Sold', price: 120, date: 'Nov 20, 2023', status: 'Sold' },
+    { id: 7, title: 'Order Dispatched', price: 350, date: 'Nov 21, 2023', status: 'Dispatched' },
+    { id: 8, title: 'Low Stock Alert', price: 75, date: 'Nov 22, 2023', status: 'Stock Low' },
+    { id: 9, title: 'New Review Added', price: null, date: 'Nov 23, 2023', status: 'Review' },
+    { id: 10, title: 'Product Sold', price: 200, date: 'Nov 24, 2023', status: 'Sold' }
+  ];
