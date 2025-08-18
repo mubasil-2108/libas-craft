@@ -3,42 +3,42 @@ import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 export const adminBar = [
-    {
-        id: 1,
-        name: 'Dashboard',
-        icon: DashboardOutlinedIcon,
-        link: '/admin/'
-    },
-    {
-        id: 2,
-        name: 'All products',
-        icon: Inventory2OutlinedIcon,
-        link: '/admin/products'
-    },
-    {
-        id: 3,
-        name: 'Order list',
-        icon: DescriptionOutlinedIcon,
-        link: '/admin/orders'
-    },
+  {
+    id: 1,
+    name: 'Dashboard',
+    icon: DashboardOutlinedIcon,
+    link: '/admin/'
+  },
+  {
+    id: 2,
+    name: 'All products',
+    icon: Inventory2OutlinedIcon,
+    link: '/admin/products'
+  },
+  {
+    id: 3,
+    name: 'Order list',
+    icon: DescriptionOutlinedIcon,
+    link: '/admin/orders'
+  },
 ]
 
 export const categories = [
-    {
-        id: 1,
-        name: 'Clothes',
-        productsNo: 21
-    },
-    {
-        id: 2,
-        name: 'Shoes',
-        productsNo: 15
-    },
-    {
-        id: 3,
-        name: 'Accessories',
-        productsNo: 30
-    },
+  {
+    id: 1,
+    name: 'Clothes',
+    productsNo: 21
+  },
+  {
+    id: 2,
+    name: 'Shoes',
+    productsNo: 15
+  },
+  {
+    id: 3,
+    name: 'Accessories',
+    productsNo: 30
+  },
 ];
 
 export const dummyProducts = [
@@ -176,87 +176,87 @@ export const imageTilesData = [
 ];
 
 export const purchases = [
-    {
-      id: 1,
-      product: 'Lorem Ipsum',
-      orderId: '#25426',
-      date: 'Nov 8th,2023',
-      customerName: 'Kavin',
-      customerAvatar: '/avatar.png', // Placeholder avatar
-      status: 'Delivered',
-      amount: '₹200.00',
-    },
-    {
-      id: 2,
-      product: 'Lorem Ipsum',
-      orderId: '#25425',
-      date: 'Nov 7th,2023',
-      customerName: 'Komael',
-      customerAvatar: '/avatar.png',
-      status: 'Canceled',
-      amount: '₹200.00',
-    },
-    {
-      id: 3,
-      product: 'Lorem Ipsum',
-      orderId: '#25424',
-      date: 'Nov 6th,2023',
-      customerName: 'Nikhil',
-      customerAvatar: '/avatar.png',
-      status: 'Delivered',
-      amount: '₹200.00',
-    },
-    {
-      id: 4,
-      product: 'Lorem Ipsum',
-      orderId: '#25423',
-      date: 'Nov 5th,2023',
-      customerName: 'Shivam',
-      customerAvatar: '/avatar.png',
-      status: 'Canceled',
-      amount: '₹200.00',
-    },
-    {
-      id: 5,
-      product: 'Lorem Ipsum',
-      orderId: '#25422',
-      date: 'Nov 4th,2023',
-      customerName: 'Shadab',
-      customerAvatar: '/avatar.png',
-      status: 'Delivered',
-      amount: '₹200.00',
-    },
-    {
-      id: 6,
-      product: 'Lorem Ipsum',
-      orderId: '#25421',
-      date: 'Nov 2nd,2023',
-      customerName: 'Yogesh',
-      customerAvatar: '/avatar.png',
-      status: 'Delivered',
-      amount: '₹200.00',
-    },
-    {
-      id: 7,
-      product: 'Lorem Ipsum',
-      orderId: '#25423', // Assuming a typo and this is meant to be unique
-      date: 'Nov 1st,2023',
-      customerName: 'Sunita',
-      customerAvatar: '/avatar.png',
-      status: 'Canceled',
-      amount: '₹200.00',
-    },
-    {
-      id: 8,
-      product: 'Lorem Ipsum',
-      orderId: '#25421', // Assuming a typo and this is meant to be unique
-      date: 'Nov 1st,2023', // Assuming a different date for distinctness
-      customerName: 'John Doe', // Example
-      customerAvatar: '/avatar.png',
-      status: 'Delivered',
-      amount: '₹200.00',
-    },
-    {
+  {
+    id: 1,
+    product: 'Lorem Ipsum',
+    orderId: '#25426',
+    date: 'Nov 8th,2023',
+    customerName: 'Kavin',
+    customerAvatar: '/avatar.png', // Placeholder avatar
+    status: 'Delivered',
+    amount: '₹200.00',
+  },
+  {
+    id: 2,
+    product: 'Lorem Ipsum',
+    orderId: '#25425',
+    date: 'Nov 7th,2023',
+    customerName: 'Komael',
+    customerAvatar: '/avatar.png',
+    status: 'Canceled',
+    amount: '₹200.00',
+  },
+  {
+    id: 3,
+    product: 'Lorem Ipsum',
+    orderId: '#25424',
+    date: 'Nov 6th,2023',
+    customerName: 'Nikhil',
+    customerAvatar: '/avatar.png',
+    status: 'Delivered',
+    amount: '₹200.00',
+  },
+  {
+    id: 4,
+    product: 'Lorem Ipsum',
+    orderId: '#25423',
+    date: 'Nov 5th,2023',
+    customerName: 'Shivam',
+    customerAvatar: '/avatar.png',
+    status: 'Canceled',
+    amount: '₹200.00',
+  },
+  {
+    id: 5,
+    product: 'Lorem Ipsum',
+    orderId: '#25422',
+    date: 'Nov 4th,2023',
+    customerName: 'Shadab',
+    customerAvatar: '/avatar.png',
+    status: 'Delivered',
+    amount: '₹200.00',
+  },
+  {
+    id: 6,
+    product: 'Lorem Ipsum',
+    orderId: '#25421',
+    date: 'Nov 2nd,2023',
+    customerName: 'Yogesh',
+    customerAvatar: '/avatar.png',
+    status: 'Delivered',
+    amount: '₹200.00',
+  },
+  {
+    id: 7,
+    product: 'Lorem Ipsum',
+    orderId: '#25423', // Assuming a typo and this is meant to be unique
+    date: 'Nov 1st,2023',
+    customerName: 'Sunita',
+    customerAvatar: '/avatar.png',
+    status: 'Canceled',
+    amount: '₹200.00',
+  },
+  {
+    id: 8,
+    product: 'Lorem Ipsum',
+    orderId: '#25421', // Assuming a typo and this is meant to be unique
+    date: 'Nov 1st,2023', // Assuming a different date for distinctness
+    customerName: 'John Doe', // Example
+    customerAvatar: '/avatar.png',
+    status: 'Delivered',
+    amount: '₹200.00',
+  },
+  {
     id: 9,
     product: 'Lorem Ipsum',
     orderId: '#25420',
@@ -416,22 +416,22 @@ export const purchases = [
     status: 'Delivered',
     amount: '₹250.00',
   },
-  ];
+];
 
 export const CARD_BRANDS = [
-  { type: 'visa',        label: 'Visa' },
-  { type: 'mastercard',  label: 'Mastercard' },
-  { type: 'amex',        label: 'American Express' },
-  { type: 'diners',      label: 'Diners Club' },
-  { type: 'discover',    label: 'Discover' },
-  { type: 'jcb',         label: 'JCB' },
-  { type: 'unionpay',    label: 'UnionPay' },
-  { type: 'maestro',     label: 'Maestro' },
-  { type: 'mir',         label: 'Mir' },
-  { type: 'elo',         label: 'Elo' },
-  { type: 'hiper',       label: 'Hiper' },
-  { type: 'hipercard',   label: 'Hipercard' },
-  { type: 'verve',       label: 'Verve' },
+  { type: 'visa', label: 'Visa' },
+  { type: 'mastercard', label: 'Mastercard' },
+  { type: 'amex', label: 'American Express' },
+  { type: 'diners', label: 'Diners Club' },
+  { type: 'discover', label: 'Discover' },
+  { type: 'jcb', label: 'JCB' },
+  { type: 'unionpay', label: 'UnionPay' },
+  { type: 'maestro', label: 'Maestro' },
+  { type: 'mir', label: 'Mir' },
+  { type: 'elo', label: 'Elo' },
+  { type: 'hiper', label: 'Hiper' },
+  { type: 'hipercard', label: 'Hipercard' },
+  { type: 'verve', label: 'Verve' },
 ];
 
 export const productOrders = [
@@ -453,14 +453,29 @@ export const productOrders = [
 ];
 
 export const notifications = [
-    { id: 1, title: 'Product Sold', price: 140, date: 'Nov 15, 2023', status: 'Sold' },
-    { id: 2, title: 'Order Dispatched', price: 250, date: 'Nov 16, 2023', status: 'Dispatched' },
-    { id: 3, title: 'New Review Added', price: null, date: 'Nov 17, 2023', status: 'Review' },
-    { id: 4, title: 'Low Stock Alert', price: 99, date: 'Nov 18, 2023', status: 'Stock Low' },
-    { id: 5, title: 'Refund Processed', price: 500, date: 'Nov 19, 2023', status: 'Refund' },
-    { id: 6, title: 'Product Sold', price: 120, date: 'Nov 20, 2023', status: 'Sold' },
-    { id: 7, title: 'Order Dispatched', price: 350, date: 'Nov 21, 2023', status: 'Dispatched' },
-    { id: 8, title: 'Low Stock Alert', price: 75, date: 'Nov 22, 2023', status: 'Stock Low' },
-    { id: 9, title: 'New Review Added', price: null, date: 'Nov 23, 2023', status: 'Review' },
-    { id: 10, title: 'Product Sold', price: 200, date: 'Nov 24, 2023', status: 'Sold' }
-  ];
+  { id: 1, title: 'Product Sold', price: 140, date: 'Nov 15, 2023', status: 'Sold' },
+  { id: 2, title: 'Order Dispatched', price: 250, date: 'Nov 16, 2023', status: 'Dispatched' },
+  { id: 3, title: 'New Review Added', price: null, date: 'Nov 17, 2023', status: 'Review' },
+  { id: 4, title: 'Low Stock Alert', price: 99, date: 'Nov 18, 2023', status: 'Stock Low' },
+  { id: 5, title: 'Refund Processed', price: 500, date: 'Nov 19, 2023', status: 'Refund' },
+  { id: 6, title: 'Product Sold', price: 120, date: 'Nov 20, 2023', status: 'Sold' },
+  { id: 7, title: 'Order Dispatched', price: 350, date: 'Nov 21, 2023', status: 'Dispatched' },
+  { id: 8, title: 'Low Stock Alert', price: 75, date: 'Nov 22, 2023', status: 'Stock Low' },
+  { id: 9, title: 'New Review Added', price: null, date: 'Nov 23, 2023', status: 'Review' },
+  { id: 10, title: 'Product Sold', price: 200, date: 'Nov 24, 2023', status: 'Sold' }
+];
+
+export const chartData = {
+  weekly: {
+    xAxis: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    series: [120, 200, 150, 80, 70, 110, 130],
+  },
+  monthly: {
+    xAxis: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    series: [300, 500, 250, 700, 600, 900],
+  },
+  yearly: {
+    xAxis: ['2019', '2020', '2021', '2022', '2023', '2024'],
+    series: [2000, 2500, 1800, 3000, 4000, 4500],
+  },
+};
