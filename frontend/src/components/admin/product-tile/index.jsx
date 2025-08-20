@@ -10,12 +10,6 @@ const ProductTile = ({ product }) => {
     minimumFractionDigits: 2
   }).format(product.price);
 
-  
-const salesPercentage = (product.sales / product.total) * 100;
-
-  // ✅ Remaining
-  const remaining = product.total - product.sales;
-
   // ✅ Truncate helper
   const truncateText = (text, maxLength) =>
     text?.length > maxLength ? text.slice(0, maxLength) + "..." : text;

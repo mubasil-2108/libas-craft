@@ -4,7 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { AdminFooter } from '../../../components/admin';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import { purchases } from '../../../services/utils/constants';
+// import { purchases } from '../../../services/utils/constants';
 
 
 const Orders = () => {
@@ -25,7 +25,7 @@ const Orders = () => {
                     /^\d+$/.test(pathSegments[pathSegments.length - 1])));
 
         setIsOrderDetail(isDetail);
-    }, [location]);
+    }, [pathSegments, location.pathname]);
 
     const breadcrumb = pathSegments.map((segment, index) => {
         if (segment === 'admin') return 'Home';
@@ -45,22 +45,22 @@ const Orders = () => {
         return capitalize(segment);
     }).join(' > ');
 
-    const getFormattedDate = (dateString) => {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
+    // const getFormattedDate = (dateString) => {
+    //     const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    //     return new Date(dateString).toLocaleDateString(undefined, options);
+    // };
 
-    const getDateRangeFromPurchases = () => {
-        if (!purchases || purchases.length === 0) return '';
+    // const getDateRangeFromPurchases = () => {
+    //     if (!purchases || purchases.length === 0) return '';
 
-        const dates = purchases.map(p => new Date(p.date));
-        const minDate = new Date(Math.min(...dates));
-        const maxDate = new Date(Math.max(...dates));
+    //     const dates = purchases.map(p => new Date(p.date));
+    //     const minDate = new Date(Math.min(...dates));
+    //     const maxDate = new Date(Math.max(...dates));
 
-        return `${getFormattedDate(minDate)} - ${getFormattedDate(maxDate)}`;
-    };
+    //     return `${getFormattedDate(minDate)} - ${getFormattedDate(maxDate)}`;
+    // };
 
-    const dateRange = getDateRangeFromPurchases();
+    // const dateRange = getDateRangeFromPurchases();
 
 
     return (
