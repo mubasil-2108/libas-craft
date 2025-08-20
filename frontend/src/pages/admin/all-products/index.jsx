@@ -1,21 +1,36 @@
-import { Box, Divider, Grid, Icon, IconButton, LinearProgress, Typography } from '@mui/material'
-
-import React from 'react'
+import { Box, Divider, Grid, Icon, IconButton, LinearProgress, Pagination, PaginationItem, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import { dummyProducts } from '../../../services/utils/constants';
 import { ProductTile } from '../../../components/admin';
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const AllProducts = () => {
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 12;
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedProducts = dummyProducts.slice(startIndex, endIndex);
 
     return (
         <Box component='div' sx={{
             width: '100%',
+            minHeight: '60vh',
             m: '15px 15px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent:'space-between'
             // position: 'fixed'
         }}>
             <Grid container spacing={3}>
                 {
-                    dummyProducts.length > 0 ?
-                        dummyProducts.map((product) => (
+                    paginatedProducts.length > 0 ?
+                        paginatedProducts.map((product) => (
                             <ProductTile key={product.id} product={product} />
                         ))
                         :
@@ -27,6 +42,121 @@ const AllProducts = () => {
                 }
 
             </Grid>
+
+            <Box component='div' sx={{
+                display: 'flex',
+                mt: 2,
+            }}>
+                <Pagination
+                    count={Math.ceil(dummyProducts.length / rowsPerPage)}
+                    page={page}
+                    onChange={handleChangePage}
+                    shape='rounded'
+                    boundaryCount={1}
+                    siblingCount={1}
+                    variant='outlined'
+                    renderItem={(item) => {
+
+                        if (item.type === 'next') {
+                            if (page >= Math.ceil(dummyProducts.length / rowsPerPage)) return null;
+                            return (
+                                <PaginationItem
+                                    {...item}
+                                    sx={{
+                                        minWidth: 70,
+                                        height: 32,
+                                        borderRadius: '8px',
+                                        fontSize: '14px',
+                                        fontWeight: 600,
+                                        border: '1px solid #232321',
+                                        color: '#232321',
+                                        backgroundColor: 'transparent',
+                                        '&:hover': {
+                                            backgroundColor: 'transparent',
+                                            color: '#232321',
+                                        },
+                                    }}
+                                    slots={{
+                                        next: () => (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, pr: 1 }}>
+                                                <Typography variant='button' component='p' sx={{ color: '#232321' }} >Next</Typography>
+                                                <Icon component={ArrowForwardIosRoundedIcon}
+                                                    sx={{
+                                                        fontSize: '14px'
+                                                    }}
+                                                />
+                                            </Box>
+                                        ),
+                                    }}
+                                />
+                            );
+                        }
+                        if (item.type === 'previous') {
+                            if (page === 1) return null;
+                            return (
+                                <PaginationItem
+                                    {...item}
+                                    sx={{
+                                        minWidth: 70,
+                                        height: 32,
+                                        borderRadius: '8px',
+                                        fontSize: '14px',
+                                        fontWeight: 600,
+                                        border: '1px solid #232321',
+                                        color: '#232321',
+                                        backgroundColor: 'transparent',
+                                        '&:hover': {
+                                            backgroundColor: 'transparent',
+                                            color: '#232321',
+                                        },
+                                    }}
+                                    slots={{
+                                        previous: () => (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, pr: 1 }}>
+                                                <Icon component={ArrowBackIosNewRoundedIcon}
+                                                    sx={{
+                                                        fontSize: '14px'
+                                                    }}
+                                                />
+                                                <Typography variant='button' component='p' sx={{ color: '#232321' }} >Prev</Typography>
+                                            </Box>
+                                        ),
+                                    }}
+                                />
+                            );
+                        }
+
+                        return (
+                            <PaginationItem
+                                {...item}
+                                sx={{
+                                    minWidth: 45,
+                                    mr: 1,
+                                    height: 32,
+                                    borderRadius: '8px',
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    color: item.selected ? '#FFFFFF' : '#232321',
+                                    '&.Mui-selected': {
+                                        backgroundColor: '#232321',
+                                        color: '#FFFFFF',
+                                        '&:hover': {
+                                            backgroundColor: '#232321',
+                                            color: '#FFFFFF',
+                                        },
+                                    },
+                                    border: '1px solid #232321',
+                                    '&:hover': {
+                                        backgroundColor: '#232321',
+                                        color: '#FFFFFF'
+                                    }
+                                }}
+
+                            />
+                        )
+                    }}
+                />
+            </Box>
         </Box>
     )
 }

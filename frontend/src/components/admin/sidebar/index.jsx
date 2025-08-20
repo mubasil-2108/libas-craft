@@ -24,9 +24,9 @@ const AdminSidebar = () => {
             backgroundColor: '#FAFAFA',
             padding: '20px',
         }}>
-            <Box component='img' src='/Group.png' onClick={()=> navigate('/admin/')} sx={{
+            <Box component='img' src='/logo.jpeg' onClick={()=> navigate('/admin/')} sx={{
                 objectFit: 'contain',
-                maxWidth: '190px',
+                maxWidth: '230px',
                 alignSelf: 'center',
                 cursor: 'pointer',
                 mb: '50px',

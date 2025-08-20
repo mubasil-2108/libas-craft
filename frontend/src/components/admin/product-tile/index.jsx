@@ -4,10 +4,27 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 
 const ProductTile = ({ product }) => {
+    const formattedPrice = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 2
+  }).format(product.price);
+
+  
+const salesPercentage = (product.sales / product.total) * 100;
+
+  // ✅ Remaining
+  const remaining = product.total - product.sales;
+
+  // ✅ Truncate helper
+  const truncateText = (text, maxLength) =>
+    text?.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+
     return (
         <Grid item xs={12} sm={6} md={4} lg={3}>
             <Box component='div' sx={{
                 minWidth: '300px',
+                maxWidth: '300px',
                 gap: 1,
                 background: '#FAFAFA',
                 display: 'flex',
@@ -44,9 +61,12 @@ const ProductTile = ({ product }) => {
                             }}>
                                 <Typography variant='h6' sx={{
                                     color: '#232321',
+                                    
+                                    flexGrow: 1,
+                                    flexShrink: 1,
                                     fontSize: '16px',
                                     fontWeight: 600
-                                }}>{product.name}</Typography>
+                                }}>{truncateText(product.name, 15)}</Typography>
 
                                 <Typography variant='h6' sx={{
                                     color: '#000000',
@@ -72,7 +92,7 @@ const ProductTile = ({ product }) => {
                             fontSize: '14px',
                             fontWeight: 600
                         }}>
-                            ₹{product.price}
+                            {formattedPrice}
                         </Typography>
                     </Box>
                 </Box>
@@ -80,6 +100,7 @@ const ProductTile = ({ product }) => {
                 <Box component='div' sx={{
                     mt: '10px',
                     display: 'flex',
+                    flexDirection: 'column',
                     flexWrap: 'wrap',
                     maxWidth: '300px',
                 }}>
@@ -93,7 +114,7 @@ const ProductTile = ({ product }) => {
                         fontWeight: 500,
                         opacity: 0.6,
                         color: '#232321',
-                    }}>{product.summary}</Typography>
+                    }}>{truncateText(product.summary, 40)}</Typography>
                 </Box>
 
                 <Box component='div' sx={{

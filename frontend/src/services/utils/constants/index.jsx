@@ -141,6 +141,180 @@ export const dummyProducts = [
     sales: 875,
     total: 1200,
     image: '/productImg.png'
+  },
+  {
+    id: 11,
+    name: 'Anker Fast Charger',
+    category: 'Charger',
+    price: 45.99,
+    summary: '20W fast charger with USB-C port for smartphones.',
+    sales: 1500,
+    total: 2000,
+    image: '/productImg.png'
+  },
+  {
+    id: 12,
+    name: 'Belkin BoostCharge',
+    category: 'Charger',
+    price: 60.5,
+    summary: 'Durable charger with dual USB output.',
+    sales: 1200,
+    total: 1800,
+    image: '/productImg.png'
+  },
+  {
+    id: 13,
+    name: 'Samsung Adaptive Charger',
+    category: 'Charger',
+    price: 39.99,
+    summary: 'Adaptive fast charging for Samsung Galaxy series.',
+    sales: 900,
+    total: 1500,
+    image: '/productImg.png'
+  },
+  {
+    id: 14,
+    name: 'Apple MagSafe Charger',
+    category: 'Charger',
+    price: 99.0,
+    summary: 'Wireless charging for iPhone with MagSafe tech.',
+    sales: 800,
+    total: 1200,
+    image: '/productImg.png'
+  },
+  // 🔋 Power Banks
+  {
+    id: 15,
+    name: 'Xiaomi Power Bank 20k',
+    category: 'Power Bank',
+    price: 75.25,
+    summary: '20000mAh high-capacity portable power bank.',
+    sales: 1900,
+    total: 2500,
+    image: '/productImg.png'
+  },
+  {
+    id: 16,
+    name: 'Anker PowerCore Slim',
+    category: 'Power Bank',
+    price: 65.0,
+    summary: 'Compact 10000mAh power bank with fast charging.',
+    sales: 1100,
+    total: 1500,
+    image: '/productImg.png'
+  },
+  {
+    id: 17,
+    name: 'RAVPower SuperBank',
+    category: 'Power Bank',
+    price: 120.0,
+    summary: '30000mAh massive capacity with PD support.',
+    sales: 600,
+    total: 1000,
+    image: '/productImg.png'
+  },
+  // 🌞 Solar Panels
+  {
+    id: 18,
+    name: 'EcoFlow Solar 110W',
+    category: 'Solar Panel',
+    price: 250.0,
+    summary: 'Foldable solar panel for outdoor adventures.',
+    sales: 450,
+    total: 800,
+    image: '/productImg.png'
+  },
+  {
+    id: 19,
+    name: 'Renogy Solar Kit',
+    category: 'Solar Panel',
+    price: 400.5,
+    summary: '400W complete solar kit for RVs and camping.',
+    sales: 300,
+    total: 600,
+    image: '/productImg.png'
+  },
+  {
+    id: 20,
+    name: 'Jackery SolarSaga',
+    category: 'Solar Panel',
+    price: 199.99,
+    summary: 'Durable 100W solar panel for power stations.',
+    sales: 500,
+    total: 700,
+    image: '/productImg.png'
+  },
+  // ⚡ Inverters
+  {
+    id: 21,
+    name: 'Sukam Pure Sine',
+    category: 'Inverter',
+    price: 350.0,
+    summary: 'Pure sine wave inverter for home appliances.',
+    sales: 250,
+    total: 500,
+    image: '/productImg.png'
+  },
+  {
+    id: 22,
+    name: 'Luminous EcoVolt',
+    category: 'Inverter',
+    price: 280.5,
+    summary: 'Eco-friendly inverter with smart load sharing.',
+    sales: 400,
+    total: 700,
+    image: '/productImg.png'
+  },
+  {
+    id: 23,
+    name: 'Tesla Power Inverter',
+    category: 'Inverter',
+    price: 600.0,
+    summary: 'High-tech inverter designed for solar integration.',
+    sales: 180,
+    total: 400,
+    image: '/productImg.png'
+  },
+  // 📱 Smart Devices
+  {
+    id: 24,
+    name: 'Google Nest Thermostat',
+    category: 'Smart Device',
+    price: 250.0,
+    summary: 'Smart home thermostat with energy-saving AI.',
+    sales: 700,
+    total: 1000,
+    image: '/productImg.png'
+  },
+  {
+    id: 25,
+    name: 'Amazon Echo Dot',
+    category: 'Smart Device',
+    price: 50.0,
+    summary: 'Voice assistant smart speaker with Alexa.',
+    sales: 3000,
+    total: 5000,
+    image: '/productImg.png'
+  },
+  {
+    id: 26,
+    name: 'Philips Hue Smart Bulb',
+    category: 'Smart Device',
+    price: 30.0,
+    summary: 'Wi-Fi enabled bulb with millions of colors.',
+    sales: 2200,
+    total: 4000,
+    image: '/productImg.png'
+  },
+  {
+    id: 27,
+    name: 'Ring Video Doorbell',
+    category: 'Smart Device',
+    price: 180.0,
+    summary: 'Smart doorbell with HD video and motion alerts.',
+    sales: 1200,
+    total: 2000,
+    image: '/productImg.png'
   }
 ];
 
