@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
 import { AddProduct, AllProducts, Dashboard, OrderDetail, OrderList, Orders, ProductDetail, Products } from './pages/admin'
+import { Home } from './pages/client'
 
 function App() {
 
   return (
     <>
       <Routes>
+        <Route path='/' index element={<Home />} />
         <Route path='/admin' element={<AdminLayout />} >
           <Route index element={<Dashboard />} />
           {/* Products */}
@@ -22,8 +24,9 @@ function App() {
             <Route index element={<OrderList />} />
             <Route path=':id' element={<OrderDetail />} />
           </Route>
-
         </Route>
+        {/* <Route index element={<Home/>}/> */}
+
       </Routes>
     </>
   )
