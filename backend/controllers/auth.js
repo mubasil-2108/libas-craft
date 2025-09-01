@@ -130,7 +130,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 })
 
 const getUser = asyncHandler(async (req, res) => {
-    const user = await USER.findById(req.user._id);
+    
+    const user = await USER.findById(req.user._id).select("-password");;
 
     if (user) {
         const { _id, name, email, photo, phone } = user;
@@ -269,7 +270,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
       <a href=${resetURL} clicktracking=off>${resetURL}</a>
 
       <p>Regards...</p>
-      <p>Pinvent Team</p>
+      <p>Liba's Craft Team</p>
     `;
 
     const subject = "Password Reset Request";
