@@ -4,7 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const ImageTile = ({ imageTile }) => {
+const ImageTile = ({ imageTile, onDelete }) => {
     return (
         <Box component='div' sx={{
             background: '#FAFAFA',
@@ -31,17 +31,18 @@ const ImageTile = ({ imageTile }) => {
                 }}
                 onClick={() => console.log('Delete clicked')}
             >
-                <Icon component={CloseIcon} sx={{ fontSize: 20, color: '#FF4D4D' }} />
+                <Icon component={CloseIcon} onClick={() => onDelete()} sx={{ fontSize: 20, color: '#FF4D4D' }} />
             </IconButton>
 
             <Box component='img' width={'64px'} height={'64px'}
-                src={imageTile.src}
+                src={imageTile.preview}
                 sx={{
                     objectFit: 'cover',
-                    borderRadius: '12px',
+                    borderRadius: '10px',
                     border: 'none',
                     background: '#000000',
-                    opacity: 0.2
+                    opacity: imageTile.progress < 100 ? 0.5 : 1, 
+                    transition: 'opacity 0.3s ease',
                 }}
             />
             <Box component='div' sx={{ display: 'flex', width: '300px', flexDirection: 'column', gap: 2, p: '0px 15px' }}>
