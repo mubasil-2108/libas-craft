@@ -1,11 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/product");
+const { uploadFileToDrive, deleteFileFromDrive } = require("../utils/googleDrive");
 
 const createProduct = asyncHandler(async (req, res) => {
     const {
         productName,
         productDescription,
-        productPhoto,
         category,
         sku,
         stockQuantity,
@@ -15,13 +15,24 @@ const createProduct = asyncHandler(async (req, res) => {
     } = req.body;
 
     if (
-        !productName || !productDescription || !productPhoto || !category || !sku || !stockQuantity ||
+        !productName || !productDescription || !category || !sku || !stockQuantity ||
         !regularPrice || !salePrice || !tags
     ) {
         return res.status(400).json({
             message: "Please fill in all required fields"
         });
     }
+
+    // Upload images to Google Drive and get URLs
+
+    let productPhoto = [];
+    if (req.files && req.files.length > 0) {
+        for (let file of req.files) {
+            const fileUrl = await uploadFileToDrive(file);
+            productPhoto.push(fileUrl);
+        }
+    }
+
 
     const product = await Product.create({
         productName,
@@ -82,12 +93,32 @@ const updateProduct = asyncHandler(async (req, res) => {
     const product = await Product.findById(id);
 
     if (product) {
-        const { productName, productDescription, productPhoto, category, sku, stockQuantity, regularPrice,
+        const { productName, productDescription, category, sku, stockQuantity, regularPrice,
             salePrice, tags } = product;
+
+        // Upload new images to Google Drive and get URLs
+        // Append new URLs to existing productPhoto array
+
+        if (req.files && req.files.length > 0) {
+            for (let file of req.files) {
+                const fileUrl = await uploadFileToDrive(file);
+                product.productPhoto.push(fileUrl); // push new { fileId, url }
+            }
+        }
+
+        // Remove images if specified in req.body.removeImages (array of fileIds)
+
+        if (req.body.removeImages && req.body.removeImages.length > 0) {
+            for (let img of req.body.removeImages) {
+                await deleteFileFromDrive(img.fileId);
+                product.productPhoto = product.productPhoto.filter(
+                    (p) => p.fileId !== img.fileId
+                )
+            }
+        }
 
         product.productName = req.body.productName || productName;
         product.productDescription = req.body.productDescription || productDescription;
-        product.productPhoto = req.body.productPhoto || productPhoto;
         product.category = req.body.category || category;
         product.sku = req.body.sku || sku;
         product.stockQuantity = req.body.stockQuantity || stockQuantity;
@@ -139,9 +170,14 @@ const searchProducts = asyncHandler(async (req, res) => {
 
 const deleteProduct = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
 
     if (product) {
+        for (let img of product.productPhoto) {
+            await deleteFileFromDrive(img.fileId);
+        }
+        await product.deleteOne();
+
         res.status(200).json({
             message: "Product deleted successfully"
         });

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('./middlewares/error');
 const authRoutes = require('./routes/auth');
+const productRoutes = require('./routes/products');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,6 +54,7 @@ app.get("/", (req, res) => {
     })
 })
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
 
 
 app.listen(PORT, () => {
