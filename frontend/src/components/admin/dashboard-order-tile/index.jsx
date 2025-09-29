@@ -3,6 +3,7 @@ import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import React from 'react'
+import { colors } from '../../../services';
 
 const DashboardOrderTile = ({ title, amount, percentage, lastMonth }) => {
     return (
@@ -42,7 +43,7 @@ const DashboardOrderTile = ({ title, amount, percentage, lastMonth }) => {
                             height: '40px',
                             width: '40px',
                             borderRadius: '10px',
-                            background: '#003F62'
+                            background: colors.primary
                         }}>
                             <Icon fontSize='medium' sx={{ color: '#FFFFFF' }} component={LocalMallOutlinedIcon} />
                         </Box>

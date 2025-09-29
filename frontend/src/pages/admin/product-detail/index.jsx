@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { deleteProduct, deleteProductImage, getProductById, updateProduct } from '../../../store/slices/productSlice';
 import { useRef } from 'react';
 import toast from 'react-hot-toast';
+import { colors } from '../../../services';
 
 const initialState = {
     productName: '',
@@ -359,7 +360,7 @@ const ProductDetail = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 30,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -378,7 +379,7 @@ const ProductDetail = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 30,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -396,7 +397,7 @@ const ProductDetail = () => {
                                                 justifyContent: 'center',
                                                 gap: 2
                                             }}>
-                                                <PhotoOutlinedIcon sx={{ fontSize: 50, color: '#003F62' }} />
+                                                <PhotoOutlinedIcon sx={{ fontSize: 50, color: colors.primary }} />
                                                 <Typography textAlign='center' fontSize={16} fontWeight={500} color='#70706E'>
                                                     Drop your image here, or browse<br />
                                                     JPEG, PNG are allowed
@@ -447,7 +448,7 @@ const ProductDetail = () => {
                                                         cursor: 'pointer',
                                                         border:
                                                             currentIndex === index
-                                                                ? '2px solid #003F62'
+                                                                ? `2px solid ${colors.primary}`
                                                                 : '2px solid transparent',
                                                         transition: '0.2s',
                                                     }}
@@ -465,11 +466,11 @@ const ProductDetail = () => {
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
-                                                    border: '2px dashed #003F62',
+                                                    border: `2px dashed ${colors.primary}`,
                                                     borderRadius: '8px',
                                                 }}
                                             >
-                                                <PhotoOutlinedIcon sx={{ fontSize: { xs: 22, sm: 30 }, color: '#003F62' }} />
+                                                <PhotoOutlinedIcon sx={{ fontSize: { xs: 22, sm: 30 }, color: colors.primary }} />
                                                 <input
                                                     id='upload-more'
                                                     type='file'
@@ -495,7 +496,7 @@ const ProductDetail = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 28,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -515,7 +516,7 @@ const ProductDetail = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 28,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -554,7 +555,7 @@ const ProductDetail = () => {
                             {/* Buttons */}
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
                                 <Button variant='contained' disabled={isLoading || isDeleting || isUpdating || isImageDeleting} loading={isUpdating} onClick={handleUpdate} sx={{ minWidth: 150, background: '#232321' }}>Update</Button>
-                                <Button variant='contained' disabled={isLoading || isDeleting || isUpdating || isImageDeleting} loading={isDeleting} sx={{ minWidth: 150, background: '#003F62' }} onClick={handleProductDelete}>Delete</Button>
+                                <Button variant='contained' disabled={isLoading || isDeleting || isUpdating || isImageDeleting} loading={isDeleting} sx={{ minWidth: 150, background: colors.primary }} onClick={handleProductDelete}>Delete</Button>
                                 <Button variant='outlined' disabled={isLoading || isDeleting || isUpdating || isImageDeleting} onClick={handleCancel} sx={{ minWidth: 150, borderColor: '#232321', color: '#232321' }}>Cancel</Button>
                             </Box>
                         </Box>

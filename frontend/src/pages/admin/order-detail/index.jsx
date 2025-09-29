@@ -12,6 +12,7 @@ import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlin
 import React, { useState } from 'react'
 import { productOrders } from '../../../services/utils/constants';
 import { useNavigate } from 'react-router-dom';
+import { colors } from '../../../services';
 
 const OrderDetail = () => {
     const navigate = useNavigate();
@@ -183,7 +184,7 @@ const OrderDetail = () => {
                                         }
                                     }}
                                 >
-                                    <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: '#003F62' }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
+                                    <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.primary }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
                                     <Divider variant='middle' />
                                     <MenuItem onClick={() => handleStatusChange('Pending')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: 'rgba(255, 165, 47, 0.8)' }} component={FiberManualRecordIcon} /> Pending</MenuItem>
                                     <Divider variant='middle' />
@@ -217,7 +218,7 @@ const OrderDetail = () => {
 
                                     </Box>
                                 </Box>
-                                <Button variant='contained' sx={{ background: '#003F62', p: '7px 15px', borderRadius: '10px' }}>
+                                <Button variant='contained' sx={{ background: colors.primary, p: '7px 15px', borderRadius: '10px' }}>
                                     <Typography component='p' sx={{ color: '#FFFFFF', fontSize: '14px', fontWeight: 500, textTransform: 'none' }}>View profile</Typography>
                                 </Button>
                             </Box>
@@ -244,7 +245,7 @@ const OrderDetail = () => {
 
                                     </Box>
                                 </Box>
-                                <Button variant='contained' sx={{ background: '#003F62', p: '7px 15px', borderRadius: '10px' }}>
+                                <Button variant='contained' sx={{ background: colors.primary, p: '7px 15px', borderRadius: '10px' }}>
                                     <Typography component='p' sx={{ color: '#FFFFFF', fontSize: '14px', fontWeight: 500, textTransform: 'none' }}>View profile</Typography>
                                 </Button>
                             </Box>
@@ -271,7 +272,7 @@ const OrderDetail = () => {
                                         }}>Address: Dharam Colony, Palam Vihar, Gurgaon, Haryana</Typography>
                                     </Box>
                                 </Box>
-                                <Button variant='contained' sx={{ background: '#003F62', p: '7px 15px', borderRadius: '10px' }}>
+                                <Button variant='contained' sx={{ background: colors.primary, p: '7px 15px', borderRadius: '10px' }}>
                                     <Typography component='p' sx={{ color: '#FFFFFF', fontSize: '14px', fontWeight: 500, textTransform: 'none' }}>View profile</Typography>
                                 </Button>
                             </Box>

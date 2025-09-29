@@ -3,6 +3,7 @@ import React from 'react'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { colors } from '../../../services';
 
 const ImageTile = ({ imageTile,apiData, onDelete, }) => {
     return (
@@ -51,7 +52,7 @@ const ImageTile = ({ imageTile,apiData, onDelete, }) => {
                     color: '#232321'
                 }}>{imageTile ? imageTile.name : apiData?.name}</Typography>
                 <LinearProgress variant="determinate" value={imageTile ? imageTile.progress : 100} color='inherit' sx={{
-                    color: '#003F62',
+                    color: colors.primary,
                     // width: '300px',
                     // minWidth:'200px',
                     background: '#4A69E2',
@@ -60,7 +61,7 @@ const ImageTile = ({ imageTile,apiData, onDelete, }) => {
             </Box>
             {
                  imageTile?.status || apiData?.status === 'uploaded' ?
-                    <Icon component={CheckCircleIcon} sx={{ color: '#003F62', fontSize: '30px' }} />
+                    <Icon component={CheckCircleIcon} sx={{ color: colors.primary, fontSize: '30px' }} />
                     :
                     <Icon component={CancelIcon} sx={{ color: '#FF4D4D', fontSize: '30px' }} />
             }

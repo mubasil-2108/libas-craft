@@ -10,6 +10,7 @@ import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlin
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { purchases } from '../../../services/utils/constants';
 import { useNavigate } from 'react-router-dom';
+import { colors } from '../../../services';
 
 const OrderList = () => {
     const navigate = useNavigate();
@@ -159,7 +160,7 @@ const OrderList = () => {
                     >
                         <MenuItem onClick={() => handleStatusChange(null)} selected={selectedStatus === null} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: '#000000' }} component={FiberManualRecordIcon} /> All</MenuItem>
                         <Divider variant='middle' />
-                        <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: '#003F62' }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
+                        <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.primary }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
                         <Divider variant='middle' />
                         <MenuItem onClick={() => handleStatusChange('Pending')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: '#E0E0E0' }} component={FiberManualRecordIcon} /> Pending</MenuItem>
                         <Divider variant='middle' />
@@ -246,7 +247,7 @@ const OrderList = () => {
                                                 width: 8,
                                                 backgroundColor:
                                                     status === 'Delivered'
-                                                        ? '#003F62' // Green for Delivered
+                                                        ? colors.primary // Green for Delivered
                                                         : status === 'Canceled'
                                                             ? '#FFC107' // Orange for Canceled
                                                             : '#E0E0E0', // Default grey
@@ -258,7 +259,7 @@ const OrderList = () => {
                                             const StatusText = styled(Typography)(({ status }) => ({
                                                 color:
                                                     status === 'Delivered'
-                                                        ? '#003F62'
+                                                        ? colors.primary
                                                         : status === 'Canceled'
                                                             ? '#FFC107'
                                                             : '#757575',

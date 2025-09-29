@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategory } from '../../../store/slices/productSlice';
+import { colors } from '../../../services';
 
 const AdminSidebar = () => {
     const dispatch = useDispatch();
@@ -69,9 +70,9 @@ const AdminSidebar = () => {
                                     color: isActive ? '#fff' : '#000',
                                     textDecoration: 'none',
                                     borderRadius: '10px',
-                                    background: isActive ? '#003F62' : '#FAFAFA',
+                                    background: isActive ? colors.primary : '#FAFAFA',
                                     '&:hover': {
-                                        background: '#003F62',
+                                        background: colors.primary,
                                         color: '#fff'
                                     }
                                 }}
@@ -130,7 +131,7 @@ const AdminSidebar = () => {
                                         <Box component='div' sx={{
                                             width: '35px',
                                             height: '30px',
-                                            background: isCategoryActive ? '#003F62' : '#E7E7E3',
+                                            background: isCategoryActive ? colors.primary : '#E7E7E3',
                                             borderRadius: '5px',
                                             display: 'flex',
                                             alignItems: 'center',

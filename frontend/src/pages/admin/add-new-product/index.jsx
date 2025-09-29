@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addNewProduct } from '../../../store/slices/productSlice';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { colors } from '../../../services';
 
 const initialState = {
     productName: '',
@@ -292,7 +293,7 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 30,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -311,7 +312,7 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 30,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -329,7 +330,7 @@ const AddProduct = () => {
                                                 justifyContent: 'center',
                                                 gap: 2
                                             }}>
-                                                <PhotoOutlinedIcon sx={{ fontSize: 50, color: '#003F62' }} />
+                                                <PhotoOutlinedIcon sx={{ fontSize: 50, color: colors.primary }} />
                                                 <Typography textAlign='center' fontSize={16} fontWeight={500} color='#70706E'>
                                                     Drop your image here, or browse<br />
                                                     JPEG, PNG are allowed
@@ -376,7 +377,7 @@ const AddProduct = () => {
                                                         cursor: 'pointer',
                                                         border:
                                                             currentIndex === index
-                                                                ? '2px solid #003F62'
+                                                                ? `2px solid ${colors.primary}`
                                                                 : '2px solid transparent',
                                                         transition: '0.2s',
                                                     }}
@@ -394,11 +395,11 @@ const AddProduct = () => {
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
-                                                    border: '2px dashed #003F62',
+                                                    border: `2px dashed ${colors.primary}`,
                                                     borderRadius: '8px',
                                                 }}
                                             >
-                                                <PhotoOutlinedIcon sx={{ fontSize: { xs: 22, sm: 30 }, color: '#003F62' }} />
+                                                <PhotoOutlinedIcon sx={{ fontSize: { xs: 22, sm: 30 }, color: colors.primary }} />
                                                 <input
                                                     id='upload-more'
                                                     type='file'
@@ -424,7 +425,7 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 28,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -444,7 +445,7 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: '#003F62',
+                                                        color: colors.primary,
                                                         fontSize: 28,
                                                         bgcolor: '#fff',
                                                         borderRadius: '50%',
@@ -472,9 +473,9 @@ const AddProduct = () => {
                             {/* Buttons */}
                             <Box sx={{ display: 'flex', justifyContent: 'space-around', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
                                 <Button variant='contained' loading={isLoading} disabled={isLoading} onClick={handleCreate} sx={{
-                                    minWidth: 200, background: '#003F62',
+                                    minWidth: 200, background: colors.primary,
                                     '& .MuiCircularProgress-root': {
-                                        color: '#003F62', // 👈 your custom loader color
+                                        color: colors.primary, // 👈 your custom loader color
                                     },
                                 }}>Create</Button>
                                 <Button variant='outlined' disabled={isLoading} onClick={handleCancel} sx={{ minWidth: 200, borderColor: '#232321', color: '#232321' }}>Cancel</Button>

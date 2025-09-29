@@ -11,6 +11,7 @@ import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import { colors } from '../../../services';
 
 const Dashboard = () => {
   const location = useLocation();
@@ -235,13 +236,13 @@ const handleClick = (id) => {
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Button variant={activeRange === 'weekly' ? "contained" : "outlined"} onClick={() => setActiveRange('weekly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'weekly' ? '#003F62' : '#232321', color: activeRange === 'weekly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'weekly' ? '#003F62' : 'transparent' }}>
+            <Button variant={activeRange === 'weekly' ? "contained" : "outlined"} onClick={() => setActiveRange('weekly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'weekly' ? colors.primary : '#232321', color: activeRange === 'weekly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'weekly' ? colors.primary : 'transparent' }}>
               Weekly
             </Button>
-            <Button variant={activeRange === 'monthly' ? "contained" : "outlined"} onClick={() => setActiveRange('monthly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'monthly' ? '#003F62' : '#232321', color: activeRange === 'monthly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'monthly' ? '#003F62' : 'transparent' }}>
+            <Button variant={activeRange === 'monthly' ? "contained" : "outlined"} onClick={() => setActiveRange('monthly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'monthly' ? colors.primary : '#232321', color: activeRange === 'monthly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'monthly' ? colors.primary : 'transparent' }}>
               Monthly
             </Button>
-            <Button variant={activeRange === 'yearly' ? "contained" : "outlined"} onClick={() => setActiveRange('yearly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'yearly' ? '#003F62' : '#232321', color: activeRange === 'yearly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'yearly' ? '#003F62' : 'transparent' }}>
+            <Button variant={activeRange === 'yearly' ? "contained" : "outlined"} onClick={() => setActiveRange('yearly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'yearly' ? colors.primary : '#232321', color: activeRange === 'yearly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'yearly' ? colors.primary : 'transparent' }}>
               Yearly
             </Button>
           </Box>
@@ -382,7 +383,7 @@ const handleClick = (id) => {
                           width: 8,
                           backgroundColor:
                             status === 'Delivered'
-                              ? '#003F62' // Green for Delivered
+                              ? colors.primary // Green for Delivered
                               : status === 'Canceled'
                                 ? '#FFC107' // Orange for Canceled
                                 : '#E0E0E0', // Default grey
@@ -394,7 +395,7 @@ const handleClick = (id) => {
                         const StatusText = styled(Typography)(({ status }) => ({
                           color:
                             status === 'Delivered'
-                              ? '#003F62'
+                              ? colors.primary
                               : status === 'Canceled'
                                 ? '#FFC107'
                                 : '#757575',

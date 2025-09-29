@@ -9,6 +9,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import { dummyProducts, notifications } from '../../../services/utils/constants';
 import { useNavigate } from 'react-router-dom';
+import { colors } from '../../../services';
 
 const AdminHeader = () => {
     const navigate = useNavigate();
@@ -65,13 +66,13 @@ const AdminHeader = () => {
                             '& .MuiOutlinedInput-root': {
                                 borderRadius: '10px',
                                 '& fieldset': {
-                                    borderColor: '#003F62',
+                                    borderColor: colors.primary,
                                 },
                                 '&:hover fieldset': {
-                                    borderColor: '#003F62',
+                                    borderColor: colors.primary,
                                 },
                                 '&.Mui-focused fieldset': {
-                                    borderColor: '#003F62',
+                                    borderColor: colors.primary,
                                 },
                             },
                         }}
@@ -83,10 +84,10 @@ const AdminHeader = () => {
                             ),
                             endAdornment: (
                                 <InputAdornment position="end" sx={{
-                                    borderLeft: '1px solid #003F62',
+                                    borderLeft: `1px solid ${colors.primary}`,
                                     pl: '10px',
                                 }}>
-                                    <IconButton onClick={() => { setShowSearch(false); setSearchQuery(''); }} sx={{ color: '#003F62', width: '10px', height: '10px', borderRadius: '50%', border: '1px solid #003F62' }}>
+                                    <IconButton onClick={() => { setShowSearch(false); setSearchQuery(''); }} sx={{ color: colors.primary, width: '10px', height: '10px', borderRadius: '50%', border: `1px solid ${colors.primary}` }}>
                                         <CloseOutlinedIcon fontSize='inherit' sx={{ fontSize: '10px', }} />
                                     </IconButton>
                                 </InputAdornment>
@@ -148,7 +149,7 @@ const AdminHeader = () => {
 
                                         {!showAllResults && filteredProducts.length > 3 && (
                                             <MenuItem onClick={() => setShowAllResults(true)}>
-                                                <Typography variant="body2" sx={{ color: '#003F62', fontWeight: 'bold' }}>
+                                                <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 'bold' }}>
                                                     See all products
                                                 </Typography>
                                             </MenuItem>
@@ -212,7 +213,7 @@ const AdminHeader = () => {
                                                         <Typography component='p' sx={{ color: '#232321', fontSize: '16px', fontWeight: 600 }}>{notification.title}</Typography>
                                                         <Typography component='p' sx={{ color: '#232321', fontSize: '14px', fontWeight: 600 }}>{notification.price === null ? '' : `Rs.${notification.price}`}</Typography>
                                                     </Box>
-                                                    <Chip variant='filled' color='default' sx={{ background: '#003F62', color: '#FAFAFA', borderRadius: '10px' }} label={notification.status} />
+                                                    <Chip variant='filled' color='default' sx={{ background: colors.primary, color: '#FAFAFA', borderRadius: '10px' }} label={notification.status} />
                                                 </Box>
                                                 <Typography component='p' sx={{ color: 'rgba(35,35,33,0.8)', fontSize: '12px', fontWeight: 600 }}>{notification.date}</Typography>
                                             </Box>
@@ -224,8 +225,8 @@ const AdminHeader = () => {
                         </Box>
                     </DialogContent>
                     <DialogActions sx={{ justifyContent: 'space-between' }}>
-                        <Button startIcon={<Icon component={DoneOutlinedIcon} />} sx={{ color: '#003F62', borderRadius: '10px', fontSize: '14px' }}>Mark all as read</Button>
-                        <Button sx={{ background: '#003F62', color: '#FFFFFF', borderRadius: '10px', fontSize: '12px', px: 2 }}>View all notificaton</Button>
+                        <Button startIcon={<Icon component={DoneOutlinedIcon} />} sx={{ color: colors.primary, borderRadius: '10px', fontSize: '14px' }}>Mark all as read</Button>
+                        <Button sx={{ background: colors.primary, color: '#FFFFFF', borderRadius: '10px', fontSize: '12px', px: 2 }}>View all notificaton</Button>
                     </DialogActions>
                 </Dialog>
             </Fragment>
@@ -236,8 +237,8 @@ const AdminHeader = () => {
                     fontSize: '14px',
                     fontWeight: 'bold',
                     borderRadius: '8px',
-                    backgroundColor: anchorEl ? '#003F62' : 'transparent',
-                    border: `1px solid ${anchorEl ? '#003F62' : '#000'}`,
+                    backgroundColor: anchorEl ? colors.primary : 'transparent',
+                    border: `1px solid ${anchorEl ? colors.primary : '#000'}`,
                     '&:hover': {
                         color: '#000',
                         border: '1px solid #000',
