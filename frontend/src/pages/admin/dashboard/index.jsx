@@ -147,7 +147,7 @@ const handleClick = (id) => {
           <Typography
             component='h3'
             sx={{
-              color: '#000',
+              color: colors.textColor_4,
               fontWeight: 'bold',
               fontSize: { xs: '20px', sm: '24px' }
             }}
@@ -157,7 +157,7 @@ const handleClick = (id) => {
           <Typography
             component='p'
             sx={{
-              color: '#000',
+              color: colors.textColor_4,
               fontSize: { xs: '14px', sm: '16px' },
               wordBreak: 'break-word'
             }}
@@ -173,11 +173,11 @@ const handleClick = (id) => {
             flexWrap: 'wrap',
           }}
         >
-          <Icon component={CalendarMonthOutlinedIcon} sx={{ color: '#232321' }} />
+          <Icon component={CalendarMonthOutlinedIcon} sx={{ color: colors.iconColor_6 }} />
           <Typography
             component='p'
             sx={{
-              color: '#000',
+              color: colors.textColor_4,
               fontSize: { xs: '14px', sm: '16px' },
               fontWeight: 500,
             }}
@@ -207,7 +207,7 @@ const handleClick = (id) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          background: '#FAFAFA',
+          background: colors.grayLight_1,
           p: { xs: 2, md: 3 },
           mt: 3,
           borderRadius: '15px',
@@ -227,7 +227,7 @@ const handleClick = (id) => {
           <Typography
             component="h3"
             sx={{
-              color: '#000',
+              color: colors.textColor_4,
               fontWeight: 'bold',
               fontSize: { xs: '18px', md: '20px' },
             }}
@@ -236,31 +236,31 @@ const handleClick = (id) => {
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Button variant={activeRange === 'weekly' ? "contained" : "outlined"} onClick={() => setActiveRange('weekly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'weekly' ? colors.primary : '#232321', color: activeRange === 'weekly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'weekly' ? colors.primary : 'transparent' }}>
+            <Button variant={activeRange === 'weekly' ? "contained" : "outlined"} onClick={() => setActiveRange('weekly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'weekly' ? colors.borderColor_2 : colors.borderColor_4, color: activeRange === 'weekly' ? colors.white : colors.grayDark_1, fontSize: '12px', background: activeRange === 'weekly' ? colors.primary : colors.transparent }}>
               Weekly
             </Button>
-            <Button variant={activeRange === 'monthly' ? "contained" : "outlined"} onClick={() => setActiveRange('monthly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'monthly' ? colors.primary : '#232321', color: activeRange === 'monthly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'monthly' ? colors.primary : 'transparent' }}>
+            <Button variant={activeRange === 'monthly' ? "contained" : "outlined"} onClick={() => setActiveRange('monthly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'monthly' ? colors.borderColor_2 : colors.borderColor_4, color: activeRange === 'monthly' ? colors.white : colors.grayDark_1, fontSize: '12px', background: activeRange === 'monthly' ? colors.primary : colors.transparent }}>
               Monthly
             </Button>
-            <Button variant={activeRange === 'yearly' ? "contained" : "outlined"} onClick={() => setActiveRange('yearly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'yearly' ? colors.primary : '#232321', color: activeRange === 'yearly' ? '#FFFFFF' : '#232321', fontSize: '12px', background: activeRange === 'yearly' ? colors.primary : 'transparent' }}>
+            <Button variant={activeRange === 'yearly' ? "contained" : "outlined"} onClick={() => setActiveRange('yearly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'yearly' ? colors.borderColor_2 : colors.borderColor_4, color: activeRange === 'yearly' ? colors.white : colors.grayDark_1, fontSize: '12px', background: activeRange === 'yearly' ? colors.primary : colors.transparent }}>
               Yearly
             </Button>
           </Box>
         </Box>
 
-        <Divider sx={{ my: 2, background: '#232321' }} />
+        <Divider sx={{ my: 2, background: colors.grayDark_1 }} />
 
         {/* Chart */}
         <Box sx={{ width: '100%', height: { xs: 250, sm: 300, md: 350, lg: 400 } }}>
           <LineChart
-            grid={{ horizontal: { stroke: '#E6E6E6', strokeWidth: 1, opacity: 0.5 } }}
+            grid={{ horizontal: { stroke: colors.grayLight_2, strokeWidth: 1, opacity: 0.5 } }}
             xAxis={[
               {
                 data: chartData[activeRange].xAxis,
                 scaleType: 'band',
                 sx: {
-                  '& .MuiChartsAxis-line': { stroke: '#E6E6E6', strokeWidth: 3 },
-                  '& .MuiChartsAxis-tickLabel': { fontSize: '16px !important', fontWeight: '600 !important', fill: '#212121' },
+                  '& .MuiChartsAxis-line': { stroke: colors.grayLight_2, strokeWidth: 3 },
+                  '& .MuiChartsAxis-tickLabel': { fontSize: '16px !important', fontWeight: '600 !important', fill: colors.grayDark_3 },
                 },
               },
             ]}
@@ -287,9 +287,9 @@ const handleClick = (id) => {
               '& .MuiLineElement-root': { strokeWidth: 5, strokeLinecap: 'round' },
 
               // (optional) axis cosmetics you already wanted
-              '& .MuiChartsAxis-line': { stroke: '#E6E6E6', strokeWidth: 3 },
+              '& .MuiChartsAxis-line': { stroke: colors.grayLight_2, strokeWidth: 3 },
               '& .MuiChartsAxis-tick': { display: 'none' },
-              '& .MuiChartsAxis-tickLabel': { fontSize: '16px !important', fontWeight: '600 !important', fill: '#8D8D8D' },
+              '& .MuiChartsAxis-tickLabel': { fontSize: '16px !important', fontWeight: '600 !important', fill: colors.gray },
 
               '& .MuiLineChart-legend': { display: 'none' },
             }}
@@ -298,15 +298,15 @@ const handleClick = (id) => {
             {/* ⬇️ Define the gradient INSIDE the chart */}
             <defs>
               <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#f3f3f3ff" />
-                <stop offset="100%" stopColor="#1B59F8" />
+                <stop offset="0%" stopColor= {colors.grayLight_4} />
+                <stop offset="100%" stopColor= {colors.blue} />
               </linearGradient>
             </defs>
           </LineChart>
         </Box>
         <Box component='div' sx={{
           width: '95%',
-          background: '#FFFFFF',
+          background: colors.white,
           display: 'flex',
           p: '20px 20px',
           mt: 2,
@@ -322,12 +322,12 @@ const handleClick = (id) => {
             gap: 2
           }}>
             <Typography component='h3' sx={{
-              color: '#000000',
+              color: colors.textColor_4,
               fontSize: '20px',
               fontWeight: 600
             }}>Recent Orders</Typography>
             <Box component='div'>
-              <IconButton onClick={handleSortClick} sx={{ color: '#000000' }}><Icon fontSize='small' component={MoreVertRoundedIcon} /></IconButton>
+              <IconButton onClick={handleSortClick} sx={{ color: colors.iconColor_7 }}><Icon fontSize='small' component={MoreVertRoundedIcon} /></IconButton>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -358,18 +358,18 @@ const handleClick = (id) => {
                       checked={purchases.length > 0 && selected.length === purchases.length}
                       onChange={handleSelectAllClick}
                       sx={{
-                        color: '#000000',
+                        color: colors.black,
                         '&.Mui-checked': {
-                          color: '#000000',
+                          color: colors.black,
                         },
                       }} />
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Product</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Order ID</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Date</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Customer Name</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Status</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Amount</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Product</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Order ID</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Date</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Customer Name</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Status</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Amount</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -385,8 +385,8 @@ const handleClick = (id) => {
                             status === 'Delivered'
                               ? colors.primary // Green for Delivered
                               : status === 'Canceled'
-                                ? '#FFC107' // Orange for Canceled
-                                : '#E0E0E0', // Default grey
+                                ? colors.yellow // Orange for Canceled
+                                : colors.grayLight_5, // Default grey
                           borderRadius: '50%',
                           display: 'inline-block',
                           marginRight: 8,
@@ -397,8 +397,8 @@ const handleClick = (id) => {
                             status === 'Delivered'
                               ? colors.primary
                               : status === 'Canceled'
-                                ? '#FFC107'
-                                : '#757575',
+                                ? colors.yellow
+                                : colors.gray_1,
                           fontWeight: 500,
                         }));
                         return (
@@ -413,17 +413,17 @@ const handleClick = (id) => {
                                 checked={isSelected(purchase.id)}
                                 onChange={() => handleClick(purchase.id)}
                                 sx={{
-                                  color: '#000000',
+                                  color: colors.black,
                                   '&.Mui-checked': {
-                                    color: '#000000',
+                                    color: colors.black,
                                   },
                                 }} />
                             </TableCell>
-                            <TableCell component='th' scope='row' sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }}>
+                            <TableCell component='th' scope='row' sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>
                               {purchase.product}
                             </TableCell>
-                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: '#000000', }}>{purchase.orderId}</TableCell>
-                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }}>{purchase.date}</TableCell>
+                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black, }}>{purchase.orderId}</TableCell>
+                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>{purchase.date}</TableCell>
                             <TableCell>
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 <Avatar alt={purchase.customerName}
@@ -435,10 +435,10 @@ const handleClick = (id) => {
                             <TableCell>
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 <StatusDot status={purchase.status} />
-                                <StatusText sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }} status={purchase.status}>{purchase.status}</StatusText>
+                                <StatusText sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} status={purchase.status}>{purchase.status}</StatusText>
                               </Box>
                             </TableCell>
-                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }} align="right">{purchase.amount}</TableCell>
+                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} align="right">{purchase.amount}</TableCell>
                           </TableRow>
                         )
                       })
@@ -446,7 +446,7 @@ const handleClick = (id) => {
                     <Typography variant='body1' component='p' sx={{
                       fontSize: '16px',
                       fontWeight: 600,
-                      color: '#232321',
+                      color: colors.textColor_3,
                     }}>No Purchases Found</Typography>
                 }
               </TableBody>
@@ -479,18 +479,18 @@ const handleClick = (id) => {
                       borderRadius: '8px',
                       fontSize: '14px',
                       fontWeight: 600,
-                      border: '1px solid #232321',
-                      color: '#232321',
-                      backgroundColor: 'transparent',
+                      border: `1px solid ${colors.borderColor_4}`,
+                      color: colors.grayDark_1,
+                      backgroundColor: colors.transparent,
                       '&:hover': {
-                        backgroundColor: 'transparent',
-                        color: '#232321',
+                        backgroundColor: colors.transparent,
+                        color: colors.grayDark_1,
                       },
                     }}
                     slots={{
                       next: () => (
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, pr: 1 }}>
-                          <Typography variant='button' component='p' sx={{ color: '#232321' }} >Next</Typography>
+                          <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Next</Typography>
                           <Icon component={ArrowForwardIosRoundedIcon}
                             sx={{
                               fontSize: '14px'
@@ -513,12 +513,12 @@ const handleClick = (id) => {
                       borderRadius: '8px',
                       fontSize: '14px',
                       fontWeight: 600,
-                      border: '1px solid #232321',
-                      color: '#232321',
-                      backgroundColor: 'transparent',
+                      border: `1px solid ${colors.borderColor_4}`,
+                      color: colors.grayDark_1,
+                      backgroundColor: colors.transparent,
                       '&:hover': {
-                        backgroundColor: 'transparent',
-                        color: '#232321',
+                        backgroundColor: colors.transparent,
+                        color: colors.grayDark_1,
                       },
                     }}
                     slots={{
@@ -529,7 +529,7 @@ const handleClick = (id) => {
                               fontSize: '14px'
                             }}
                           />
-                          <Typography variant='button' component='p' sx={{ color: '#232321' }} >Prev</Typography>
+                          <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Prev</Typography>
                         </Box>
                       ),
                     }}
@@ -547,19 +547,19 @@ const handleClick = (id) => {
                     borderRadius: '8px',
                     fontSize: '14px',
                     fontWeight: 600,
-                    color: item.selected ? '#FFFFFF' : '#232321',
+                    color: item.selected ? colors.white : colors.grayDark_1,
                     '&.Mui-selected': {
-                      backgroundColor: '#232321',
-                      color: '#FFFFFF',
+                      backgroundColor: colors.grayDark_1,
+                      color: colors.white,
                       '&:hover': {
-                        backgroundColor: '#232321',
-                        color: '#FFFFFF',
+                        backgroundColor: colors.grayDark_1,
+                        color: colors.white,
                       },
                     },
-                    border: '1px solid #232321',
+                    border: `1px solid ${colors.borderColor_4}`,
                     '&:hover': {
-                      backgroundColor: '#232321',
-                      color: '#FFFFFF'
+                      backgroundColor: colors.grayDark_1,
+                      color: colors.white
                     }
                   }}
 

@@ -1,21 +1,22 @@
 import { Box, Chip, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
+import { colors } from '../../../services';
 
 export const Inputs = ({ multiline, title, placeholder, value, onChange, style }) => {
     return (
         <Box component='div' sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            <Typography variant='body1' component='p' sx={{
+            <Typography variant='body1' color={colors.textColor_3} component='p' sx={{
                 fontSize: '20px',
                 fontWeight: 'bold'
             }}>{title}</Typography>
             <TextField variant='outlined' value={value} onChange={onChange} multiline={multiline} rows={multiline ? 7 : 1} placeholder={placeholder} size='small' sx={[{
                 maxWidth: '500px',
                 '& .MuiInputBase-input::placeholder': {
-                    color: '#1F1A24',
+                    color: colors.placeholderColor_2,
                     opacity: 1
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#232321', // border color here
+                    borderColor: colors.borderColor_4, // border color here
                 },
             }, style]}
                 InputProps={{
@@ -51,6 +52,7 @@ export const Tags = ({ title, placeholder, style, value, onChange}) => {
     <Box component='div' sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
       <Typography variant='body1' component='p' sx={{
         fontSize: '20px',
+        color: colors.textColor_3,
         fontWeight: 'bold'
       }}>
         {title}
@@ -64,7 +66,7 @@ export const Tags = ({ title, placeholder, style, value, onChange}) => {
           gap: 1,
           maxWidth: '500px',
           p: 1,
-          border: '1px solid #232321',
+          border: `1px solid ${colors.borderColor_4}`,
           borderRadius: '8px',
           ...style,
         }}
@@ -74,7 +76,7 @@ export const Tags = ({ title, placeholder, style, value, onChange}) => {
             key={index}
             label={tag}
             onDelete={() => handleDelete(tag)}
-            sx={{ backgroundColor: '#36323B', color: '#E9E9EA' }}
+            sx={{ backgroundColor: colors.bgColor_1, color: colors.grayLight_8 }}
           />
         ))}
 
@@ -96,7 +98,7 @@ export const Tags = ({ title, placeholder, style, value, onChange}) => {
           }}
           sx={{
             '& .MuiInputBase-input::placeholder': {
-              color: '#1F1A24',
+              color: colors.placeholderColor_2,
               opacity: 1,
             },
           }}

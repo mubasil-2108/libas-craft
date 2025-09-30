@@ -124,17 +124,17 @@ const OrderList = () => {
                     alignItems: 'center',
                     borderRadius: '10px',
                     p: '10px 15px',
-                    background: '#F4F2F2'
+                    background: colors.grayLight_6
                 }}>
                     <Box>
                         <Typography component='p' sx={{
-                            color: '#232321',
+                            color: colors.textColor_3,
                             fontSize: '14px',
                             fontWeight: 500,
                         }}>{selectedStatus ? selectedStatus : 'All'}</Typography>
                     </Box>
                     <Box>
-                        <IconButton sx={{ color: '#232321', }} onClick={handleStatusClick}>
+                        <IconButton sx={{ color: colors.iconColor_6, }} onClick={handleStatusClick}>
                             <Icon component={KeyboardArrowDownRoundedIcon}  sx={{
                                 transform: statusAnchorEl ? 'rotate(180deg)' : 'rotate(0deg)',
                             }}/>
@@ -158,19 +158,19 @@ const OrderList = () => {
                             }
                         }}
                     >
-                        <MenuItem onClick={() => handleStatusChange(null)} selected={selectedStatus === null} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: '#000000' }} component={FiberManualRecordIcon} /> All</MenuItem>
+                        <MenuItem onClick={() => handleStatusChange(null)} selected={selectedStatus === null} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_7 }} component={FiberManualRecordIcon} /> All</MenuItem>
                         <Divider variant='middle' />
-                        <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.primary }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
+                        <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_5 }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
                         <Divider variant='middle' />
-                        <MenuItem onClick={() => handleStatusChange('Pending')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: '#E0E0E0' }} component={FiberManualRecordIcon} /> Pending</MenuItem>
+                        <MenuItem onClick={() => handleStatusChange('Pending')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_10 }} component={FiberManualRecordIcon} /> Pending</MenuItem>
                         <Divider variant='middle' />
-                        <MenuItem onClick={() => handleStatusChange('Canceled')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: '#FFC107' }} component={FiberManualRecordIcon} /> Cancelled</MenuItem>
+                        <MenuItem onClick={() => handleStatusChange('Canceled')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_8 }} component={FiberManualRecordIcon} /> Cancelled</MenuItem>
                     </Menu>
                 </Box>
             </Box>
             <Box component='div' sx={{
                 width: '95%',
-                background: '#FFFFFF',
+                background: colors.white,
                 display: 'flex',
                 p: '20px 20px',
                 mt: 2,
@@ -186,12 +186,12 @@ const OrderList = () => {
                     gap: 2
                 }}>
                     <Typography component='h3' sx={{
-                        color: '#000000',
+                        color: colors.textColor_4,
                         fontSize: '20px',
                         fontWeight: 600
                     }}>Recent Purchases</Typography>
                     <Box component='div'>
-                        <IconButton onClick={handleSortClick} sx={{ color: '#000000' }}><Icon fontSize='small' component={MoreVertRoundedIcon} /></IconButton>
+                        <IconButton onClick={handleSortClick} sx={{ color: colors.black }}><Icon fontSize='small' component={MoreVertRoundedIcon} /></IconButton>
                         <Menu
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
@@ -222,18 +222,18 @@ const OrderList = () => {
                                         checked={purchases.length > 0 && selected.length === purchases.length}
                                         onChange={handleSelectAllClick}
                                         sx={{
-                                            color: '#000000',
+                                            color: colors.black,
                                             '&.Mui-checked': {
-                                                color: '#000000',
+                                                color: colors.black,
                                             },
                                         }} />
                                 </TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Product</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Order ID</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Date</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Customer Name</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Status</TableCell>
-                                <TableCell align="right" sx={{ fontWeight: 'bold', color: '#232321', opacity: 0.8 }}>Amount</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Product</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Order ID</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Date</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Customer Name</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Status</TableCell>
+                                <TableCell align="right" sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Amount</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -249,8 +249,8 @@ const OrderList = () => {
                                                     status === 'Delivered'
                                                         ? colors.primary // Green for Delivered
                                                         : status === 'Canceled'
-                                                            ? '#FFC107' // Orange for Canceled
-                                                            : '#E0E0E0', // Default grey
+                                                            ? colors.yellow // Orange for Canceled
+                                                            : colors.grayLight_5, // Default grey
                                                 borderRadius: '50%',
                                                 display: 'inline-block',
                                                 marginRight: 8,
@@ -261,8 +261,8 @@ const OrderList = () => {
                                                     status === 'Delivered'
                                                         ? colors.primary
                                                         : status === 'Canceled'
-                                                            ? '#FFC107'
-                                                            : '#757575',
+                                                            ? colors.yellow
+                                                            : colors.gray_1,
                                                 fontWeight: 500,
                                             }));
                                             return (
@@ -277,17 +277,17 @@ const OrderList = () => {
                                                             checked={isSelected(purchase.id)}
                                                             onChange={() => handleClick(purchase.id)}
                                                             sx={{
-                                                                color: '#000000',
+                                                                color: colors.black,
                                                                 '&.Mui-checked': {
-                                                                    color: '#000000',
+                                                                    color: colors.black,
                                                                 },
                                                             }} />
                                                     </TableCell>
-                                                    <TableCell component='th' scope='row' sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }}>
+                                                    <TableCell component='th' scope='row' sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>
                                                         {purchase.product}
                                                     </TableCell>
-                                                    <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: '#000000', }}>{purchase.orderId}</TableCell>
-                                                    <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }}>{purchase.date}</TableCell>
+                                                    <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black, }}>{purchase.orderId}</TableCell>
+                                                    <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>{purchase.date}</TableCell>
                                                     <TableCell>
                                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                             <Avatar alt={purchase.customerName}
@@ -299,10 +299,10 @@ const OrderList = () => {
                                                     <TableCell>
                                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                             <StatusDot status={purchase.status} />
-                                                            <StatusText sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }} status={purchase.status}>{purchase.status}</StatusText>
+                                                            <StatusText sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} status={purchase.status}>{purchase.status}</StatusText>
                                                         </Box>
                                                     </TableCell>
-                                                    <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: '#000000' }} align="right">{purchase.amount}</TableCell>
+                                                    <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} align="right">{purchase.amount}</TableCell>
                                                 </TableRow>
                                             )
                                         })
@@ -310,7 +310,7 @@ const OrderList = () => {
                                     <Typography variant='body1' component='p' sx={{
                                         fontSize: '16px',
                                         fontWeight: 600,
-                                        color: '#232321',
+                                        color: colors.textColor_3,
                                     }}>No Purchases Found</Typography>
                             }
                         </TableBody>
@@ -343,18 +343,18 @@ const OrderList = () => {
                                         borderRadius: '8px',
                                         fontSize: '14px',
                                         fontWeight: 600,
-                                        border: '1px solid #232321',
-                                        color: '#232321',
-                                        backgroundColor: 'transparent',
+                                        border: `1px solid ${colors.borderColor_4}`,
+                                        color: colors.grayDark_1,
+                                        backgroundColor: colors.transparent,
                                         '&:hover': {
-                                            backgroundColor: 'transparent',
-                                            color: '#232321',
+                                            backgroundColor: colors.transparent,
+                                            color: colors.grayDark_1,
                                         },
                                     }}
                                     slots={{
                                         next: () => (
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, pr: 1 }}>
-                                                <Typography variant='button' component='p' sx={{ color: '#232321' }} >Next</Typography>
+                                                <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Next</Typography>
                                                 <Icon component={ArrowForwardIosRoundedIcon}
                                                     sx={{
                                                         fontSize: '14px'
@@ -377,12 +377,12 @@ const OrderList = () => {
                                         borderRadius: '8px',
                                         fontSize: '14px',
                                         fontWeight: 600,
-                                        border: '1px solid #232321',
-                                        color: '#232321',
-                                        backgroundColor: 'transparent',
+                                        border: `1px solid ${colors.borderColor_4}`,
+                                        color: colors.grayDark_1,
+                                        backgroundColor: colors.transparent,
                                         '&:hover': {
-                                            backgroundColor: 'transparent',
-                                            color: '#232321',
+                                            backgroundColor: colors.transparent,
+                                            color: colors.grayDark_1,
                                         },
                                     }}
                                     slots={{
@@ -393,7 +393,7 @@ const OrderList = () => {
                                                         fontSize: '14px'
                                                     }}
                                                 />
-                                                <Typography variant='button' component='p' sx={{ color: '#232321' }} >Prev</Typography>
+                                                <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Prev</Typography>
                                             </Box>
                                         ),
                                     }}
@@ -411,19 +411,19 @@ const OrderList = () => {
                                     borderRadius: '8px',
                                     fontSize: '14px',
                                     fontWeight: 600,
-                                    color: item.selected ? '#FFFFFF' : '#232321',
+                                    color: item.selected ? colors.white : colors.grayDark_1,
                                     '&.Mui-selected': {
-                                        backgroundColor: '#232321',
-                                        color: '#FFFFFF',
+                                        backgroundColor: colors.grayDark_1,
+                                        color: colors.white,
                                         '&:hover': {
-                                            backgroundColor: '#232321',
-                                            color: '#FFFFFF',
+                                            backgroundColor: colors.grayDark_1,
+                                            color: colors.white,
                                         },
                                     },
-                                    border: '1px solid #232321',
+                                    border: `1px solid ${colors.borderColor_4}`,
                                     '&:hover': {
-                                        backgroundColor: '#232321',
-                                        color: '#FFFFFF'
+                                        backgroundColor: colors.grayDark_1,
+                                        color: colors.white
                                     }
                                 }}
 

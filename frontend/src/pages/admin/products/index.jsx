@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { AdminFooter } from '../../../components/admin'
 import { Outlet, useLocation } from 'react-router-dom'
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { colors } from '../../../services';
 
 const Products = () => {
     const location = useLocation();
@@ -81,12 +82,12 @@ const Products = () => {
                             }}
                         >
                             <Typography component='h3' sx={{
-                                color: '#000000',
+                                color: colors.textColor_4,
                                 fontWeight: 'bold',
                                 fontSize: '24px'
                             }}>{isProductDetail || isAddNewProduct ? breadcrumb.split(' > ')[2] : breadcrumb.split(' > ')[1]}</Typography>
                             <Typography component='p' sx={{
-                                color: '#000000',
+                                color: colors.textColor_4,
                                 fontWeight: 400,
                                 fontSize: '16px'
                             }}>{breadcrumb}</Typography>
@@ -96,15 +97,15 @@ const Products = () => {
                             <Box component={Link} href='/admin/products/add-new-product'>
                                 <Button variant='contained' startIcon={<Icon component={AddCircleOutlineOutlinedIcon} />}
                                     sx={{
-                                        color: '#fff',
-                                        backgroundColor: '#000000',
+                                        color: colors.white,
+                                        backgroundColor: colors.black,
                                         padding: '10px 15px',
                                         fontSize: '14px',
                                         fontWeight: 'bold',
                                         borderRadius: '8px',
-                                        border: '1px solid #000000',
+                                        border: `1px solid ${colors.borderColor_3}`,
                                         '&:hover': {
-                                            border: '1px solid #000000',
+                                            border: `1px solid ${colors.borderColor_3}`,
                                         }
                                     }}
                                 >

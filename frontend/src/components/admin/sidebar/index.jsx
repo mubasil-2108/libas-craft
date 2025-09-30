@@ -43,7 +43,7 @@ const AdminSidebar = () => {
             // height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#FAFAFA',
+            backgroundColor: colors.grayLight_1,
             padding: '20px',
         }}>
             <Box component='img' src='/logo.jpeg' onClick={() => navigate('/admin/')} sx={{
@@ -67,13 +67,13 @@ const AdminSidebar = () => {
                                     alignItems: 'center',
                                     padding: '10px 20px',
                                     gap: 1,
-                                    color: isActive ? '#fff' : '#000',
+                                    color: isActive ? colors.white : colors.black,
                                     textDecoration: 'none',
                                     borderRadius: '10px',
-                                    background: isActive ? colors.primary : '#FAFAFA',
+                                    background: isActive ? colors.primary : colors.grayLight_1,
                                     '&:hover': {
                                         background: colors.primary,
-                                        color: '#fff'
+                                        color: colors.white
                                     }
                                 }}
                             >
@@ -91,15 +91,15 @@ const AdminSidebar = () => {
                         display: 'flex',
                         alignItems: 'center',
                         padding: '10px 0px',
-                        color: '#000',
+                        color: colors.black,
                         justifyContent: 'space-between',
                         textDecoration: 'none',
                         borderRadius: '10px',
-                        background: '#FAFAFA',
+                        background: colors.grayLight_1,
                         cursor: 'pointer',
                     }}
                 >
-                    <Typography variant='body1' fontSize={'20px'} fontWeight={'bold'}>Categories</Typography>
+                    <Typography variant='body1' fontSize={'20px'} color={colors.textColor_3} fontWeight={'bold'}>Categories</Typography>
                     <Icon sx={{
                         fontSize: '20px',
                         transform: showCategories ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -127,11 +127,11 @@ const AdminSidebar = () => {
                                             cursor: 'pointer',
                                             mb: '10px'
                                         }}>
-                                        <Typography color='#232321' variant='body1' fontSize={'16px'}>{category.name}</Typography>
+                                        <Typography color= {colors.textColor_3} variant='body1' fontSize={'16px'}>{category.name}</Typography>
                                         <Box component='div' sx={{
                                             width: '35px',
                                             height: '30px',
-                                            background: isCategoryActive ? colors.primary : '#E7E7E3',
+                                            background: isCategoryActive ? colors.primary : colors.grayLight_3,
                                             borderRadius: '5px',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -139,7 +139,7 @@ const AdminSidebar = () => {
                                         }}>
                                             <Typography variant='body1' fontSize={'14px'} sx={{
                                                 textAlign: 'center',
-                                                color: isCategoryActive ? '#fff' : '#232321'
+                                                color: isCategoryActive ? colors.textColor_5 : colors.textColor_3
                                             }}>{category.productsNo}</Typography>
                                         </Box>
                                     </Box>

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getAllProducts } from '../../../store/slices/productSlice';
 import toast from 'react-hot-toast';
+import { colors } from '../../../services';
 
 const AllProducts = () => {
     const dispatch = useDispatch();
@@ -68,7 +69,7 @@ const AllProducts = () => {
                         <Typography variant='body1' component='p' sx={{
                             fontSize: '16px',
                             fontWeight: 600,
-                            color: '#232321',
+                            color: colors.textColor_3,
                         }}>No Products Found</Typography>
                 }
 
@@ -102,18 +103,18 @@ const AllProducts = () => {
                                                     borderRadius: '8px',
                                                     fontSize: '14px',
                                                     fontWeight: 600,
-                                                    border: '1px solid #232321',
-                                                    color: '#232321',
-                                                    backgroundColor: 'transparent',
+                                                    border: `1px solid ${colors.borderColor_4}`,
+                                                    color: colors.grayDark_1,
+                                                    backgroundColor: colors.transparent,
                                                     '&:hover': {
-                                                        backgroundColor: 'transparent',
-                                                        color: '#232321',
+                                                        backgroundColor: colors.transparent,
+                                                        color: colors.grayDark_1,
                                                     },
                                                 }}
                                                 slots={{
                                                     next: () => (
                                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, pr: 1 }}>
-                                                            <Typography variant='button' component='p' sx={{ color: '#232321' }} >Next</Typography>
+                                                            <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Next</Typography>
                                                             <Icon component={ArrowForwardIosRoundedIcon}
                                                                 sx={{
                                                                     fontSize: '14px'
@@ -136,12 +137,12 @@ const AllProducts = () => {
                                                     borderRadius: '8px',
                                                     fontSize: '14px',
                                                     fontWeight: 600,
-                                                    border: '1px solid #232321',
-                                                    color: '#232321',
-                                                    backgroundColor: 'transparent',
+                                                    border: `1px solid ${colors.borderColor_4}`,
+                                                    color: colors.grayDark_1,
+                                                    backgroundColor: colors.transparent,
                                                     '&:hover': {
-                                                        backgroundColor: 'transparent',
-                                                        color: '#232321',
+                                                        backgroundColor: colors.transparent,
+                                                        color: colors.grayDark_1,
                                                     },
                                                 }}
                                                 slots={{
@@ -152,7 +153,7 @@ const AllProducts = () => {
                                                                     fontSize: '14px'
                                                                 }}
                                                             />
-                                                            <Typography variant='button' component='p' sx={{ color: '#232321' }} >Prev</Typography>
+                                                            <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Prev</Typography>
                                                         </Box>
                                                     ),
                                                 }}
@@ -170,19 +171,19 @@ const AllProducts = () => {
                                                 borderRadius: '8px',
                                                 fontSize: '14px',
                                                 fontWeight: 600,
-                                                color: item.selected ? '#FFFFFF' : '#232321',
+                                                color: item.selected ? colors.white : colors.grayDark_1,
                                                 '&.Mui-selected': {
-                                                    backgroundColor: '#232321',
-                                                    color: '#FFFFFF',
+                                                    backgroundColor: colors.grayDark_1,
+                                                    color: colors.white,
                                                     '&:hover': {
-                                                        backgroundColor: '#232321',
-                                                        color: '#FFFFFF',
+                                                        backgroundColor: colors.grayDark_1,
+                                                        color: colors.white,
                                                     },
                                                 },
-                                                border: '1px solid #232321',
+                                                border: `1px solid ${colors.borderColor_4}`,
                                                 '&:hover': {
-                                                    backgroundColor: '#232321',
-                                                    color: '#FFFFFF'
+                                                    backgroundColor: colors.grayDark_1,
+                                                    color: colors.white
                                                 }
                                             }}
 

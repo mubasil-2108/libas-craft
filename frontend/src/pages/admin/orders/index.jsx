@@ -4,6 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { AdminFooter } from '../../../components/admin';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import { colors } from '../../../services';
 // import { purchases } from '../../../services/utils/constants';
 
 
@@ -92,12 +93,12 @@ const Orders = () => {
                             }}
                         >
                             <Typography component='h3' sx={{
-                                color: '#000000',
+                                color: colors.textColor_4,
                                 fontWeight: 'bold',
                                 fontSize: '24px'
                             }}>{isOrderDetail ? breadcrumb.split(' > ')[2] : breadcrumb.split(' > ')[1]}</Typography>
                             <Typography component='p' sx={{
-                                color: '#000000',
+                                color: colors.textColor_4,
                                 fontWeight: 400,
                                 fontSize: '16px'
                             }}>{breadcrumb}</Typography>
@@ -112,11 +113,11 @@ const Orders = () => {
                                     alignItems: 'center',
                                 }}>
                                     <Box>
-                                        <Icon component={CalendarMonthOutlinedIcon} sx={{ color: '#232321', }} />
+                                        <Icon component={CalendarMonthOutlinedIcon} sx={{ color: colors.iconColor_6, }} />
                                     </Box>
                                     <Box>
                                         <Typography component='p' sx={{
-                                            color: '#000000',
+                                            color: colors.textColor_4,
                                             fontSize: '16px',
                                             fontWeight: 500,
                                         }}>Feb 16,2022 - Feb 20,2022</Typography>

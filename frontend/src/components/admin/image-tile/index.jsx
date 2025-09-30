@@ -8,7 +8,7 @@ import { colors } from '../../../services';
 const ImageTile = ({ imageTile,apiData, onDelete, }) => {
     return (
         <Box component='div' sx={{
-            background: '#FAFAFA',
+            background: colors.grayLight_1,
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
@@ -24,14 +24,14 @@ const ImageTile = ({ imageTile,apiData, onDelete, }) => {
                     top: -10,
                     right: -1,
                     zIndex: 1,
-                    background: '#ffffff',
-                    boxShadow: '0px 1px 4px rgba(0,0,0,0.2)',
+                    background: colors.iconBgColor_2,
+                    boxShadow: `0px 1px 4px ${colors.blackLight_20}`,
                     '&:hover': {
-                        background: '#f5f5f5',
+                        background: colors.iconBgColor_4,
                     },
                 }}
             >
-                <Icon component={CloseIcon} onClick={() => onDelete()} sx={{ fontSize: 20, color: '#FF4D4D' }} />
+                <Icon component={CloseIcon} onClick={() => onDelete()} sx={{ fontSize: 20, color: colors.iconColor_2 }} />
             </IconButton>
 
             <Box component='img' width={'70px'} height={'70px'}
@@ -40,7 +40,7 @@ const ImageTile = ({ imageTile,apiData, onDelete, }) => {
                     objectFit: 'cover',
                     borderRadius: '10px',
                     border: 'none',
-                    background: '#000000',
+                    background: colors.black,
                     opacity: imageTile && imageTile.progress < 100 ? 0.5 : 1, 
                     transition: 'opacity 0.3s ease',
                 }}
@@ -49,21 +49,19 @@ const ImageTile = ({ imageTile,apiData, onDelete, }) => {
                 <Typography variant='body1' component='p' sx={{
                     fontSize: '16px',
                     fontWeight: 600,
-                    color: '#232321'
+                    color: colors.textColor_3
                 }}>{imageTile ? imageTile.name : apiData?.name}</Typography>
                 <LinearProgress variant="determinate" value={imageTile ? imageTile.progress : 100} color='inherit' sx={{
                     color: colors.primary,
-                    // width: '300px',
-                    // minWidth:'200px',
-                    background: '#4A69E2',
+                    background: colors.blue_1,
                     borderRadius: '8px'
                 }} />
             </Box>
             {
                  imageTile?.status || apiData?.status === 'uploaded' ?
-                    <Icon component={CheckCircleIcon} sx={{ color: colors.primary, fontSize: '30px' }} />
+                    <Icon component={CheckCircleIcon} sx={{ color: colors.iconColor_5, fontSize: '30px' }} />
                     :
-                    <Icon component={CancelIcon} sx={{ color: '#FF4D4D', fontSize: '30px' }} />
+                    <Icon component={CancelIcon} sx={{ color: colors.iconColor_2, fontSize: '30px' }} />
             }
         </Box>
     )

@@ -40,7 +40,7 @@ const AdminHeader = () => {
     }
 
     return (
-        <Box component='div' bgcolor={'#FAFAFA'} maxWidth={'100%'} minHeight={'70px'} sx={{
+        <Box component='div' bgcolor={colors.grayLight_1} maxWidth={'100%'} minHeight={'70px'} sx={{
             justifyContent: 'flex-end',
             alignItems: 'center',
             display: 'flex',
@@ -61,33 +61,33 @@ const AdminHeader = () => {
                         onFocus={(event => setSearchAnchorEl(event.currentTarget))}
                         sx={{
                             width: 250,
-                            background: '#fff',
+                            background: colors.white,
                             borderRadius: '10px',
                             '& .MuiOutlinedInput-root': {
                                 borderRadius: '10px',
                                 '& fieldset': {
-                                    borderColor: colors.primary,
+                                    borderColor: colors.borderColor_2,
                                 },
                                 '&:hover fieldset': {
-                                    borderColor: colors.primary,
+                                    borderColor: colors.borderColor_2,
                                 },
                                 '&.Mui-focused fieldset': {
-                                    borderColor: colors.primary,
+                                    borderColor: colors.borderColor_2,
                                 },
                             },
                         }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <SearchOutlinedIcon fontSize='small' sx={{ color: '#70706E' }} />
+                                    <SearchOutlinedIcon fontSize='small' sx={{ color: colors.iconColor_1 }} />
                                 </InputAdornment>
                             ),
                             endAdornment: (
                                 <InputAdornment position="end" sx={{
-                                    borderLeft: `1px solid ${colors.primary}`,
+                                    borderLeft: `1px solid ${colors.borderColor_2}`,
                                     pl: '10px',
                                 }}>
-                                    <IconButton onClick={() => { setShowSearch(false); setSearchQuery(''); }} sx={{ color: colors.primary, width: '10px', height: '10px', borderRadius: '50%', border: `1px solid ${colors.primary}` }}>
+                                    <IconButton onClick={() => { setShowSearch(false); setSearchQuery(''); }} sx={{ color: colors.iconColor_5, width: '10px', height: '10px', borderRadius: '50%', border: `1px solid ${colors.borderColor_2}` }}>
                                         <CloseOutlinedIcon fontSize='inherit' sx={{ fontSize: '10px', }} />
                                     </IconButton>
                                 </InputAdornment>
@@ -112,7 +112,7 @@ const AdminHeader = () => {
                             }}
                         >
                             <Box component='div'>
-                                <Typography variant="h5" sx={{ py: 1, fontWeight: 'bold', color: '#232321' }}>Products</Typography>
+                                <Typography variant="h5" sx={{ py: 1, fontWeight: 'bold', color: colors.textColor_3 }}>Products</Typography>
                             </Box>
                             <Box component='div' sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                                 {filteredProducts.length > 0 ? (
@@ -139,7 +139,7 @@ const AdminHeader = () => {
                                                         />
                                                         <Typography
                                                             variant="body2"
-                                                            sx={{ color: '#232321', fontWeight: 'bold' }}
+                                                            sx={{ color: colors.textColor_3, fontWeight: 'bold' }}
                                                         >
                                                             {product.name}
                                                         </Typography>
@@ -149,7 +149,7 @@ const AdminHeader = () => {
 
                                         {!showAllResults && filteredProducts.length > 3 && (
                                             <MenuItem onClick={() => setShowAllResults(true)}>
-                                                <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 'bold' }}>
+                                                <Typography variant="body2" sx={{ color: colors.textColor_6, fontWeight: 'bold' }}>
                                                     See all products
                                                 </Typography>
                                             </MenuItem>
@@ -157,7 +157,7 @@ const AdminHeader = () => {
                                     </>
                                 ) : (
                                     <MenuItem disabled>
-                                        <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                                        <Typography variant="body2" color={colors.textColor_3} sx={{ fontStyle: 'italic' }}>
                                             No products found
                                         </Typography>
                                     </MenuItem>
@@ -168,14 +168,14 @@ const AdminHeader = () => {
                 </>
             ) : (
                 <IconButton onClick={() => setShowSearch(true)}>
-                    <SearchOutlinedIcon sx={{ color: '#000' }} />
+                    <SearchOutlinedIcon sx={{ color: colors.iconColor_7 }} />
                 </IconButton>
             )}
             <IconButton onClick={() => setOpen(true)} sx={{
-                color: '#000', '&:hover': { color: '#000' }
+                color: colors.black, '&:hover': { color: colors.iconColor_7 }
             }}>
                 <Icon sx={{
-                    color: '#000'
+                    color: colors.iconColor_7
                 }} component={NotificationsIcon} />
             </IconButton>
             <Fragment>
@@ -194,9 +194,9 @@ const AdminHeader = () => {
                 >
                     <Box sx={{ p: 2, width: '400px', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Box component='div' sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant='h6' component='p' sx={{ color: '#232321', fontWeight: 'bold' }}>Notifications</Typography>
-                            <IconButton onClick={() => setOpen(false)} sx={{ color: '#000', width: '10px', height: '10px', borderRadius: '50%', border: '1px solid #000' }}>
-                                <Icon fontSize='inherit' sx={{ color: '#232321', fontSize: '12px' }} component={CloseOutlinedIcon} />
+                            <Typography variant='h6' component='p' sx={{ color: colors.textColor_3, fontWeight: 'bold' }}>Notifications</Typography>
+                            <IconButton onClick={() => setOpen(false)} sx={{ color: colors.iconColor_7, width: '10px', height: '10px', borderRadius: '50%', border: `1px solid ${colors.borderColor_3}` }}>
+                                <Icon fontSize='inherit' sx={{ color: colors.iconColor_6, fontSize: '12px' }} component={CloseOutlinedIcon} />
                             </IconButton>
                         </Box>
                     </Box>
@@ -205,43 +205,43 @@ const AdminHeader = () => {
                             {
                                 notifications.length > 0 ?
                                     notifications.map((notification) => (
-                                        <Box key={notification.id} component='div' sx={{ display: 'flex', gap: 2, flexDirection: 'row', background: '#FAFAFA', p: 1, borderRadius: '10px' }}>
+                                        <Box key={notification.id} component='div' sx={{ display: 'flex', gap: 2, flexDirection: 'row', background: colors.grayLight_1, p: 1, borderRadius: '10px' }}>
                                             <Box component='img' src='/productImg.png' sx={{ width: '70px', height: '70px', objectFit: 'contain', borderRadius: '10px' }} />
                                             <Box component='div' sx={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'space-between', }}>
                                                 <Box component='div' sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                     <Box component='div' sx={{ display: 'flex', flexDirection: 'column' }}>
-                                                        <Typography component='p' sx={{ color: '#232321', fontSize: '16px', fontWeight: 600 }}>{notification.title}</Typography>
-                                                        <Typography component='p' sx={{ color: '#232321', fontSize: '14px', fontWeight: 600 }}>{notification.price === null ? '' : `Rs.${notification.price}`}</Typography>
+                                                        <Typography component='p' sx={{ color: colors.textColor_3, fontSize: '16px', fontWeight: 600 }}>{notification.title}</Typography>
+                                                        <Typography component='p' sx={{ color: colors.textColor_3, fontSize: '14px', fontWeight: 600 }}>{notification.price === null ? '' : `Rs.${notification.price}`}</Typography>
                                                     </Box>
-                                                    <Chip variant='filled' color='default' sx={{ background: colors.primary, color: '#FAFAFA', borderRadius: '10px' }} label={notification.status} />
+                                                    <Chip variant='filled' color='default' sx={{ background: colors.primary, color: colors.grayLight_1, borderRadius: '10px' }} label={notification.status} />
                                                 </Box>
-                                                <Typography component='p' sx={{ color: 'rgba(35,35,33,0.8)', fontSize: '12px', fontWeight: 600 }}>{notification.date}</Typography>
+                                                <Typography component='p' sx={{ color: colors.textColor_2, fontSize: '12px', fontWeight: 600 }}>{notification.date}</Typography>
                                             </Box>
                                         </Box>
                                     ))
                                     :
-                                    <Typography variant='body1' component='p' sx={{ color: '#232321', fontSize: '14px', fontWeight: 600 }}>No new notifications</Typography>
+                                    <Typography variant='body1' component='p' sx={{ color: colors.textColor_3, fontSize: '14px', fontWeight: 600 }}>No new notifications</Typography>
                             }
                         </Box>
                     </DialogContent>
                     <DialogActions sx={{ justifyContent: 'space-between' }}>
                         <Button startIcon={<Icon component={DoneOutlinedIcon} />} sx={{ color: colors.primary, borderRadius: '10px', fontSize: '14px' }}>Mark all as read</Button>
-                        <Button sx={{ background: colors.primary, color: '#FFFFFF', borderRadius: '10px', fontSize: '12px', px: 2 }}>View all notificaton</Button>
+                        <Button sx={{ background: colors.primary, color: colors.white, borderRadius: '10px', fontSize: '12px', px: 2 }}>View all notificaton</Button>
                     </DialogActions>
                 </Dialog>
             </Fragment>
             <Button variant='outlined' onClick={handleSortClick} endIcon={<Icon component={KeyboardArrowDownIcon} />}
                 sx={{
-                    color: anchorEl ? '#fff' : '#000',
+                    color: anchorEl ? colors.white : colors.black,
                     padding: '10px 15px',
                     fontSize: '14px',
                     fontWeight: 'bold',
                     borderRadius: '8px',
-                    backgroundColor: anchorEl ? colors.primary : 'transparent',
-                    border: `1px solid ${anchorEl ? colors.primary : '#000'}`,
+                    backgroundColor: anchorEl ? colors.primary : colors.transparent,
+                    border: `1px solid ${anchorEl ? colors.borderColor_2 : colors.borderColor_3}`,
                     '&:hover': {
-                        color: '#000',
-                        border: '1px solid #000',
+                        color: colors.black,
+                        border: `1px solid ${colors.borderColor_3}`,
                     }
                 }}
             >ADMIN</Button>
@@ -265,10 +265,10 @@ const AdminHeader = () => {
                 }}
             >
                 <Box sx={{ p: 2, pt: 0, pb: 1, display: 'flex', flexDirection: 'column', }}>
-                    <Typography variant='h6' component='p' sx={{ color: '#232321', fontWeight: 'bold' }}>Admin</Typography>
+                    <Typography variant='h6' component='p' sx={{ color: colors.textColor_3, fontWeight: 'bold' }}>Admin</Typography>
                 </Box>
-                <MenuItem onClick={handleSortClose} sx={{ justifyContent: 'space-between', color: '#232321', fontSize: '14px', py: 1.5 }}>Change password <Icon fontSize='inherit' sx={{ fontSize: '14px' }} component={ArrowForwardIosOutlinedIcon} /></MenuItem>
-                <MenuItem onClick={handleSortClose} sx={{ justifyContent: 'space-between', color: '#232321', fontSize: '14px', py: 1.5 }}>LOG OUT <Icon fontSize='inherit' sx={{ fontSize: '14px' }} component={LogoutOutlinedIcon} /></MenuItem>
+                <MenuItem onClick={handleSortClose} sx={{ justifyContent: 'space-between', color: colors.textColor_3, fontSize: '14px', py: 1.5 }}>Change password <Icon fontSize='inherit' sx={{ fontSize: '14px' }} component={ArrowForwardIosOutlinedIcon} /></MenuItem>
+                <MenuItem onClick={handleSortClose} sx={{ justifyContent: 'space-between', color: colors.textColor_3, fontSize: '14px', py: 1.5 }}>LOG OUT <Icon fontSize='inherit' sx={{ fontSize: '14px' }} component={LogoutOutlinedIcon} /></MenuItem>
             </Menu>
         </Box>
     )

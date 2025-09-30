@@ -3,6 +3,7 @@ import React from 'react'
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import { useNavigate } from 'react-router-dom';
+import { colors } from '../../../services';
 
 const ProductTile = ({ product }) => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const ProductTile = ({ product }) => {
                 minWidth: '300px',
                 maxWidth: '300px',
                 gap: 1,
-                background: '#FAFAFA',
+                background: colors.grayLight_1,
                 display: 'flex',
                 p: '15px 15px',
                 flexDirection: 'column',
@@ -64,7 +65,7 @@ const ProductTile = ({ product }) => {
                                 flexDirection: 'column',
                             }}>
                                 <Typography variant='h6' sx={{
-                                    color: '#232321',
+                                    color: colors.textColor_3,
 
                                     flexGrow: 1,
                                     flexShrink: 1,
@@ -73,7 +74,7 @@ const ProductTile = ({ product }) => {
                                 }}>{truncateText(product?.productName, 15)}</Typography>
 
                                 <Typography variant='h6' sx={{
-                                    color: '#000000',
+                                    color: colors.textColor_4,
                                     opacity: 0.6,
                                     fontSize: '14px',
                                     fontWeight: 600
@@ -81,18 +82,18 @@ const ProductTile = ({ product }) => {
                             </Box>
                             <Box component='div'  sx={{ alignItems: 'start' }}>
                                 <IconButton onClick={()=> navigate(`/admin/products/${product?._id}`)} size='small' sx={{
-                                    background: '#EFEFEF',
+                                    background: colors.iconBgColor_1,
                                     borderRadius: '10px'
                                 }}>
                                     <Icon component={MoreHorizOutlinedIcon} sx={{
-                                        color: '#232321',
+                                        color: colors.iconColor_6,
                                         opacity: 0.5
                                     }} />
                                 </IconButton>
                             </Box>
                         </Box>
                         <Typography variant='h5' component='span' sx={{
-                            color: '#232321',
+                            color: colors.textColor_3,
                             fontSize: '14px',
                             fontWeight: 600
                         }}>
@@ -111,13 +112,13 @@ const ProductTile = ({ product }) => {
                     <Typography variant='body1' component='p' sx={{
                         fontSize: '16px',
                         fontWeight: 600,
-                        color: '#232321',
+                        color: colors.textColor_3,
                     }}>Summary</Typography>
                     <Typography variant='body1' component='p' sx={{
                         fontSize: '14px',
                         fontWeight: 500,
                         opacity: 0.6,
-                        color: '#232321',
+                        color: colors.textColor_3,
                     }}>{truncateText(product?.productDescription, 40)}</Typography>
                 </Box>
 
@@ -127,7 +128,7 @@ const ProductTile = ({ product }) => {
                     p: '10px',
                     borderRadius: '8px',
                     gap: 1,
-                    border: '1px solid rgba(35,35,35,0.3)',
+                    border: `1px solid ${colors.borderColor_1}`,
                 }}>
                     <Box component='div' sx={{
                         display: 'flex',
@@ -139,7 +140,7 @@ const ProductTile = ({ product }) => {
                             fontSize: '14px',
                             fontWeight: 500,
                             opacity: 0.8,
-                            color: '#232321',
+                            color: colors.textColor_3,
                         }}>Sales</Typography>
                         <Box component='div' sx={{
                             display: 'flex',
@@ -148,14 +149,14 @@ const ProductTile = ({ product }) => {
                             gap: 1
                         }}>
                             <Icon component={ArrowUpwardOutlinedIcon} sx={{
-                                color: '#FFA52F',
+                                color: colors.iconColor_3,
                                 fontSize: '18px'
                             }} />
                             <Typography component='span' sx={{
                                 fontSize: '14px',
                                 fontWeight: 500,
                                 opacity: 0.6,
-                                color: '#000000',
+                                color: colors.textColor_4,
                             }}>{salesPercentage}%</Typography>
                         </Box>
                     </Box>
@@ -172,7 +173,7 @@ const ProductTile = ({ product }) => {
                             fontSize: '14px',
                             fontWeight: 500,
                             opacity: 0.8,
-                            color: '#232321',
+                            color: colors.textColor_3,
                         }}>Remaining Products</Typography>
                         <Box component='div' sx={{
                             display: 'flex',
@@ -180,12 +181,12 @@ const ProductTile = ({ product }) => {
                             alignItems: 'center',
                             gap: 1
                         }}>
-                            <LinearProgress variant='determinate' value={((product.stockQuantity - product.sales) / product.stockQuantity) * 100} color='inherit' sx={{ width: '50px', borderRadius: '10px', color: '#FFA52F' }} />
+                            <LinearProgress variant='determinate' value={((product.stockQuantity - product.sales) / product.stockQuantity) * 100} color='inherit' sx={{ width: '50px', borderRadius: '10px', color: colors.iconColor_3 }} />
                             <Typography component='span' sx={{
                                 fontSize: '14px',
                                 fontWeight: 500,
                                 opacity: 0.6,
-                                color: '#000000',
+                                color: colors.textColor_4,
                             }}>{product.stockQuantity - product.sales}</Typography>
                         </Box>
                     </Box>

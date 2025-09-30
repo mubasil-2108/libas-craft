@@ -146,7 +146,7 @@ const AddProduct = () => {
         }}>
             <Box component='div' sx={{
                 width: '95%',
-                background: '#FFFFFF',
+                background: colors.white,
                 display: 'flex',
                 p: '20px 20px',
                 flexDirection: 'column',
@@ -234,9 +234,9 @@ const AddProduct = () => {
                                 position: 'relative',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                background: '#FAFAFA',
+                                background: colors.grayLight_1,
                                 borderRadius: '10px',
-                                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.20)'
+                                boxShadow: `0px 2px 2px ${colors.blackLight_20}`,
                             }}>
                                 <Box
                                     component='img'
@@ -254,7 +254,7 @@ const AddProduct = () => {
 
                             {/* Product Gallery */}
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                                <Typography variant='body1' fontWeight='bold' fontSize={20}>Product Gallery</Typography>
+                                <Typography variant='body1' fontWeight='bold' color={colors.textColor_3} fontSize={20}>Product Gallery</Typography>
 
                                 <Box
                                     sx={{
@@ -263,11 +263,11 @@ const AddProduct = () => {
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        background: '#FAFAFA',
+                                        background: colors.grayLight_1,
                                         borderRadius: '10px',
                                         position: 'relative',
                                         overflow: 'hidden',
-                                        border: formData.images.length === 0 ? '2px dashed #00000080' : 'none'
+                                        border: formData.images.length === 0 ? `2px dashed ${colors.blackLight_80}` : 'none'
                                     }}
                                 >
                                     {formData.images.length > 0 ? (
@@ -293,9 +293,9 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: colors.primary,
+                                                        color: colors.iconColor_5,
                                                         fontSize: 30,
-                                                        bgcolor: '#fff',
+                                                        bgcolor: colors.iconBgColor_2,
                                                         borderRadius: '50%',
                                                         p: 0.5
                                                     }}
@@ -312,9 +312,9 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: colors.primary,
+                                                        color: colors.iconColor_5,
                                                         fontSize: 30,
-                                                        bgcolor: '#fff',
+                                                        bgcolor: colors.iconBgColor_2,
                                                         borderRadius: '50%',
                                                         p: 0.5
                                                     }}
@@ -330,8 +330,8 @@ const AddProduct = () => {
                                                 justifyContent: 'center',
                                                 gap: 2
                                             }}>
-                                                <PhotoOutlinedIcon sx={{ fontSize: 50, color: colors.primary }} />
-                                                <Typography textAlign='center' fontSize={16} fontWeight={500} color='#70706E'>
+                                                <PhotoOutlinedIcon sx={{ fontSize: 50, color: colors.iconColor_5 }} />
+                                                <Typography textAlign='center' fontSize={16} fontWeight={500} color={colors.textColor_1}>
                                                     Drop your image here, or browse<br />
                                                     JPEG, PNG are allowed
                                                 </Typography>
@@ -377,8 +377,8 @@ const AddProduct = () => {
                                                         cursor: 'pointer',
                                                         border:
                                                             currentIndex === index
-                                                                ? `2px solid ${colors.primary}`
-                                                                : '2px solid transparent',
+                                                                ? `2px solid ${colors.borderColor_2}`
+                                                                : `2px solid ${colors.transparent}`,
                                                         transition: '0.2s',
                                                     }}
                                                 />
@@ -399,7 +399,7 @@ const AddProduct = () => {
                                                     borderRadius: '8px',
                                                 }}
                                             >
-                                                <PhotoOutlinedIcon sx={{ fontSize: { xs: 22, sm: 30 }, color: colors.primary }} />
+                                                <PhotoOutlinedIcon sx={{ fontSize: { xs: 22, sm: 30 }, color: colors.iconColor_5 }} />
                                                 <input
                                                     id='upload-more'
                                                     type='file'
@@ -425,12 +425,12 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: colors.primary,
+                                                        color: colors.iconColor_5,
                                                         fontSize: 28,
-                                                        bgcolor: '#fff',
+                                                        bgcolor: colors.iconBgColor_2,
                                                         borderRadius: '50%',
                                                         p: 0.5,
-                                                        boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
+                                                        boxShadow: `0px 2px 4px ${colors.blackLight_20}`,
                                                     }}
                                                 />
 
@@ -445,12 +445,12 @@ const AddProduct = () => {
                                                         top: '50%',
                                                         transform: 'translateY(-50%)',
                                                         cursor: 'pointer',
-                                                        color: colors.primary,
+                                                        color: colors.iconColor_5,
                                                         fontSize: 28,
-                                                        bgcolor: '#fff',
+                                                        bgcolor: colors.iconBgColor_2,
                                                         borderRadius: '50%',
                                                         p: 0.5,
-                                                        boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
+                                                        boxShadow: `0px 2px 4px ${colors.blackLight_20}`,
                                                     }}
                                                 />
                                             </>
@@ -466,7 +466,7 @@ const AddProduct = () => {
                                         <ImageTile key={index} imageTile={image} onDelete={() => handleRemoveImage(index)} />
                                     ))
                                 ) : (
-                                    <Typography fontSize={16} fontWeight={600} color='#232321'>No Images Found</Typography>
+                                    <Typography fontSize={16} fontWeight={600} color= {colors.textColor_3}>No Images Found</Typography>
                                 )}
                             </Box>
 
@@ -478,7 +478,7 @@ const AddProduct = () => {
                                         color: colors.primary, // 👈 your custom loader color
                                     },
                                 }}>Create</Button>
-                                <Button variant='outlined' disabled={isLoading} onClick={handleCancel} sx={{ minWidth: 200, borderColor: '#232321', color: '#232321' }}>Cancel</Button>
+                                <Button variant='outlined' disabled={isLoading} onClick={handleCancel} sx={{ minWidth: 200, borderColor: colors.borderColor_4, color: colors.grayDark_1 }}>Cancel</Button>
                             </Box>
                         </Box>
                     </Grid>
