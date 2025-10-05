@@ -43,22 +43,9 @@ const createProduct = asyncHandler(async (req, res) => {
         });
     }
     const stockQuantityNum = parseInt(stockQuantity);
-    const regularPriceNum = parseFloat(regularPrice) * 100;
-    const salePriceNum = parseFloat(salePrice) * 100;
+    const regularPriceNum = parseFloat(regularPrice);
+    const salePriceNum = parseFloat(salePrice);
     // Upload images to Google Drive and get URLs
-
-    // let photo = [];
-    // if (req.files && req.files.length > 0) {
-    //     for (let file of req.files) {
-    //         console.log("Processing file:", file.originalname);
-    //         const fileUrl = await uploadFile(file); // passes { fileId, url }
-    //         photo.push(fileUrl);
-    //     }
-    // } else {
-    //     return res.status(400).json({
-    //         message: "Product photo is required"
-    //     });
-    // }
 
     let photo = [];
     if (req.files && req.files.length > 0) {

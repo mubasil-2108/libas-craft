@@ -1,6 +1,5 @@
 import { Box, Divider, Grid, Icon, IconButton, LinearProgress, Pagination, PaginationItem, Typography } from '@mui/material'
 import React, { useMemo, useState } from 'react'
-import { dummyProducts } from '../../../services/utils/constants';
 import { ProductTile } from '../../../components/admin';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -12,9 +11,7 @@ import { colors } from '../../../services';
 
 const AllProducts = () => {
     const dispatch = useDispatch();
-    const { isLoading, products, selectedCategory } = useSelector((state) => state.product);
-    // console.log('Products from Redux Store:', products);
-    console.log('Selected Category:', selectedCategory);
+    const { products, selectedCategory } = useSelector((state) => state.product);
     const [page, setPage] = useState(1);
     const rowsPerPage = 12;
 
@@ -36,8 +33,6 @@ const AllProducts = () => {
     const paginatedProducts = useMemo(() => {
         return filterProducts.slice(startIndex, endIndex) || [];
     }, [filterProducts, startIndex, endIndex]);
-
-    console.log('Filtered Products:', paginatedProducts);
 
     useEffect(() => {
         const fetchAllProducts = async () => {

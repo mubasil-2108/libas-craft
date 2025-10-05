@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { google } = require("googleapis");
-const googleConfig = require("./config/googleConfig");
+const googleConfig = require("../config/googleConfig.js");
 const open = (...args) =>
   import("open").then(({ default: open }) => open(...args));
 

@@ -1,4 +1,5 @@
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, Icon, IconButton, InputAdornment, Menu, MenuItem, Paper, Popper, TextField, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 import React, { Fragment, useState } from 'react'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -7,12 +8,16 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
-import { dummyProducts, notifications } from '../../../services/utils/constants';
+import { notifications } from '../../../services/utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '../../../services';
+import { searchProduct } from '../../../store/slices/productSlice';
+import { useCallback } from 'react';
 
 const AdminHeader = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { searchProducts } = useSelector((state) => state.product);
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
@@ -21,23 +26,31 @@ const AdminHeader = () => {
     const [showAllResults, setShowAllResults] = useState(false);
 
     // Example: filtered products based on search
-    const filteredProducts = dummyProducts.filter((p) =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    const handleSortClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleSortClose = () => {
-        setAnchorEl(null);
-    };
+    const filteredProducts = searchProducts;
 
-    const handleSearchProductClick = (product) => {
+    const handleSortClick = useCallback((event) => {
+        setAnchorEl(event.currentTarget);
+    }, []);
+
+    const handleSortClose = useCallback(() => {
+        setAnchorEl(null);
+    }, []);
+
+    const handleSearchChange = useCallback(async (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+
+        if (value.trim() !== '') {
+            await dispatch(searchProduct(value));
+        }
+    }, [dispatch]);
+
+    const handleSearchProductClick = useCallback((product) => {
         setShowSearch(false);
         setSearchQuery('');
         setShowAllResults(false);
-        const route = navigate(`/admin/products/${product.id}`);
-        console.log(route);
-    }
+        navigate(`/admin/products/${product?._id}`);
+    }, [navigate]);
 
     return (
         <Box component='div' bgcolor={colors.grayLight_1} maxWidth={'100%'} minHeight={'70px'} sx={{
@@ -55,7 +68,7 @@ const AdminHeader = () => {
                         placeholder="Search products..."
                         value={searchQuery}
                         onChange={(e) => {
-                            setSearchQuery(e.target.value);
+                            handleSearchChange(e);
                             if (!searchAnchorEl) setSearchAnchorEl(e.currentTarget);
                         }}
                         onFocus={(event => setSearchAnchorEl(event.currentTarget))}
@@ -127,8 +140,8 @@ const AdminHeader = () => {
                                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                         <Box
                                                             component="img"
-                                                            src={product.image}
-                                                            alt={product.name}
+                                                            src={`https://www.googleapis.com/drive/v3/files/${product?.productPhoto[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
+                                                            alt={product?.productPhoto[0]?.name}
                                                             sx={{
                                                                 width: '50px',
                                                                 height: '50px',
@@ -141,7 +154,7 @@ const AdminHeader = () => {
                                                             variant="body2"
                                                             sx={{ color: colors.textColor_3, fontWeight: 'bold' }}
                                                         >
-                                                            {product.name}
+                                                            {product.productName}
                                                         </Typography>
                                                     </Box>
                                                 </MenuItem>

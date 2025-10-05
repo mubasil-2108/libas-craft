@@ -4,7 +4,7 @@ import { adminBar, categories } from '../../../services/utils/constants'
 import { useLocation, useNavigate } from 'react-router-dom'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategory } from '../../../store/slices/productSlice';
+import { getAllProducts, setCategory } from '../../../store/slices/productSlice';
 import { colors } from '../../../services';
 
 const AdminSidebar = () => {
@@ -14,6 +14,13 @@ const AdminSidebar = () => {
     const { products } = useSelector((state) => state.product)
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [showCategories, setShowCategories] = useState(true)
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            await dispatch(getAllProducts());
+        };
+        fetchProducts();
+    }, [dispatch]);
 
     const categoriesWithCount = useMemo(() => {
         const counts = {}
@@ -127,7 +134,7 @@ const AdminSidebar = () => {
                                             cursor: 'pointer',
                                             mb: '10px'
                                         }}>
-                                        <Typography color= {colors.textColor_3} variant='body1' fontSize={'16px'}>{category.name}</Typography>
+                                        <Typography color={colors.textColor_3} variant='body1' fontSize={'16px'}>{category.name}</Typography>
                                         <Box component='div' sx={{
                                             width: '35px',
                                             height: '30px',

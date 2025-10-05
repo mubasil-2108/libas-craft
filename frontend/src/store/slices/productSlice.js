@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
     products: [],
+    searchProducts: [],
     selectedProduct: null,
     selectedCategory: null,
     isLoading: false,
@@ -115,6 +116,21 @@ export const deleteProduct = createAsyncThunk(
     }
 )
 
+export const searchProduct = createAsyncThunk(
+    'product/search-product',
+    async (keyword, thunkAPI) => {
+        try {
+            const result = await axios.get(`http://localhost:5000/api/products/search?keyword=${keyword}`);
+            if (result.status !== 200) {
+                throw new Error('Failed to search product');
+            }
+            return result.data.products;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+)
+
 const productSlice = createSlice({
     name: 'product',
     initialState,
@@ -181,6 +197,16 @@ const productSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(deleteProduct.rejected, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(searchProduct.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(searchProduct.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.searchProducts = action.payload;
+            })
+            .addCase(searchProduct.rejected, (state) => {
                 state.isLoading = false;
             })
     }

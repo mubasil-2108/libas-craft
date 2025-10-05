@@ -27,8 +27,6 @@ const OrderDetail = () => {
     const subtotal = productOrders.reduce((acc, item) => acc + Number(item.total || 0), 0);
     const total = subtotal - discount + shippingRate;
 
-    console.log(discount, " ", shippingRate, " ", subtotal, " ", total);
-
     const handleSortClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
