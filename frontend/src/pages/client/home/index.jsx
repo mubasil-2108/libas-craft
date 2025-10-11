@@ -1,12 +1,17 @@
-import React from 'react'
+import { Box } from "@mui/material";
+import { Banner, Categories } from "../../../components/client";
 
 const Home = () => {
-  return (
-    <div>
-      <h1>Home</h1>
-      <button>login</button>
-    </div>
-  )
-}
 
-export default Home
+  return (
+    <Box
+      sx={{
+        position: "relative",
+      }}>
+      <Banner />
+      <Categories />
+    </Box>
+  );
+};
+
+export default Home;

@@ -1,6 +1,13 @@
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import { FaSnapchatGhost, FaTiktok } from "react-icons/fa";
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 export const adminBar = [
   {
@@ -22,6 +29,93 @@ export const adminBar = [
     link: '/admin/orders'
   },
 ]
+
+export const reasons = [
+  {
+    id: 1,
+    reason: 'Natural\nIngredients',
+    image: '/ingrediants.png',
+  },
+  {
+    id: 2,
+    reason: 'Cruelty Free',
+    image: '/cruelity-free.png',
+  },
+  {
+    id: 3,
+    reason: 'Eco-friendly\nPackagaing',
+    image: '/eco-friendly.png',
+  }
+]
+
+export const clientBar = [
+  {
+    id: 1,
+    name: 'Home',
+    icon: HomeOutlinedIcon,
+    link: '/'
+  },
+  {
+    id: 2,
+    name: 'Catalog',
+    icon: ShoppingBagOutlinedIcon,
+    link: '/catalog'
+  },
+  {
+    id: 3,
+    name: 'Contact',
+    icon: PhoneOutlinedIcon,
+    link: '/contact'
+  },
+];
+
+export const socialMediaLinks = [
+  {
+    id: 1,
+    icon: FacebookIcon,
+    name: 'Facebook',
+    link: 'https://www.facebook.com/'
+  },
+  {
+    id: 2,
+    icon: WhatsAppIcon,
+    name: 'WhatsApp',
+    link: 'https://web.whatsapp.com/'
+  },
+  {
+    id: 3,
+    icon: FaSnapchatGhost,
+    name: 'Snapchat',
+    link: 'https://www.snapchat.com/'
+  },
+  {
+    id: 4,
+    icon: FaTiktok,
+    name: 'TikTok',
+    link: 'https://www.tiktok.com/'
+  },
+  {
+    id: 5,
+    icon: InstagramIcon,
+    name: 'Instagram',
+    link: 'https://www.instagram.com/'
+  }
+]
+
+export const dummyCategories = [
+  { id: 1, name: 'Skincare', image: '/images/skincare.png' },
+  { id: 2, name: 'Haircare', image: '/images/haircare.png' },
+  { id: 3, name: 'Makeup', image: '/images/makeup.png' },
+  { id: 4, name: 'Fragrance', image: '/images/fragrance.png' },
+  { id: 5, name: 'Body & Bath', image: '/images/bodybath.png' },
+  { id: 6, name: 'Wellness', image: '/images/wellness.png' },
+  { id: 7, name: 'Skincare', image: '/images/skincare.png' },
+  { id: 8, name: 'Haircare', image: '/images/haircare.png' },
+  { id: 9, name: 'Makeup', image: '/images/makeup.png' },
+  { id: 10, name: 'Fragrance', image: '/images/fragrance.png' },
+  { id: 11, name: 'Body & Bath', image: '/images/bodybath.png' },
+  { id: 12, name: 'Wellness', image: '/images/wellness.png' },
+];
 
 export const categories = [
   {

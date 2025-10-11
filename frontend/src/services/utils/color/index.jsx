@@ -8,9 +8,11 @@ export const colors = {
     blue: '#1B59F8', // blue
     blue_1: '#4A69E2', // blue
     yellow: '#FFC107', // yellow
+    teal:'#07484A', // teal
+
+
 
     transparent: 'transparent', // transparent
-
 
     // background colors
     bgColor_1: '#36323B', // dark gray
@@ -30,12 +32,15 @@ export const colors = {
     grayLight_6: '#F4F2F2', // light gray
     grayLight_7: '#f5f5f5', // very light gray
     grayLight_8: '#E9E9EA', // light gray
-
+    greenLight_1: '#F5FFF5', // very light green
     // dark colors
 
     grayDark_1: '#232321', // very dark gray
     grayDark_2: '#70706E', // dark gray
     grayDark_3: '#212121', // dark gray
+    greenDark_1: '#316D52', // dark green
+    greenDark_2: '#1E4434', // dark green
+    greenDark_3: '#2D6A4F', // dark green
 
     // text colors
     textColor_1: '#70706E', // dark gray
@@ -44,6 +49,8 @@ export const colors = {
     textColor_4: '#000', // black
     textColor_5: '#fff', // white
     textColor_6: '#003F62', // dark blue
+    textColor_7: '#1E4434', // dark green
+    textColor_8: '#07484A', // teal
 
     // placeholder colors
 
@@ -62,12 +69,18 @@ export const colors = {
     iconColor_8: '#FFC107', // yellow
     iconColor_9: '#fff', // white
     iconColor_10: '#E0E0E0', // light gray
+    iconColor_11: '#1E4434', // dark green
+    iconColor_12: '#2D6A4F', // dark green
+    iconColor_13: '#6E757E', // grayish blue
+    iconColor_14: '#07484A', // teal
 
     // icons background colors
     iconBgColor_1: '#EFEFEF', // light gray
     iconBgColor_2: '#fff', // white
     iconBgColor_3: '#F4F2F2', // light gray
     iconBgColor_4: '#f5f5f5', // very light gray
+    iconBgColor_5: '#E0EFF6', // very light blue
+    iconBgColor_6: '#F9D9DA', // very light red
 
     // border colors
     borderColor_1: 'rgba(35,35,35,0.3)', // dark gray
@@ -76,4 +89,10 @@ export const colors = {
     borderColor_4: '#232321', // dark gray
     borderColor_5: '#8D8D8D', // gray
     borderColor_6: '#E7E7E3', // light gray
+
+    // button colors
+    buttonColor_1:'#316D52', // dark green
+
+    // input background colors
+    inputBgColor_1: '#F0F0F0', // very light gray
 }

@@ -1,3 +1,52 @@
+@font-face {
+  font-family: 'cinzel-decorative';
+  src: url('/fonts/CinzelDecorative-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'nunito-sans';
+  src: url('/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'cinzel';
+  src: url('/fonts/Cinzel-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'cinzel-bold';
+  src: url('/fonts/Cinzel-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'playfairDisplay';
+  src: url('/fonts/PlayfairDisplay-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto-regular';
+  src: url('/fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'openSans-bold';
+  src: url('/fonts/OpenSans-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,4 +54,30 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px;              /* Width of the vertical scrollbar */
+  height: 10px;             /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #F5FFF5;      /* Track color */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #316D52, #1E4434);  /* Thumb gradient */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #316D52, #1E4434);  /* On hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;                     /* 'auto' or 'thin' */
+  scrollbar-color: #316D52 #f1f1f1;         /* thumb color | track color */
 }

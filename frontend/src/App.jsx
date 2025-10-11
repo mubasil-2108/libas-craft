@@ -3,13 +3,16 @@ import { Routes, Route } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
 import { AddProduct, AllProducts, Dashboard, OrderDetail, OrderList, Orders, ProductDetail, Products } from './pages/admin'
 import { Home } from './pages/client'
+import { ClientLayout } from './components/client'
 
 function App() {
 
   return (
     <>
       <Routes>
-        <Route path='/' index element={<Home />} />
+        <Route path='/' element={<ClientLayout />}> 
+          <Route index element={<Home />} />
+        </Route>
         <Route path='/admin' element={<AdminLayout />} >
           <Route index element={<Dashboard />} />
           {/* Products */}
