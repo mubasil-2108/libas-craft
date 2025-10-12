@@ -128,6 +128,7 @@ const Categories = () => {
               autoHeight
               ref={listRef}
               autoHeightMax={isMobile ? 200 : 300}
+              thumbSize={50} thumbMinSize={50}
               renderView={(props) => (
                 <div
                   {...props}
@@ -144,8 +145,10 @@ const Categories = () => {
                   style={{
                     ...props.style,
                     right: 2,
+                    bottom: 2,
                     top: 2,
                     width: "3px",
+                    // backgroundColor: colors.grayDark_1,
                   }}
                 />
               )}
@@ -159,6 +162,7 @@ const Categories = () => {
                   }}
                 />
               )}
+              style={{ width: '100%', borderColor: 'black', borderLeftColor: 'black' }}
             >
               <List>
                 {dummyCategories.map((item) => (
@@ -168,9 +172,7 @@ const Categories = () => {
                     sx={{
                       width: "100%",
                       borderRadius: "10px",
-                      "&:hover": {
-                        backgroundColor: colors.grayLight_1,
-                      },
+                      cursor: "pointer",
                     }}
                   >
                     <ListItemText

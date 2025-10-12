@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Banner, Categories } from "../../../components/client";
+import { Banner, Categories, MainProduct } from "../../../components/client";
 
 const Home = () => {
 
@@ -10,6 +10,8 @@ const Home = () => {
       }}>
       <Banner />
       <Categories />
+      <MainProduct />
+      
     </Box>
   );
 };

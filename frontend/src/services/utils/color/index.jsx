@@ -9,8 +9,7 @@ export const colors = {
     blue_1: '#4A69E2', // blue
     yellow: '#FFC107', // yellow
     teal:'#07484A', // teal
-
-
+    teal_2: 'rgba(7, 72, 74, 0.4)', // teal
 
     transparent: 'transparent', // transparent
 
