@@ -8,7 +8,7 @@ export const colors = {
     blue: '#1B59F8', // blue
     blue_1: '#4A69E2', // blue
     yellow: '#FFC107', // yellow
-    teal:'#07484A', // teal
+    teal: '#07484A', // teal
     teal_2: 'rgba(7, 72, 74, 0.4)', // teal
 
     transparent: 'transparent', // transparent
@@ -31,7 +31,11 @@ export const colors = {
     grayLight_6: '#F4F2F2', // light gray
     grayLight_7: '#f5f5f5', // very light gray
     grayLight_8: '#E9E9EA', // light gray
+    grayLight_9: '#FFF4E7', // light gray
     greenLight_1: '#F5FFF5', // very light green
+    greenLight_2: '#CAF3E5', // light green
+    blueLight_1: '#EEEBFF', // light blue
+
     // dark colors
 
     grayDark_1: '#232321', // very dark gray
@@ -90,7 +94,7 @@ export const colors = {
     borderColor_6: '#E7E7E3', // light gray
 
     // button colors
-    buttonColor_1:'#316D52', // dark green
+    buttonColor_1: '#316D52', // dark green
 
     // input background colors
     inputBgColor_1: '#F0F0F0', // very light gray

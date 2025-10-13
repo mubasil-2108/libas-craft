@@ -8,6 +8,10 @@ import { FaSnapchatGhost, FaTiktok } from "react-icons/fa";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { colors } from '../color';
+// import PaymentIcon from '@mui/icons-material/Payment';
+// import { TbPackageImport } from "react-icons/tb";
+// import { BiSupport } from "react-icons/bi";
 
 export const adminBar = [
   {
@@ -101,6 +105,30 @@ export const socialMediaLinks = [
     link: 'https://www.instagram.com/'
   }
 ]
+
+export const benefits = [
+  {
+    id: 1,
+    name: 'Payment Method',
+    desc: 'We offer flexible payment\noptions, to make easier.',
+    image: '/payment-method.png',
+    bgColor: colors.blueLight_1
+  },
+  {
+    id: 2,
+    name: 'Return Policy',
+    desc: 'You can return a product\nwithin 30 days.',
+    image: '/return-policy.png',
+    bgColor: colors.grayLight_9
+  },
+  {
+    id: 3,
+    name: 'Customer Support',
+    desc: 'Our customer support\nis 24/7.',
+    image: '/customer-support.png',
+    bgColor: colors.greenLight_2
+  },
+];
 
 export const dummyCategories = [
   { id: 1, name: 'Skincare', image: '/images/skincare.png' },
