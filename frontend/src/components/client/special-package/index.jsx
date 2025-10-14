@@ -278,7 +278,7 @@ const SpecialPackage = () => {
                     <Box
                         sx={{
                             display: "flex",
-                            flexDirection: { xs: "column", sm: "row" },
+                            flexDirection: { xs: "column-reverse", sm: "row" },
                             gap: { xs: 2, sm: 3 },
                             alignItems: "center",
                             width: "100%",
