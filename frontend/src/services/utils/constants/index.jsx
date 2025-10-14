@@ -104,7 +104,51 @@ export const socialMediaLinks = [
     name: 'Instagram',
     link: 'https://www.instagram.com/'
   }
-]
+];
+
+export const dummyPackages = [
+  {
+    id: 1,
+    title: "Living Room Special Set",
+    price: "229.99",
+    rating: 5,
+    description: "A perfect combination of comfort and elegance for your living space.",
+    image: "/watch.jpg",
+  },
+  {
+    id: 2,
+    title: "Modern Wooden Chair",
+    price: "149.50",
+    rating: 4.5,
+    description: "Crafted with high-quality wood, ideal for both indoor and outdoor use.",
+    image: "/watch.jpg",
+  },
+  {
+    id: 3,
+    title: "Minimalist Table Lamp",
+    price: "89.99",
+    rating: 4,
+    description: "Soft, ambient lighting that complements any modern interior.",
+    image: "/watch.jpg",
+  },
+  {
+    id: 4,
+    title: "Premium Leather Sofa",
+    price: "899.00",
+    rating: 5,
+    description: "Luxury and comfort combined in one elegant leather design.",
+    image: "/watch.jpg",
+  },
+  {
+    id: 5,
+    title: "Wall Art Canvas Set",
+    price: "199.99",
+    rating: 4.5,
+    description: "Set of 3 premium-quality abstract art pieces for your walls.",
+    image: "/watch.jpg",
+  },
+];
+
 
 export const benefits = [
   {

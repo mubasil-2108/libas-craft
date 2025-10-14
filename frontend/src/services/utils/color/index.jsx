@@ -35,6 +35,7 @@ export const colors = {
     greenLight_1: '#F5FFF5', // very light green
     greenLight_2: '#CAF3E5', // light green
     blueLight_1: '#EEEBFF', // light blue
+    blueLight_2: '#E0F6F1', // very light blue
 
     // dark colors
 
@@ -54,6 +55,7 @@ export const colors = {
     textColor_6: '#003F62', // dark blue
     textColor_7: '#1E4434', // dark green
     textColor_8: '#07484A', // teal
+    textColor_9: '#FDFBF8', // very light gray
 
     // placeholder colors
 
@@ -76,6 +78,8 @@ export const colors = {
     iconColor_12: '#2D6A4F', // dark green
     iconColor_13: '#6E757E', // grayish blue
     iconColor_14: '#07484A', // teal
+    iconColor_15: '#FDFBF8', // very light gray
+    iconColor_16: '#FFC107', // yellow
 
     // icons background colors
     iconBgColor_1: '#EFEFEF', // light gray
