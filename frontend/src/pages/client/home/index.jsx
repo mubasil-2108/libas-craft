@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { Banner, BenefitsSection, Categories, MainProduct, SpecialPackage } from "../../../components/client";
+import { Banner, BenefitsSection, Categories, MainProduct, PopularProduct, SpecialPackage } from "../../../components/client";
 import { colors } from "../../../services";
 
 const Home = () => {
@@ -14,6 +14,7 @@ const Home = () => {
       <MainProduct />
       <SpecialPackage />
       <BenefitsSection />
+      <PopularProduct />
     </Box>
   );
 };

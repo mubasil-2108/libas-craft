@@ -4,6 +4,7 @@ import Categories from "./category";
 import MainProduct from "./main-product";
 import BenefitsSection from "./benefits-section";
 import SpecialPackage from "./special-package";
+import PopularProduct from "./popular-product";
 
 export {
     ClientLayout,
@@ -11,5 +12,6 @@ export {
     Categories,
     MainProduct,
     BenefitsSection,
-    SpecialPackage
+    SpecialPackage,
+    PopularProduct
 }

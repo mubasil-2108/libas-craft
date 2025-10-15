@@ -56,6 +56,7 @@ export const colors = {
     textColor_7: '#1E4434', // dark green
     textColor_8: '#07484A', // teal
     textColor_9: '#FDFBF8', // very light gray
+    textColor_10: '#2D6A4F', // dark green
 
     // placeholder colors
 
