@@ -1,13 +1,13 @@
-import { Box, Button, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { useRef } from 'react'
-import { colors } from '../../../services'
+import { colors } from '../../../services';
+import { Box, Button, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import ProductTile from '../product-tile';
 import Scrollbars from 'react-custom-scrollbars';
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import ProductTile from '../product-tile';
 import { MdArrowRightAlt } from "react-icons/md";
 
-const FeaturedProduct = () => {
+const NewArrival = () => {
     const listRef = useRef(null);
 
     const theme = useTheme();
@@ -87,7 +87,7 @@ const FeaturedProduct = () => {
                     lineHeight: 1.2,
                 }}
             >
-                Featured Products
+                New Arrival
             </Typography>
             <Box component='div' sx={{
                 display: 'flex',
@@ -243,4 +243,4 @@ const FeaturedProduct = () => {
     )
 }
 
-export default FeaturedProduct
+export default NewArrival

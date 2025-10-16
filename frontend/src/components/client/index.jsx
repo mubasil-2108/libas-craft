@@ -6,6 +6,7 @@ import BenefitsSection from "./benefits-section";
 import SpecialPackage from "./special-package";
 import PopularProduct from "./popular-product";
 import FeaturedProduct from "./featured-product";
+import NewArrival from "./new-arrival";
 
 export {
     ClientLayout,
@@ -15,5 +16,6 @@ export {
     BenefitsSection,
     SpecialPackage,
     PopularProduct,
-    FeaturedProduct
+    FeaturedProduct,
+    NewArrival
 }
