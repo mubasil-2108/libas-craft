@@ -3,6 +3,7 @@ import { Box, Button, Divider, Icon, Link, Typography } from '@mui/material'
 import { Outlet } from 'react-router-dom';
 import Header from '../header';
 import { colors } from '../../../services';
+import Footer from '../footer';
 
 const ClientLayout = () => {
 
@@ -38,6 +39,7 @@ const ClientLayout = () => {
                     }}>
                         <Outlet />
                     </Box>
+                    <Footer/>
                 </Box>
             </Box>
         </Box>

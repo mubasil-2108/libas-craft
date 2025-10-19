@@ -15,6 +15,8 @@ export const colors = {
 
     // background colors
     bgColor_1: '#36323B', // dark gray
+    bgColor_2: '#1E4434', // dark green
+
 
     // percentages
     blackLight_80: '#00000080', // black with 80% opacity
@@ -97,6 +99,8 @@ export const colors = {
     borderColor_4: '#232321', // dark gray
     borderColor_5: '#8D8D8D', // gray
     borderColor_6: '#E7E7E3', // light gray
+    borderColor_7: '#316D52', // dark green
+
 
     // button colors
     buttonColor_1: '#316D52', // dark green
