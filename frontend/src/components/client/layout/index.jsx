@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Divider, Icon, Link, Typography } from '@mui/material'
+import { Box, Button, Divider, Fab, Icon, Link, Typography } from '@mui/material'
 import { Outlet } from 'react-router-dom';
 import Header from '../header';
 import { colors } from '../../../services';
 import Footer from '../footer';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 const ClientLayout = () => {
 
@@ -42,6 +43,17 @@ const ClientLayout = () => {
                     <Footer/>
                 </Box>
             </Box>
+            <Fab size='large' sx={{ 
+                backgroundColor:colors.green, 
+                ":hover":{
+                    backgroundColor:colors.buttonColor_1
+                },
+                position: 'fixed', 
+                bottom: '1rem', 
+                right: '1rem'
+                 }}>
+                <Icon fontSize='large' component={WhatsAppIcon} sx={{ color: colors.iconColor_9 }} />
+                </Fab>
         </Box>
     )
 }

@@ -63,7 +63,7 @@ export const clientBar = [
     id: 2,
     name: 'Catalog',
     icon: ShoppingBagOutlinedIcon,
-    link: '/catalog'
+    link: '/collections/all'
   },
   {
     id: 3,

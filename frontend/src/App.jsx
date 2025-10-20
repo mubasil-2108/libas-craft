@@ -2,16 +2,18 @@ import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
 import { AddProduct, AllProducts, Dashboard, OrderDetail, OrderList, Orders, ProductDetail, Products } from './pages/admin'
-import { Home } from './pages/client'
+import { Catalog, Home } from './pages/client'
 import { ClientLayout } from './components/client'
+import { NotFound, UnAuth } from './pages/common'
 
 function App() {
 
   return (
     <>
       <Routes>
-        <Route path='/' element={<ClientLayout />}> 
+        <Route path='/' element={<ClientLayout />}>
           <Route index element={<Home />} />
+          <Route path='collections/all' element={<Catalog />} />
         </Route>
         <Route path='/admin' element={<AdminLayout />} >
           <Route index element={<Dashboard />} />
@@ -29,7 +31,8 @@ function App() {
           </Route>
         </Route>
         {/* <Route index element={<Home/>}/> */}
-
+        <Route path='/401' element={<UnAuth />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </>
   )

@@ -10,6 +10,7 @@ export const colors = {
     yellow: '#FFC107', // yellow
     teal: '#07484A', // teal
     teal_2: 'rgba(7, 72, 74, 0.4)', // teal
+    green: '#00d757', // green
 
     transparent: 'transparent', // transparent
 
