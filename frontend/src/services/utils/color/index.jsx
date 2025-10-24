@@ -12,6 +12,8 @@ export const colors = {
     teal_2: 'rgba(7, 72, 74, 0.4)', // teal
     green: '#00d757', // green
 
+     
+
     transparent: 'transparent', // transparent
 
     // background colors
@@ -35,6 +37,8 @@ export const colors = {
     grayLight_7: '#f5f5f5', // very light gray
     grayLight_8: '#E9E9EA', // light gray
     grayLight_9: '#FFF4E7', // light gray
+    grayLight_10: '#F3F3F3', // very light gray
+    grayLight_11: '#F9FAFB', // very light gray
     greenLight_1: '#F5FFF5', // very light green
     greenLight_2: '#CAF3E5', // light green
     blueLight_1: '#EEEBFF', // light blue
@@ -45,6 +49,7 @@ export const colors = {
     grayDark_1: '#232321', // very dark gray
     grayDark_2: '#70706E', // dark gray
     grayDark_3: '#212121', // dark gray
+    grayDark_4: '#6b6b6bff', // dark gray
     greenDark_1: '#316D52', // dark green
     greenDark_2: '#1E4434', // dark green
     greenDark_3: '#2D6A4F', // dark green
@@ -60,6 +65,10 @@ export const colors = {
     textColor_8: '#07484A', // teal
     textColor_9: '#FDFBF8', // very light gray
     textColor_10: '#2D6A4F', // dark green
+    textColor_11: '#B9BBBF', // light gray
+    textColor_12: '#D46F77', // light red
+    textColor_13: '#D48D3B', // light orange
+    textColor_14: '#726C6C', // grayish blue
 
     // placeholder colors
 
@@ -84,6 +93,10 @@ export const colors = {
     iconColor_14: '#07484A', // teal
     iconColor_15: '#FDFBF8', // very light gray
     iconColor_16: '#FFC107', // yellow
+    iconColor_17: '#D46F77', // light red
+    iconColor_18: '#D48D3B', // light orange
+    iconColor_19: '#726C6C', // grayish blue
+    iconColor_20: '#D75951', // light red
 
     // icons background colors
     iconBgColor_1: '#EFEFEF', // light gray
@@ -92,6 +105,10 @@ export const colors = {
     iconBgColor_4: '#f5f5f5', // very light gray
     iconBgColor_5: '#E0EFF6', // very light blue
     iconBgColor_6: '#F9D9DA', // very light red
+    iconBgColor_7: '#FFF0F0', // very light red
+    iconBgColor_8: '#CAF3E5', // light green
+    iconBgColor_9: '#FBF3EA', // very light yellow
+
 
     // border colors
     borderColor_1: 'rgba(35,35,35,0.3)', // dark gray
@@ -101,10 +118,13 @@ export const colors = {
     borderColor_5: '#8D8D8D', // gray
     borderColor_6: '#E7E7E3', // light gray
     borderColor_7: '#316D52', // dark green
+    borderColor_8: '#E4E4E4', // very light gray
+    borderColor_9: '#DDDDDD', // very light gray
 
 
     // button colors
     buttonColor_1: '#316D52', // dark green
+    buttonColor_2: '#FFF0F0', // very light red
 
     // input background colors
     inputBgColor_1: '#F0F0F0', // very light gray

@@ -1,96 +1,3 @@
-// import { Box, Button, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
-// import React from 'react'
-// import { colors } from '../../../services'
-
-// const NewsLetter = () => {
-//     const theme = useTheme();
-
-//     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-//     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-//     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
-//     return (
-//         <Box component='div' sx={{
-//             display: 'flex',
-//             flexDirection: 'column',
-//             justifyContent: 'flex-end',
-//             minHeight: '400px',
-//             backgroundColor: colors.white
-//         }}>
-//             <Box component='div' sx={{ display: 'flex', flexDirection: 'row' }}>
-//                 <Box component='img' sx={{ width: '600px', height: '400px', objectFit: 'cover' }} src='/news-letter.jpg' />
-//                 <Box component='div' sx={{
-//                     display: 'flex',
-//                     flexDirection: 'column',
-//                     backgroundColor: colors.blueLight_2,
-//                     flexGrow: 1,
-//                     justifyContent: 'center',
-//                     px: 10,
-//                     height: '400px'
-//                 }}>
-//                     <Typography sx={{
-//                         color: colors.textColor_7,
-//                         fontSize: '64px',
-//                         fontFamily: 'playfairDisplay-regular',
-//                         lineHeight: 0.8
-//                     }}>Join Our
-//                         <Typography sx={{
-//                             color: colors.textColor_7,
-//                             fontSize: '64px',
-//                             fontFamily: 'playfairDisplay',
-//                         }}>
-//                             Newsletter
-//                         </Typography>
-//                     </Typography>
-//                     <Typography sx={{
-//                         color: colors.textColor_7,
-//                         fontSize: '18px',
-//                         fontFamily: 'roboto-regular',
-//                     }}>Receive exclusive deals, discounts and many offers.</Typography>
-//                     <TextField
-//                         sx={{
-//                             // backgroundColor: colors.b,
-//                             borderRadius: '10px',
-//                             py: 1,
-//                             my: 2,
-//                             fontFamily: 'roboto-regular',
-//                             width: '60%',
-//                             '& .MuiOutlinedInput-root': {
-//                                 borderRadius: '10px',
-//                             },
-//                             '& .MuiOutlinedInput-notchedOutline': {
-//                                 borderColor: colors.borderColor_7,
-//                             },
-//                         }}
-//                         type='email'
-//                         placeholder='Enter your email address'
-//                     />
-//                     <Button
-//                         sx={{
-//                             width: '150px',
-//                             color: colors.textColor_9,
-//                             fontFamily: "roboto-regular",
-//                             backgroundColor: colors.greenDark_1,
-//                             textTransform: "none",
-//                             fontSize: { xs: "14px", sm: "16px" },
-//                             px: { xs: 2, sm: 3 },
-//                             py: { xs: 1, sm: 1.2 },
-//                             borderRadius: "10px",
-//                             "&:hover": {
-//                                 backgroundColor: colors.greenDark_2,
-//                             },
-//                         }}
-//                     >
-//                         Subscribe
-//                     </Button>
-//                 </Box>
-//             </Box>
-//         </Box>
-//     )
-// }
-
-// export default NewsLetter
-
-
 import { Box, Button, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React from 'react'
 import { colors } from '../../../services'
@@ -134,7 +41,7 @@ const NewsLetter = () => {
           src="/news-letter.jpg"
           alt="Newsletter"
           sx={{
-            width: { xs: "100%", md: "600px" },
+            width: { xs: "100%", sm: "100%", md: "600px" },
             height: { xs: "220px", sm: "300px", md: "400px" },
             objectFit: "cover",
           }}
@@ -151,6 +58,7 @@ const NewsLetter = () => {
             justifyContent: "center",
             px: { xs: 3, sm: 6, md: 10 },
             py: { xs: 4, sm: 5, md: 0 },
+            width: { xs: "100%", md: "600px" },
             height: { xs: "auto", md: "400px" },
             textAlign: { xs: "center", md: "left" },
           }}
@@ -198,7 +106,7 @@ const NewsLetter = () => {
               alignItems: "center",
               justifyContent: { xs: "center", md: "flex-start" },
               gap: { xs: 2, sm: 2.5 },
-              width: { xs: "100%", sm: "80%", md: "100%" },
+              width: { xs: "80%", sm: "80%", md: "100%" },
               mx: { xs: "auto", md: 0 },
             }}
           >

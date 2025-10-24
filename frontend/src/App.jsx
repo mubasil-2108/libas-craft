@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
 import { AddProduct, AllProducts, Dashboard, OrderDetail, OrderList, Orders, ProductDetail, Products } from './pages/admin'
-import { Catalog, Home } from './pages/client'
+import { Catalog, ClientProductDetail, Home } from './pages/client'
 import { ClientLayout } from './components/client'
 import { NotFound, UnAuth } from './pages/common'
 
@@ -14,6 +14,7 @@ function App() {
         <Route path='/' element={<ClientLayout />}>
           <Route index element={<Home />} />
           <Route path='collections/all' element={<Catalog />} />
+          <Route path='collections/:id' element={<ClientProductDetail />} />
         </Route>
         <Route path='/admin' element={<AdminLayout />} >
           <Route index element={<Dashboard />} />

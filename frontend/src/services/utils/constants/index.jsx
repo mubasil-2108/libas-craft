@@ -207,6 +207,106 @@ export const categories = [
   },
 ];
 
+export const images = [
+  '/watch.jpg',
+  '/herbal.png',
+  '/master-card.png',
+  '/news-letter.jpg',
+  '/watch.jpg',
+  '/herbal.png',
+  '/master-card.png',
+  '/news-letter.jpg',
+];
+export const productSections = [
+  {
+    title: "Product Description",
+    paragraph:
+      "This herbal supplement supports healthy immune function and overall well-being. Made from natural ingredients with no artificial preservatives. This herbal supplement supports healthy immune function and overall well-being. Made from natural ingredients with no artificial preservatives.",
+  },
+  {
+    title: "Benefits",
+    points: [
+      "Boosts immune system naturally",
+      "Supports respiratory health",
+      "Rich in antioxidants",
+      "100% herbal composition",
+    ],
+  },
+  {
+    title: "Product Details",
+    points: [
+      "Form: Capsule",
+      "Packaging: 60 capsules per bottle",
+      "Shelf Life: 24 months",
+    ],
+  },
+  {
+    title: "More Details",
+    paragraph:
+      "This product is manufactured in GMP-certified facilities ensuring purity, safety, and potency.",
+  },
+];
+export const ratings = [
+  { stars: 5, value: 90 },
+  { stars: 4, value: 70 },
+  { stars: 3, value: 40 },
+  { stars: 2, value: 20 },
+  { stars: 1, value: 10 },
+];
+
+export const reviews = [
+  {
+    id: 1,
+    name: "Nicolas Cage",
+    avatarName: "Nicolas Cage",
+    rating: 4.5,
+    title: "Great Product",
+    comment:
+      "Absolutely love this sideboard! The build quality and design are excellent. It fits perfectly in my living room.",
+    daysAgo: "3 Days ago",
+  },
+  {
+    id: 2,
+    name: "Emma Watson",
+    avatarName: "Emma Watson",
+    rating: 5,
+    title: "Perfect Choice",
+    comment:
+      "This product exceeded my expectations. The materials feel premium and the finish is flawless. Highly recommended!",
+    daysAgo: "1 Week ago",
+  },
+  {
+    id: 3,
+    name: "Chris Evans",
+    avatarName: "Chris Evans",
+    rating: 3.5,
+    title: "Good but not great",
+    comment:
+      "The product is decent, but I expected a bit more for the price. Still, it works well for my needs.",
+    daysAgo: "2 Weeks ago",
+  },
+  {
+    id: 4,
+    name: "Scarlett Johansson",
+    avatarName: "Scarlett Johansson",
+    rating: 4,
+    title: "Stylish and Useful",
+    comment:
+      "Really stylish design and easy to assemble. Adds a modern touch to my room.",
+    daysAgo: "1 Month ago",
+  },
+  {
+    id: 5,
+    name: "Robert Downey Jr.",
+    avatarName: "Robert Downey Jr.",
+    rating: 5,
+    title: "Worth Every Penny",
+    comment:
+      "Incredible quality! I’ve received so many compliments. It’s sturdy, elegant, and looks amazing.",
+    daysAgo: "2 Months ago",
+  },
+];
+
 export const dummyProducts = [
   {
     id: 1,

@@ -15,8 +15,8 @@ import { clientBar, colors } from '../../../services';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
-import DrawerComponent from '../drawer';
 import { Icon, useMediaQuery, useTheme } from '@mui/material';
+import { DrawerComponent } from '../drawer';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -44,7 +44,11 @@ const Header = () => {
     };
 
     return (
-        <AppBar position="static" sx={{ background: colors.white, py: 0.5, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
+        <AppBar position="static" sx={{ 
+            position: 'sticky', // 👈 keeps it visible while scrolling
+          top: 0,
+          zIndex: 1100, 
+            background: colors.white, py: 0.5, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters >
                     <Box component='img' src='/logo-1.png' sx={{
