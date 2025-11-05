@@ -11,26 +11,31 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { clientBar, colors } from '../../../services';
+import { clientBar, colors, dummyCart } from '../../../services';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
-import { Icon, useMediaQuery, useTheme } from '@mui/material';
-import { DrawerComponent } from '../drawer';
+import { Drawer, Icon, Rating, TextField, useMediaQuery, useTheme } from '@mui/material';
+import { CartDrawer, DrawerComponent } from '../drawer';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Header = () => {
     const location = useLocation();
     const theme = useTheme();
-    
-      // Responsive breakpoints
-      const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-      const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+    // Responsive breakpoints
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [open, setOpen] = useState(false);
 
+    const [quantity, setQuantity] = useState(1);
+
+    // Cart Drawer
+    const [openCart, setOpenCart] = useState(false);
+    
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
@@ -43,12 +48,16 @@ const Header = () => {
         setAnchorElUser(null);
     };
 
+    // Cart Drawer handlers
+    const handleOpenCart = () => setOpenCart(true);
+    const handleCloseCart = () => setOpenCart(false);
     return (
-        <AppBar position="static" sx={{ 
+        <AppBar position="static" sx={{
             position: 'sticky', // 👈 keeps it visible while scrolling
-          top: 0,
-          zIndex: 1100, 
-            background: colors.white, py: 0.5, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}>
+            top: 0,
+            zIndex: 1100,
+            background: colors.white, py: 0.5, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
+        }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters >
                     <Box component='img' src='/logo-1.png' sx={{
@@ -78,7 +87,7 @@ const Header = () => {
                         alignSelf: 'center',
                         cursor: 'pointer',
                     }} />
-                    <Box sx={{ flexGrow: isTablet || isMobile ? 0.5: 1, display: { xs: 'flex', md: 'none' } }} />
+                    <Box sx={{ flexGrow: isTablet || isMobile ? 0.5 : 1, display: { xs: 'flex', md: 'none' } }} />
 
                     <Box sx={{ flexGrow: 1, justifyContent: 'center', gap: 7, display: { xs: 'none', md: 'flex' } }}>
                         {clientBar.map((page) => {
@@ -121,17 +130,19 @@ const Header = () => {
                         })}
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton>
+                        <Tooltip>
+                            <IconButton onClick={handleOpenCart}>
                                 <Icon component={ShoppingCartOutlinedIcon} sx={{ color: colors.iconColor_12 }} fontSize='medium' />
                             </IconButton>
+                            {/* Cart Sidebar */}
+                            <CartDrawer openCart={openCart} handleCloseCart={handleCloseCart} quantity={quantity} setQuantity={setQuantity} />
                             {
                                 isAuthenticated ? (
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                         <Avatar alt="Remy Sharp" />
                                     </IconButton>
                                 ) : (
-                                    <IconButton>
+                                    <IconButton href='/account/orders'>
                                         <Icon component={AccountCircleOutlinedIcon} sx={{ color: colors.iconColor_12 }} fontSize='medium' />
                                     </IconButton>
                                 )

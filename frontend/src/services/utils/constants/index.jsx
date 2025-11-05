@@ -52,6 +52,80 @@ export const reasons = [
   }
 ]
 
+export const dummyOrders = [
+  {
+    id: 1,
+    productName: "Classic Leather Watch",
+    image: "/watch.jpg",
+    price: 150,
+    steps: ["Ordered", "Payment", "Confirmation", "Delivery"],
+    activeStep: 2, // currently at "Confirmation"
+  },
+  {
+    id: 2,
+    productName: "Wireless Bluetooth Headphones",
+    image: "/watch.jpg",
+    price: 250,
+    steps: ["Ordered", "Payment", "Confirmation", "Delivery"],
+    activeStep: 1, // currently at "Payment"
+  },
+  {
+    id: 3,
+    productName: "Smart Fitness Band",
+    image: "/watch.jpg",
+    price: 180,
+    steps: ["Ordered", "Payment", "Confirmation", "Delivery"],
+    activeStep: 3, // completed
+  },
+  {
+    id: 4,
+    productName: "Men's Running Shoes",
+    image: "/watch.jpg",
+    price: 320,
+    steps: ["Ordered", "Payment", "Confirmation", "Delivery"],
+    activeStep: 0, // just ordered
+  },
+];
+
+export const dummyCart = [
+  {
+    id: 1,
+    name: 'Classic Leather Watch',
+    price: 150.0,
+    image: '/watch.jpg',
+    quantity: 1,
+  },
+  {
+    id: 2,
+    name: 'Smart Fitness Band',
+    price: 200.0,
+    image: '/watch.jpg',
+    quantity: 2,
+  },
+   {
+    id: 3,
+    name: 'Smart Fitness Band',
+    price: 200.0,
+    image: '/watch.jpg',
+    quantity: 2,
+  },
+   {
+    id: 4,
+    name: 'Smart Fitness Band',
+    price: 200.0,
+    image: '/watch.jpg',
+    quantity: 2,
+  },
+  {
+    id: 5,
+    name: 'Smart Fitness Band',
+    price: 200.0,
+    image: '/watch.jpg',
+    quantity: 2,
+  },
+];
+
+
 export const clientBar = [
   {
     id: 1,

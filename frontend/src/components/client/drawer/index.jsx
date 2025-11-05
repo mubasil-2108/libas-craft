@@ -11,9 +11,17 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import PersonIcon from '@mui/icons-material/Person';
-import { clientBar, colors, socialMediaLinks } from '../../../services';
-import { Icon, MenuItem, Slider, TextField, Typography } from '@mui/material';
+import { clientBar, colors, dummyCart, socialMediaLinks } from '../../../services';
+import { Icon, IconButton, MenuItem, Slider, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
+import CancelIcon from '@mui/icons-material/Cancel';
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import Scrollbars from 'react-custom-scrollbars';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { useState } from 'react';
+
 
 export const DrawerComponent = ({ toggleDrawer, open }) => {
     const location = useLocation();
@@ -86,6 +94,307 @@ export const DrawerComponent = ({ toggleDrawer, open }) => {
             </Drawer>
         </div>
     );
+}
+
+export const CartDrawer = ({ openCart, handleCloseCart }) => {
+    const theme = useTheme();
+
+    // Responsive breakpoints
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+    const [cartItems, setCartItems] = useState(dummyCart);
+
+    // ➕ Increment handler
+    const handleIncrement = (id) => {
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+            )
+        );
+    };
+
+    // ➖ Decrement handler
+    const handleDecrement = (id) => {
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === id
+                    ? { ...item, quantity: item.quantity > 1 ? item.quantity - 1 : 1 }
+                    : item
+            )
+        );
+    };
+
+    // 🧾 Total calculation
+    const totalAmount = cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+    );
+
+    const handleRemove = (id) => {
+        setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    };
+
+    const handleCancelOrder = () => {
+        setCartItems([]);
+    }
+
+    return (
+        <Drawer anchor="right" open={openCart} onClose={handleCloseCart}>
+            <Box
+                sx={{
+                    width: { xs: 280, sm: 350 },
+                    height: "100vh", // ✅ full viewport height
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+            >
+                {/* 🔹 Fixed Header */}
+                <Box
+                    sx={{
+                        position: "sticky",
+                        top: 0,
+                        backgroundColor: colors.white,
+                        zIndex: 2,
+                        p: 2,
+                        borderBottom: "1px solid #ddd",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontFamily: "inter-medium",
+                                color: colors.textColor_4,
+                                fontSize: { xs: "16px", sm: "18px", md: "20px" },
+                            }}
+                        >
+                            Shopping Cart
+                        </Typography>
+                        <IconButton onClick={handleCloseCart}>
+                            <Icon component={CancelIcon} sx={{ color: colors.iconColor_1 }} />
+                        </IconButton>
+                    </Box>
+                </Box>
+
+                {/* 🔹 Scrollable Cart Items */}
+                <Box
+                    sx={{
+                        flex: 1,
+                        overflowY: "auto",
+                        px: 1,
+                        py: 1
+                    }}
+                >
+                    {cartItems.map((item) => (
+                        <Box
+                            component='div'
+                            key={item.id}
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                backgroundColor: colors.grayLight_1,
+                                borderRadius: "10px",
+                                px: 1,
+                                py: 1,
+                                mb: 1,
+                                position:'relative'
+                            }}
+                        >
+                            {/* Product Image */}
+                            <Box
+                                component='div'
+                                onClick={handleCloseCart}
+                                sx={{
+                                    width: { xs: 80, sm: 100, md: 60 },
+                                    height: { xs: 80, sm: 100, md: 60 },
+                                    borderRadius: "10px",
+                                    cursor: "pointer",
+                                    overflow: "hidden",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    src={item.image}
+                                    sx={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            </Box>
+
+                            {/* Product Info */}
+                            <Box sx={{ flexGrow: 1, ml: 1 }}>
+                                <Typography
+                                    sx={{
+                                        fontFamily: "inter-medium",
+                                        color: colors.textColor_4,
+                                        fontSize: { xs: "14px", sm: "16px", md: "18px" },
+                                    }}
+                                >
+                                    {item.name.slice(0, 10).concat("...")}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        fontFamily: "inter-medium",
+                                        color: colors.textColor_1,
+                                        fontSize: { xs: "12px", sm: "14px", md: "16px" },
+                                    }}
+                                >
+                                    Rs.{item.price}
+                                </Typography>
+                            </Box>
+
+                            {/* Quantity Controls */}
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    zIndex: 1000,
+                                }}
+                            >
+                                <IconButton size="small" onClick={() => handleDecrement(item.id)}>
+                                    <RemoveIcon fontSize="small" />
+                                </IconButton>
+                                <TextField
+                                    variant="standard"
+                                    inputProps={{
+                                        min: 1,
+                                        style: {
+                                            textAlign: "center",
+                                            fontFamily: "roboto-regular",
+                                            fontSize: "16px",
+                                            width: "40px",
+                                        },
+                                    }}
+                                    value={item.quantity}
+                                    onChange={(e) => {
+                                        const value = Math.max(1, parseInt(e.target.value) || 1);
+                                        setCartItems((prevItems) =>
+                                            prevItems.map((i) =>
+                                                i.id === item.id ? { ...i, quantity: value } : i
+                                            )
+                                        );
+                                    }}
+                                    sx={{
+                                        "& .MuiInputBase-root:before": { borderBottom: "none" },
+                                        "& .MuiInputBase-root:after": { borderBottom: "none" },
+                                    }}
+                                />
+                                <IconButton size="small" onClick={() => handleIncrement(item.id)}>
+                                    <AddIcon fontSize="small" />
+                                </IconButton>
+                            </Box>
+                            <IconButton
+                                size="small"
+                                onClick={() => handleRemove(item.id)}
+                                sx={{
+                                    // ml: 0.5,
+                                    position: "absolute",
+                                    top: -5,
+                                    right: -5,
+                                    // zIndex: 1000,
+                                    color: colors.iconColor_20 || "#e53935",
+                                    backgroundColor: colors.iconBgColor_6,
+                                    "&:hover": { backgroundColor: colors.iconBgColor_8 },
+                                }}
+                            >
+                                <DeleteOutlinedIcon fontSize="small" />
+                            </IconButton>
+                        </Box>
+                    ))}
+                </Box>
+
+                {/* 🔹 Fixed Footer */}
+                <Box
+                    sx={{
+                        position: "sticky",
+                        bottom: 0,
+                        backgroundColor: colors.white,
+                        p: 2,
+                        borderTop: "1px solid #ddd",
+                        zIndex: 2,
+                    }}
+                >
+                    {/* Total */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            mb: 1,
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontFamily: "inter-bold",
+                                color: colors.textColor_4,
+                                fontSize: { xs: "14px", sm: "16px", md: "20px" },
+                            }}
+                        >
+                            Total Amount
+                        </Typography>
+                        <Typography
+                            sx={{
+                                fontFamily: "inter-medium",
+                                color: colors.textColor_4,
+                                fontSize: { xs: "14px", sm: "16px", md: "20px" },
+                            }}
+                        >
+                            Rs.{totalAmount.toFixed(2)}
+                        </Typography>
+                    </Box>
+
+                    {/* Buttons */}
+                    <Button
+                        variant="contained"
+                        endIcon={<Icon component={ShoppingCartOutlinedIcon} />}
+                        sx={{
+                            color: colors.textColor_5,
+                            backgroundColor: colors.greenDark_1,
+                            width: "100%",
+                            height: "50px",
+                            borderRadius: "8px",
+                            textTransform: "none",
+                            fontFamily: "roboto-regular",
+                        }}
+                    >
+                        Proceed To Checkout
+                    </Button>
+                    {/* Cancel the order and empty the cart */}
+                    <Button
+                        variant="outlined"
+                        onClick={handleCancelOrder}
+                        sx={{
+                            color: colors.greenDark_1,
+                            borderColor: colors.greenDark_1,
+                            width: "100%",
+                            height: "50px",
+                            borderRadius: "8px",
+                            mt: 1,
+                            textTransform: "none",
+                            fontFamily: "roboto-regular",
+                            "&:hover": {
+                                backgroundColor: `${colors.greenDark_1}10`,
+                            },
+                        }}
+                    >
+                        Cancel Order
+                    </Button>
+                </Box>
+            </Box>
+        </Drawer>
+    )
 }
 
 export const FilterSortDrawer = ({ drawerOpen, toggleDrawer, priceRange, handlePriceChange, handleMaxChange, handleMinChange, sortOption, setSortOption }) => {
