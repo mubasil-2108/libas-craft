@@ -8,7 +8,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useRef } from "react";
-import { colors } from "../../../services";
+import { colors, dummyCatalog } from "../../../services";
 import ProductTile from "../product-tile";
 import Scrollbars from "react-custom-scrollbars";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
@@ -24,7 +24,7 @@ const PopularProduct = () => {
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   // Dummy product array for rendering
-  const products = [1, 2, 3, 4, 5, 6];
+  // const products = [1, 2, 3, 4, 5, 6];
 
   // Smooth scroll helper
   const smoothScroll = (target, distance, duration = 400) => {
@@ -134,8 +134,8 @@ const PopularProduct = () => {
               flexDirection: "row",
             }}
           >
-            {products.map((_, index) => (
-              <ProductTile key={index} />
+            {dummyCatalog.map((item) => (
+              <ProductTile key={item.id} item={item} />
             ))}
           </Box>
         </Scrollbars>

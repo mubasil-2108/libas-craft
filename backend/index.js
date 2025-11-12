@@ -7,6 +7,7 @@ const cors = require('cors');
 const errorHandler = require('./middlewares/error');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
+const orderRoutes = require('./routes/order');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,6 +54,7 @@ app.get("/", (req, res) => {
 })
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.use(errorHandler);
 

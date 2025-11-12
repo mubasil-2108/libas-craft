@@ -13,15 +13,19 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { clientBar, colors, dummyCart } from '../../../services';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { useLocation, Link as RouterLink } from 'react-router-dom';
+import { useLocation, Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Drawer, Icon, Rating, TextField, useMediaQuery, useTheme } from '@mui/material';
 import { CartDrawer, DrawerComponent } from '../drawer';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { ShoppingFormDialog } from '../dialog';
+import { useSelector } from 'react-redux';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Header = () => {
+    const cartItems = useSelector((state) => state.cart.cartItems);
     const location = useLocation();
+    const navigate = useNavigate();
     const theme = useTheme();
 
     // Responsive breakpoints
@@ -30,12 +34,16 @@ const Header = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [open, setOpen] = useState(false);
-
-    const [quantity, setQuantity] = useState(1);
-
+    const [openForm, setOpenForm] = useState(false);
     // Cart Drawer
     const [openCart, setOpenCart] = useState(false);
-    
+
+    // 🧾 Total calculation
+    const totalAmount = cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+    );
+
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
@@ -51,129 +59,140 @@ const Header = () => {
     // Cart Drawer handlers
     const handleOpenCart = () => setOpenCart(true);
     const handleCloseCart = () => setOpenCart(false);
-    return (
-        <AppBar position="static" sx={{
-            position: 'sticky', // 👈 keeps it visible while scrolling
-            top: 0,
-            zIndex: 1100,
-            background: colors.white, py: 0.5, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
-        }}>
-            <Container maxWidth="xl">
-                <Toolbar disableGutters >
-                    <Box component='img' src='/logo-1.png' sx={{
-                        display: { xs: 'none', md: 'flex' },
-                        objectFit: 'contain',
-                        maxWidth: '120px',
-                        alignSelf: 'center',
-                        cursor: 'pointer',
-                    }} />
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={toggleDrawer(true)}
-                            color="inherit"
-                        >
-                            <MenuIcon sx={{ color: colors.iconColor_7 }} />
-                        </IconButton>
-                        <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
-                    </Box>
-                    <Box component='img' src='/logo-1.png' sx={{
-                        display: { xs: 'flex', md: 'none' },
-                        objectFit: 'contain',
-                        maxWidth: '120px',
-                        alignSelf: 'center',
-                        cursor: 'pointer',
-                    }} />
-                    <Box sx={{ flexGrow: isTablet || isMobile ? 0.5 : 1, display: { xs: 'flex', md: 'none' } }} />
 
-                    <Box sx={{ flexGrow: 1, justifyContent: 'center', gap: 7, display: { xs: 'none', md: 'flex' } }}>
-                        {clientBar.map((page) => {
-                            const isActive = location.pathname === page.link
-                            return (
-                                <Box key={page.id} sx={{
-                                    justifyContent: 'center',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 0.5
-                                }}>
-                                    <Box
-                                        component={RouterLink}
-                                        to={page.link}
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            color: colors.textColor_4,
-                                            textDecoration: 'none',
-                                            transition: 'color 0.3s ease',
-                                            '&:hover': {
-                                                color: colors.textColor_7,
-                                            },
-                                        }}
-                                    >
-                                        <Typography variant='h6' sx={{ fontFamily: 'nunito-sans', fontSize: '16px', fontWeight: isActive ? '600' : 'normal' }}>{page.name}</Typography>
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            height: '3px',
-                                            width: '80%',
-                                            alignSelf: 'center',
-                                            // borderRadius: '2px',
-                                            backgroundColor: isActive ? colors.greenDark_3 : 'transparent',
-                                            transition: 'background-color 0.3s ease',
-                                        }}
-                                    />
-                                </Box>
-                            )
-                        })}
-                    </Box>
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip>
-                            <IconButton onClick={handleOpenCart}>
-                                <Icon component={ShoppingCartOutlinedIcon} sx={{ color: colors.iconColor_12 }} fontSize='medium' />
+    const handleOpenForm = () => setOpenForm(true);
+    const handleCloseForm = () => setOpenForm(false);
+    return (
+        <>
+            <AppBar position="static" sx={{
+                position: 'sticky', // 👈 keeps it visible while scrolling
+                top: 0,
+                zIndex: 1100,
+                background: colors.white, py: 0.5, boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
+            }}>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters >
+                        <Box component='img' onClick={() => window.location.href = '/'} src='/logo-1.png' sx={{
+                            display: { xs: 'none', md: 'flex' },
+                            objectFit: 'contain',
+                            maxWidth: '120px',
+                            alignSelf: 'center',
+                            cursor: 'pointer',
+                            pointerEvents: 'auto',
+                        }} />
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={toggleDrawer(true)}
+                                color="inherit"
+                            >
+                                <MenuIcon sx={{ color: colors.iconColor_7 }} />
                             </IconButton>
-                            {/* Cart Sidebar */}
-                            <CartDrawer openCart={openCart} handleCloseCart={handleCloseCart} quantity={quantity} setQuantity={setQuantity} />
-                            {
-                                isAuthenticated ? (
-                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                        <Avatar alt="Remy Sharp" />
-                                    </IconButton>
-                                ) : (
-                                    <IconButton href='/account/orders'>
-                                        <Icon component={AccountCircleOutlinedIcon} sx={{ color: colors.iconColor_12 }} fontSize='medium' />
-                                    </IconButton>
+                            <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
+                        </Box>
+                        <Box component='img' onClick={() => navigate('/')} src='/logo-1.png' sx={{
+                            display: { xs: 'flex', md: 'none' },
+                            objectFit: 'contain',
+                            maxWidth: '120px',
+                            alignSelf: 'center',
+                            cursor: 'pointer',
+                            pointerEvents: 'auto',
+                        }} />
+                        <Box sx={{ flexGrow: isTablet || isMobile ? 0.5 : 1, display: { xs: 'flex', md: 'none' } }} />
+
+                        <Box sx={{ flexGrow: 1, justifyContent: 'center', gap: 7, display: { xs: 'none', md: 'flex' } }}>
+                            {clientBar.map((page) => {
+                                const isActive = location.pathname === page.link
+                                return (
+                                    <Box key={page.id} sx={{
+                                        justifyContent: 'center',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 0.5
+                                    }}>
+                                        <Box
+                                            component='div'
+                                            onClick={() => navigate(page.link)}
+                                            sx={{
+                                                position: "relative",
+                                                zIndex: 10,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                cursor: 'pointer',
+                                                color: colors.textColor_4,
+                                                textDecoration: 'none',
+                                                transition: 'color 0.3s ease',
+                                                '&:hover': {
+                                                    color: colors.textColor_7,
+                                                },
+                                            }}
+                                        >
+                                            <Typography variant='h6' sx={{ fontFamily: 'nunito-sans', fontSize: '16px', fontWeight: isActive ? '600' : 'normal' }}>{page.name}</Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                height: '3px',
+                                                width: '80%',
+                                                alignSelf: 'center',
+                                                // borderRadius: '2px',
+                                                backgroundColor: isActive ? colors.greenDark_3 : 'transparent',
+                                                transition: 'background-color 0.3s ease',
+                                            }}
+                                        />
+                                    </Box>
                                 )
-                            }
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
-                </Toolbar>
-            </Container>
-        </AppBar>
+                            })}
+                        </Box>
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Tooltip>
+                                <IconButton onClick={handleOpenCart}>
+                                    <Icon component={ShoppingCartOutlinedIcon} sx={{ color: colors.iconColor_12 }} fontSize='medium' />
+                                </IconButton>
+                                {/* Cart Sidebar */}
+                                <CartDrawer cartItems={cartItems} totalAmount={totalAmount} handleOpenForm={handleOpenForm} openCart={openCart} handleCloseCart={handleCloseCart} />
+                                {
+                                    isAuthenticated ? (
+                                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                            <Avatar alt="Remy Sharp" />
+                                        </IconButton>
+                                    ) : (
+                                        <IconButton onClick={() => navigate('/account/orders')}>
+                                            <Icon component={AccountCircleOutlinedIcon} sx={{ color: colors.iconColor_12 }} fontSize='medium' />
+                                        </IconButton>
+                                    )
+                                }
+                            </Tooltip>
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                                {settings.map((setting) => (
+                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                        <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </Box>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+            <ShoppingFormDialog cartItems={cartItems} handleCloseCart={handleCloseCart} totalAmount={totalAmount} open={openForm} handleClose={handleCloseForm} />
+        </>
     );
 }
 export default Header;

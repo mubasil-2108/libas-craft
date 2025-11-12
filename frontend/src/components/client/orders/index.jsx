@@ -1,200 +1,299 @@
-import {
-    Box,
-    Icon,
-    Pagination,
-    PaginationItem,
-    Typography,
-} from "@mui/material";
+import { Box } from "@mui/system";
 import React, { useState } from "react";
+import { colors } from "../../../services";
+import CircleIcon from "@mui/icons-material/Circle";
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import {
-    colors,
-    dummyOrders
-} from "../../../services";
-import { ClientOrders } from "../../../components/client";
-import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+    Button,
+    Icon,
+    IconButton,
+    Step,
+    StepConnector,
+    stepConnectorClasses,
+    StepLabel,
+    Stepper,
+    styled,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getUserOrders, updateOrderStatus } from "../../../store/slices/orderSlice";
 
-const Account = () => {
-    const steps = ["Ordered", "Payment", "Confirmation", "Delivery"];
+const CustomConnector = styled(StepConnector)(({ theme }) => ({
+    [`&.${stepConnectorClasses.alternativeLabel}`]: {},
+    [`& .${stepConnectorClasses.line}`]: {
+        height: 3,
+        border: 0,
+        borderRadius: 1,
+        backgroundColor: "yellow",
+    },
+    [`&.${stepConnectorClasses.active} .${stepConnectorClasses.line}`]: {
+        backgroundColor: "yellow",
+    },
+    [`&.${stepConnectorClasses.completed} .${stepConnectorClasses.line}`]: {
+        backgroundColor: "green",
+    },
+}));
 
-    // Pagination state
-    const [page, setPage] = useState(1);
-    const itemsPerPage = 3;
-
-    // Paginated data
-    const totalPages = Math.ceil(dummyOrders.length / itemsPerPage);
-    const startIndex = (page - 1) * itemsPerPage;
-    const currentOrders = dummyOrders.slice(startIndex, startIndex + itemsPerPage);
-
-    const handleChange = (event, value) => {
-        setPage(value);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
+const CustomStepIcon = (props) => {
+    const { active, completed } = props;
     return (
-        <Box
+        <CircleIcon
             sx={{
-                display: "flex",
-                flexDirection: "column",
-                backgroundColor: colors.white,
-                px: { xs: 2, sm: 4, md: 8, lg: 12 },
-                py: { xs: 2, sm: 4, md: 6 },
-                minHeight: "100vh",
+                fontSize: 20,
+                color: completed ? "green" : active ? "yellow" : "yellow",
             }}
-        >
-            {/* ✅ Title */}
-            <Typography
-                sx={{
-                    fontFamily: "playfairDisplay",
-                    fontSize: { xs: "24px", sm: "32px", md: "42px", lg: "48px" },
-                    color: colors.textColor_3,
-                    textAlign: { xs: "center", sm: "left" },
-                    mb: { xs: 2, sm: 4 },
-                    wordBreak: "break-word",
-                }}
-            >
-                Orders
-            </Typography>
-
-            {/* ✅ Orders Section */}
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        borderRadius: "20px",
-                        width: "100%",
-                        maxWidth: { xs: "100%", sm: "90%", md: "80%", lg: "70%" },
-                        mx: "auto",
-                        gap: { xs: 2, sm: 2.5 },
-                    }}
-                >
-                    {dummyOrders.length > 0 ? (
-                        currentOrders.map((item) => (
-                            <ClientOrders key={item.id} steps={steps} order={item} />
-                        ))
-                    ) : (
-                        <Typography
-                            sx={{
-                                fontFamily: "playfairDisplay",
-                                fontSize: { xs: "22px", sm: "32px", md: "48px" },
-                                color: colors.textColor_3,
-                                textAlign: "center",
-                                py: 6,
-                            }}
-                        >
-                            No orders found
-                        </Typography>
-                    )}
-                </Box>
-            </Box>
-
-            {/* ✅ Pagination */}
-            {totalPages > 1 && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        mt: { xs: 3, sm: 4 },
-                        mb: { xs: 1, sm: 2 },
-                    }}
-                >
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={handleChange}
-                        shape="rounded"
-                        boundaryCount={1}
-                        siblingCount={1}
-                        variant="outlined"
-                        renderItem={(item) => {
-                            if (item.type === "next" && page >= totalPages) return null;
-                            if (item.type === "previous" && page === 1) return null;
-
-                            return (
-                                <PaginationItem
-                                    {...item}
-                                    slots={{
-                                        previous: () => (
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: 0.5,
-                                                    pl: 1,
-                                                    pr: 1,
-                                                }}
-                                            >
-                                                <Icon
-                                                    component={ArrowBackIosNewRoundedIcon}
-                                                    sx={{ fontSize: "14px" }}
-                                                />
-                                                <Typography
-                                                    variant="button"
-                                                    component="p"
-                                                    sx={{ fontSize: "13px" }}
-                                                >
-                                                    Prev
-                                                </Typography>
-                                            </Box>
-                                        ),
-                                        next: () => (
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: 0.5,
-                                                    pl: 1,
-                                                    pr: 1,
-                                                }}
-                                            >
-                                                <Typography
-                                                    variant="button"
-                                                    component="p"
-                                                    sx={{ fontSize: "13px" }}
-                                                >
-                                                    Next
-                                                </Typography>
-                                                <Icon
-                                                    component={ArrowForwardIosRoundedIcon}
-                                                    sx={{ fontSize: "14px" }}
-                                                />
-                                            </Box>
-                                        ),
-                                    }}
-                                    sx={{
-                                        minWidth: item.type === "page" ? 38 : 70,
-                                        height: 32,
-                                        borderRadius: "8px",
-                                        fontSize: "14px",
-                                        fontWeight: 600,
-                                        color:
-                                            item.selected
-                                                ? colors.white
-                                                : colors.grayDark_1,
-                                        border: `1px solid ${colors.borderColor_7}`,
-                                        "&.Mui-selected": {
-                                            backgroundColor: colors.greenDark_3,
-                                            color: colors.white,
-                                            "&:hover": {
-                                                backgroundColor: colors.greenDark_1,
-                                                color: colors.white,
-                                            },
-                                        },
-                                        "&:hover": {
-                                            backgroundColor: colors.greenDark_1,
-                                            color: colors.white,
-                                        },
-                                        mx: { xs: 0.5, sm: 1 },
-                                    }}
-                                />
-                            );
-                        }}
-                    />
-                </Box>
-            )}
-        </Box>
+        />
     );
 };
 
-export default Account;
+const ClientOrders = ({ order, steps }) => {
+    const theme = useTheme();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const stepIndex = steps.findIndex(
+        (step) => step.toLowerCase() === order?.status?.toLowerCase()
+    );
+
+    const totalItems = order?.orderItems?.length || 0;
+    const hasMultipleItems = totalItems > 1;
+
+    const handlePrevOrder = () => {
+        // Logic to navigate to the previous order
+        if (currentIndex > 0) {
+            setCurrentIndex((prev) => prev - 1);
+        }
+    }
+
+    const handleNextOrder = () => {
+        // Logic to navigate to the next order
+        if (currentIndex < totalItems - 1) {
+            setCurrentIndex((prev) => prev + 1);
+        }
+    }
+
+    const handleCancelOrder = async () => {
+        // Logic to cancel the order
+        await dispatch(updateOrderStatus({ orderId: order?._id, status: 'Cancelled' })).unwrap();
+        await dispatch(getUserOrders(order?.user))
+    }
+
+    return (
+        <Box component='div' sx={{
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 1,
+            width: '100%',
+        }}>
+            <IconButton onClick={handlePrevOrder} disabled={!hasMultipleItems || currentIndex === 0}>
+                <Icon component={ArrowBackIosNewOutlinedIcon} sx={{
+                    color:
+                        hasMultipleItems && currentIndex > 0
+                            ? colors.black
+                            : colors.transparent,
+                }} />
+            </IconButton>
+            <Box
+                component="div"
+                sx={{
+                    flexGrow: { xs: 0, sm: 0, md: 1 },
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    cursor: "pointer",
+                    alignItems: "center",
+                    backgroundColor: colors.grayLight_1,
+                    borderRadius: "15px",
+                    justifyContent: "space-between",
+                    px: { xs: 2, sm: 3 },
+                    py: { xs: 2, sm: 3 },
+                    gap: { xs: 2, sm: 3 },
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                }}
+            >
+                <Box component='div'
+                    onClick={() => navigate(`/collections/${order?.orderItems[currentIndex]?.productId}`)}
+                    sx={{
+                        width: '100%',
+                        display: "flex",
+                        flexDirection: { xs: "column", sm: "row" },
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: { xs: 2, sm: 3 },
+                    }}
+                >
+                    {/* 🖼️ Image */}
+                    <Box
+                        component="div"
+                        sx={{
+                            width: { xs: '80px', sm: '100px', md: '120px' },
+                            height: { xs: 80, sm: 100, md: 120 },
+                            borderRadius: "15px",
+                            overflow: "hidden",
+                            flexShrink: 0,
+                            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                            position: "relative",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center', // ✅ centers horizontally & vertically
+                        }}
+                    >
+                        <Box component='img' src={order?.orderItems[currentIndex]?.productPhoto} sx={{
+                            width: { xs: '80px', sm: '100px', md: '120px' },
+                            height: { xs: 80, sm: 100, md: 120 },
+                            objectFit: 'cover',
+                        }} />
+                    </Box>
+
+                    {/* 🧾 Product Info */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            flexGrow: 1,
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            width: "100%",
+                        }}
+                    >
+                        <Box sx={{ flex: 1, }}>
+                            <Typography
+                                sx={{
+                                    fontFamily: "inter-regular",
+                                    fontSize: { xs: "12px", sm: "13px", md: "14px" },
+                                    color: colors.textColor_4,
+                                    textAlign: { xs: "center", sm: "left" },
+                                    flexWrap: "wrap",
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                {order?.orderItems[currentIndex]?.productName}
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: { xs: 'row', sm: 'row', md: 'column' }, alignItems: 'center', gap: { xs: 1, sm: 1, md: 0 } }}>
+                            <Typography
+                                sx={{
+                                    fontFamily: "inter-semibold",
+                                    fontSize: { xs: "13px", sm: "15px", md: "18px" },
+                                    color: colors.textColor_4,
+                                    textAlign: "center",
+                                }}
+                            >
+                                Rs.{order?.orderItems[currentIndex]?.total}
+                            </Typography>
+                            {/* Quantity */}
+                            <Typography
+                                sx={{
+                                    fontFamily: "inter-regular",
+                                    fontSize: { xs: "11px", sm: "12px", md: "14px" },
+                                    color: colors.textColor_4,
+                                    textAlign: "center",
+                                }}
+                            >
+                                Qty: {order?.orderItems[currentIndex]?.quantity}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Box>
+
+
+                {/* 🪜 Stepper */}
+                <Box
+                    sx={{
+                        width: { xs: "100%", sm: "350px", md: "100%" },
+                        mt: { xs: 1, sm: 0 },
+                    }}
+                >
+                    <Stepper
+                        activeStep={stepIndex !== -1 ? stepIndex + 1 : 0} // if stepIndex is -1, set activeStep to 0
+                        alternativeLabel
+                        connector={<CustomConnector />}
+                    >
+                        {steps.map((label, index) => (
+                            <Step key={index}>
+                                <StepLabel
+                                    StepIconComponent={CustomStepIcon}
+                                    sx={{
+                                        "& .MuiStepLabel-label": {
+                                            fontSize: { xs: "10px", sm: "12px" },
+                                            display: isMobile ? "block" : "block",
+                                        },
+                                    }}
+                                >
+                                    {label}
+                                </StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Box>
+
+                {/* 🔘 Buttons */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: { xs: "row", sm: "column" },
+                        gap: { xs: 1, sm: 2 },
+                        width: { xs: "100%", sm: "auto" },
+                        justifyContent: "center",
+                        alignItems: "center",
+                        mt: { xs: 1, sm: 0 },
+                    }}
+                >
+                    {/* Total Amount */}
+                    <Box sx={{ flex: 1 }}>
+                        <Typography
+                            sx={{
+                                fontFamily: "inter-semibold",
+                                fontSize: { xs: "13px", sm: "16px", md: "18px" },
+                                color: colors.textColor_4,
+                                textAlign: "center",
+                            }}
+                        >
+                            Total: Rs.{order?.totalAmount}
+                        </Typography>
+                    </Box>
+
+                    <Button
+                        variant="contained"
+                         onClick={handleCancelOrder}
+                        disabled={order?.status === "Cancelled" || order?.status === "Shipped" || order?.status === "Delivered"}
+                        sx={{
+                            flex: 1,
+                            minWidth: { xs: "120px", sm: "150px" },
+                            height: { xs: "35px", sm: "40px" },
+                            borderRadius: "10px",
+                            color: colors.textColor_4,
+                            backgroundColor: colors.buttonColor_3,
+                            fontSize: { xs: "11px", sm: "13px", md: "15px" },
+                            fontFamily: "inter-regular",
+                            textTransform: "none",
+                        }}
+                    >
+                        {order?.status === "Cancelled" ? "Cancelled" : "Cancel Order"}
+                    </Button>
+                </Box>
+            </Box>
+            <IconButton onClick={handleNextOrder} disabled={!hasMultipleItems || currentIndex >= totalItems - 1}>
+                <Icon component={ArrowForwardIosOutlinedIcon} sx={{
+                    color:
+                        hasMultipleItems && currentIndex < totalItems - 1
+                            ? colors.black
+                            : colors.transparent,
+                }} />
+            </IconButton>
+        </Box>
+
+    );
+};
+
+export default ClientOrders;

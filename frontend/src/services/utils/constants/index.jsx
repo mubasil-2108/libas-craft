@@ -125,6 +125,99 @@ export const dummyCart = [
   },
 ];
 
+export const dummyCatalog = [
+  {
+    id: 1,
+    name: "Luxury Watch",
+    price: 1500,
+    description:
+      "Elegant timepiece with premium leather strap and water-resistant design.",
+    image: "/watch.jpg",
+    rating: 4.5,
+  },
+  {
+    id: 2,
+    name: "Classic Chrono",
+    price: 2000,
+    description:
+      "Timeless chronograph with a bold stainless steel body and precise movement.",
+    image: "/watch.jpg",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Modern Minimal",
+    price: 1200,
+    description:
+      "Sleek and minimal design perfect for casual and formal occasions.",
+    image: "/watch.jpg",
+    rating: 4,
+  },
+  {
+    id: 4,
+    name: "Titan Edge",
+    price: 2500,
+    description:
+      "Ultra-slim design crafted for comfort and durability with premium materials.",
+    image: "/watch.jpg",
+    rating: 4.8,
+  },
+  {
+    id: 5,
+    name: "Aviator Series",
+    price: 1800,
+    description:
+      "Inspired by aviation, this watch features precision and bold aesthetics.",
+    image: "/watch.jpg",
+    rating: 4.3,
+  },
+  {
+    id: 6,
+    name: "Vintage Gold",
+    price: 2200,
+    description:
+      "A retro gold finish with fine craftsmanship for a timeless look.",
+    image: "/watch.jpg",
+    rating: 4.7,
+  },
+  {
+    id: 7,
+    name: "Smart Analog",
+    price: 2700,
+    description:
+      "A hybrid analog smartwatch with modern features and classic appeal.",
+    image: "/watch.jpg",
+    rating: 4.6,
+  },
+  {
+    id: 8,
+    name: "Steel Force",
+    price: 2100,
+    description:
+      "Rugged stainless steel construction with superior performance design.",
+    image: "/watch.jpg",
+    rating: 4.4,
+  },
+  {
+    id: 9,
+    name: "Midnight Black",
+    price: 1900,
+    description:
+      "Matte black aesthetic with luminous dials and bold wrist presence.",
+    image: "/watch.jpg",
+    rating: 4.9,
+  },
+  {
+    id: 10,
+    name: "Royal Blue",
+    price: 2300,
+    description:
+      "Blue dial luxury watch combining precision engineering and style.",
+    image: "/watch.jpg",
+    rating: 4.2,
+  },
+];
+
 
 export const clientBar = [
   {

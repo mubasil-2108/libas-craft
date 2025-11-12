@@ -23,9 +23,10 @@ import TuneIcon from "@mui/icons-material/Tune";
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { FilterSortDrawer } from "../../../components/client/drawer";
+import { dummyCatalog } from "../../../services";
 
 const Catalog = () => {
-    const products = [1, 2, 3, 4, 5, 6, 7];
+    // const products = [1, 2, 3, 4, 5, 6, 7];
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -35,12 +36,12 @@ const Catalog = () => {
     const rowsPerPage = 6; // show 6 products per page
 
     // Calculate paginated products
-    const paginatedProducts = products.slice(
+    const paginatedProducts = dummyCatalog.slice(
         (page - 1) * rowsPerPage,
         page * rowsPerPage
     );
 
-    const totalPages = Math.ceil(products.length / rowsPerPage);
+    const totalPages = Math.ceil(dummyCatalog.length / rowsPerPage);
 
     const [priceRange, setPriceRange] = useState([20, 80]);
     const [showPriceFilter, setShowPriceFilter] = useState(false);
@@ -143,7 +144,7 @@ const Catalog = () => {
                             fontSize: "14px",
                         }}
                     >
-                        {products.length} products
+                        {dummyCatalog.length} products
                     </Typography>
                 </Box>
 
@@ -375,7 +376,7 @@ const Catalog = () => {
                                 color: colors.textColor_1,
                             }}
                         >
-                            {products.length} products
+                            {dummyCatalog.length} products
                         </Typography>
                     </Box>
                 </Box>
@@ -393,8 +394,8 @@ const Catalog = () => {
                         gap: { xs: 2, sm: 3, md: 4, lg: 5 },
                     }}
                 >
-                    {paginatedProducts.map((_, i) => (
-                        <ProductTile key={i} index={i} />
+                    {paginatedProducts.map((item) => (
+                        <ProductTile key={item.id} item={item} />
                     ))}
                 </Box>
 

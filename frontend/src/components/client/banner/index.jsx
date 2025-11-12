@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { colors, reasons } from "../../../services";
+import { useNavigate } from "react-router-dom";
 
 const Banner = () => {
   const [width, setWidth] = useState(window.innerWidth);
   const theme = useTheme();
-
+  const navigate = useNavigate();
   // Responsive breakpoints
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -149,6 +150,7 @@ const Banner = () => {
 
           <Button
             variant="contained"
+            onClick={()=> navigate('/collections/all')}
             sx={{
               backgroundColor: colors.greenDark_1,
               color: colors.textColor_5,

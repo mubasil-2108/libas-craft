@@ -1,6 +1,6 @@
 import { Box, Button, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { useRef } from 'react'
-import { colors } from '../../../services'
+import { colors, dummyCatalog } from '../../../services'
 import Scrollbars from 'react-custom-scrollbars';
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
@@ -16,7 +16,7 @@ const FeaturedProduct = () => {
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
-    const products = [1, 2, 3, 4, 5, 6];
+    // const products = [1, 2, 3, 4, 5, 6];
 
     const smoothScroll = (target, distance, duration = 400) => {
         if (!target || !target.view) return;
@@ -172,8 +172,8 @@ const FeaturedProduct = () => {
                                 flexDirection: "row",
                             }}
                         >
-                            {products.map((_, index) => (
-                                <ProductTile key={index} />
+                           {dummyCatalog.map((item) => (
+                                <ProductTile key={item.id} item={item} />
                             ))}
                         </Box>
                     </Scrollbars>

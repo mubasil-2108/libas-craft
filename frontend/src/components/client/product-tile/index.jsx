@@ -3,11 +3,34 @@ import { Box, Button, Rating, Typography, useMediaQuery, useTheme } from '@mui/m
 import { styled } from '@mui/system';
 import { colors } from '../../../services';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, removeFromCart } from '../../../store/slices/cartSlice';
 
-const ProductTile = ({index}) => {
+const ProductTile = ({ item }) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+
+  const isInCart = cartItems.some(i => i.id === item.id);
+
+  const handleCartAction = (e) => {
+    e.stopPropagation(); // prevent navigation
+    if (isInCart) {
+      dispatch(removeFromCart(item.id));
+    } else {
+      dispatch(addToCart({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        image: item.image,
+        description: item.description,
+        rating: item.rating,
+        quantity: 1, // initial quantity
+      }));
+    }
+  };
 
   return (
     <Box
@@ -18,7 +41,7 @@ const ProductTile = ({index}) => {
         p: { xs: 1, sm: 2, md: 3 },
         width: "100%",
       }}
-      onClick={()=> navigate(`/collections/${index}`)}
+      onClick={() => navigate(`/collections/${item.id}`)}
     >
       <CardBox isMobile={isMobile}>
         <Ribbon isMobile={isMobile} />
@@ -36,7 +59,7 @@ const ProductTile = ({index}) => {
             >
               <Box
                 component='img'
-                src='/watch.jpg'
+                src={item?.image}
                 alt='Product'
                 sx={{
                   width: "100%",
@@ -67,7 +90,7 @@ const ProductTile = ({index}) => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  Armchair
+                  {item?.name}
                 </Typography>
                 <Typography
                   sx={{
@@ -76,14 +99,14 @@ const ProductTile = ({index}) => {
                     color: colors.textColor_10,
                   }}
                 >
-                  Rs. 1000
+                  Rs.{item?.price}
                 </Typography>
               </Box>
 
               <Rating
                 size={isMobile ? "small" : "medium"}
                 name="read-only"
-                value={5}
+                value={item?.rating}
                 precision={0.5}
                 readOnly
                 sx={{ color: colors.iconColor_16, mb: isMobile ? 0.5 : 1 }}
@@ -98,8 +121,7 @@ const ProductTile = ({index}) => {
                   lineHeight: 1.4,
                 }}
               >
-                {`Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.`.slice(0, isMobile ? 60 : 100) + "..."}
+                {item?.description.slice(0, isMobile ? 60 : 70) + "..."}
               </Typography>
             </Box>
           </Box>
@@ -107,6 +129,7 @@ const ProductTile = ({index}) => {
           <Box>
             <Button
               variant='contained'
+              onClick={handleCartAction}
               sx={{
                 width: "100%",
                 borderRadius: "0 0 20px 20px",
@@ -120,7 +143,7 @@ const ProductTile = ({index}) => {
                 },
               }}
             >
-              Add to cart
+              {isInCart ? "Remove from Cart" : "Add to Cart"}
             </Button>
           </Box>
         </Box>

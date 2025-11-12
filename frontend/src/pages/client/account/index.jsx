@@ -1,24 +1,44 @@
 import { Box, Icon, Pagination, PaginationItem, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { colors, dummyOrders } from '../../../services'
-import { ClientOrders } from '../../../components/client';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import { ClientOrders } from '../../../components/client';
+import { useDispatch, useSelector } from 'react-redux';
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+
+import { getUserOrders } from '../../../store/slices/orderSlice';
 
 // ✅ Custom Connector with dynamic colors
 
 
 const Account = () => {
-    const steps = ["Ordered", "Payment", "Confirmation", "Delivery"];
+    const steps = ['Pending', 'Processing', 'Shipped', 'Delivered',];
 
     // Pagination state
     const [page, setPage] = useState(1);
     const itemsPerPage = 3; // 👈 change this number to show more/less per page
+    const dispatch = useDispatch();
+    let userId = localStorage.getItem('guestId');
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            if (userId) {
+                await dispatch(getUserOrders(userId));
+            }
+        };
+        fetchOrders();
+    }, [dispatch, userId]);
+
+    const { isLoading, userOrders } = useSelector((state) => state.order);
+
+    const orders = useMemo(() => userOrders || [], [userOrders]);
+    console.log(orders, "userOrders in Account page");
 
     // Calculate paginated data
-    const totalPages = Math.ceil(dummyOrders.length / itemsPerPage);
+    const totalPages = Math.ceil(orders.length / itemsPerPage);
     const startIndex = (page - 1) * itemsPerPage;
-    const currentOrders = dummyOrders.slice(startIndex, startIndex + itemsPerPage);
+    const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
 
     const handleChange = (event, value) => {
         setPage(value);
@@ -55,10 +75,10 @@ const Account = () => {
                     // height: 500,
                     borderRadius: '20px',
                     width: 'auto',
-                    gap: 1
+                    gap: 2
                     // backgroundColor: colors.grayLight_2
                 }}>
-                    {dummyOrders.length > 0 ? (
+                    {orders.length > 0 ? (
                         currentOrders.map((item) => (
                             <ClientOrders key={item.id} steps={steps} order={item} />
                         ))
