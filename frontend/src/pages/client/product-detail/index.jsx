@@ -20,13 +20,17 @@ import { IoIosRadioButtonOff, IoIosRadioButtonOn } from "react-icons/io";
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 // import { BorderLinearProgress } from '../../../components/client/progress-bar'
 import { ProductTabs } from '../../../components/client'
+import { useParams } from 'react-router-dom'
 
 const ClientProductDetail = () => {
 
     const theme = useTheme();
+    const { id } = useParams();
+
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+    
 
     const [currentImage, setCurrentImage] = useState(0)
     const thumbnailsRef = useRef(null); // ✅ ref for the thumbnails container
@@ -822,6 +826,7 @@ const ClientProductDetail = () => {
             {/* Product Detail, Reviews, Ingredients */}
             <ProductTabs
                 selectedTab={selectedTab}
+                productId={id}
                 setSelectedTab={setSelectedTab}
                 reviews={reviews}
                 productSections={productSections}

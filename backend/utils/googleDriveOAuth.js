@@ -54,13 +54,13 @@ async function authorize() {
   });
 }
 
-async function uploadFile(filePath) {
+async function uploadFile(filePath, folderName) {
   const auth = await authorize();
   const drive = google.drive({ version: "v3", auth });
 
   const fileMetadata = {
     name: path.basename(filePath),
-    parents: [process.env.GOOGLE_DRIVE_FOLDER_ID],
+    parents: folderName === 'reviews' ? [process.env.GOOGLE_DRIVE_REVIEWS_FOLDER_ID] : [process.env.GOOGLE_DRIVE_FOLDER_ID],
   };
   const media = {
     body: fs.createReadStream(filePath),
