@@ -18,12 +18,25 @@ function stringToColor(string) {
   return color;
 }
 
+// function stringAvatar(name) {
+//   return {
+//     sx: {
+//       bgcolor: stringToColor(name),
+//     },
+//     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+//   };
+// }
+
 function stringAvatar(name) {
+  const words = name.split(' ');
+
   return {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    children: words.length > 1
+      ? `${words[0][0]}${words[1][0]}`
+      : words[0][0], // fallback to single letter
   };
 }
 

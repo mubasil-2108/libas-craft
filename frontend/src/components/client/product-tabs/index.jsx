@@ -27,7 +27,7 @@ import PhotoOutlinedIcon from '@mui/icons-material/PhotoOutlined'
 import { useRef } from "react";
 import { useState } from "react";
 import { useCallback } from "react";
-import { createReview, resetReviewsState } from "../../../store/slices/reviewsSlice";
+import { createReview, fetchReviewsByProduct, resetReviewsState } from "../../../store/slices/reviewsSlice";
 import toast from "react-hot-toast";
 
 const initialState = {
@@ -55,6 +55,25 @@ const ProductTabs = ({
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     const [formData, setFormData] = useState(initialState);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    const productDetails = [
+        productSections?.productDescription && {
+            title: "Product Description",
+            paragraph: productSections?.productDescription,
+        },
+        productSections?.productDetails?.length > 0 && {
+            title: "Product Details",
+            points: productSections?.productDetails,
+        },
+        productSections?.productBenefits?.length > 0 && {
+            title: "Product Benefits",
+            points: productSections?.productBenefits,
+        },
+        productSections?.productExtraDetails && {
+            title: "Additional Details",
+            paragraph: productSections?.productExtraDetails,
+        },
+    ].filter(Boolean);
 
     const handleImageUpload = useCallback((e) => {
         const files = Array.from(e.target.files);
@@ -86,11 +105,12 @@ const ProductTabs = ({
             form.append('images', img.file);
         });
 
-        await dispatch(createReview(form)).then((data) => {
+        await dispatch(createReview(form)).then(async(data) => {
             if (data?.type !== 'product/add-new-product/rejected') {
                 setFormData(initialState);
                 setCurrentIndex(0);
                 dispatch(resetReviewsState());
+                await dispatch(fetchReviewsByProduct(productId));
             } else {
                 toast.error(data?.payload || 'Failed to add product');
             }
@@ -134,7 +154,7 @@ const ProductTabs = ({
                 }}
             >
                 <Tab label="Product Details" value="details" />
-                <Tab label={`Reviews (${reviews.length})`} value="reviews" />
+                <Tab label={`Reviews (${reviews?.length})`} value="reviews" />
                 <Tab label="Ingredients" value="ingredients" />
             </Tabs>
 
@@ -143,7 +163,7 @@ const ProductTabs = ({
             {/* DETAILS TAB */}
             {selectedTab === "details" && (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                    {productSections.map((section, index) => (
+                    {productDetails.map((section, index) => (
                         <Box key={index}>
                             {section.title && (
                                 <Typography
@@ -337,9 +357,9 @@ const ProductTabs = ({
                     >
                         Reviews
                     </Typography>
-
-                    {reviews.slice(0, 3).map((item) => (
-                        <Box key={item.id}>
+                        <Box component='div' sx={{ display: "flex", flexDirection: "column-reverse",  }}>
+                    {reviews?.slice(0, 3).map((item) => (
+                        <Box key={item._id}>
                             <Box
                                 sx={{
                                     display: "flex",
@@ -350,9 +370,9 @@ const ProductTabs = ({
                                 }}
                             >
                                 <Avatar
-                                    {...stringAvatar(item.name)}
+                                    {...stringAvatar(item?.title || "Unknown User")}
                                     sx={{
-                                        ...stringAvatar(item.name).sx,
+                                        ...stringAvatar(item?.title || "Unknown User").sx,
                                         width: 50,
                                         height: 50,
                                     }}
@@ -372,30 +392,32 @@ const ProductTabs = ({
                                             color: colors.textColor_4,
                                         }}
                                     >
-                                        {item.name}
+                                        {item?.title}
                                     </Typography>
                                     <Rating
                                         name="half-rating-read"
                                         size="small"
-                                        defaultValue={item.rating}
-                                        precision={0.5}
+                                        defaultValue={item?.rating}
+                                        precision={1}
                                         readOnly
                                     />
                                     {/* Images/ Screenshots */}
                                     <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-                                        <Box
-                                            sx={{
-                                                width: 80,
-                                                height: 80,
-                                                borderRadius: "10px",
-                                                overflow: "hidden",
-                                            }}>
+                                        {item?.images.map((img, index) => (
                                             <Box
-                                                component='img'
-                                                src={'/watch.jpg'}
-                                                sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                            />
-                                        </Box>
+                                                sx={{
+                                                    width: 80,
+                                                    height: 80,
+                                                    borderRadius: "10px",
+                                                    overflow: "hidden",
+                                                }}>
+                                                <Box
+                                                    component='img'
+                                                    src={`https://www.googleapis.com/drive/v3/files/${img?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
+                                                    sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                                />
+                                            </Box>
+                                        ))}
                                     </Box>
                                     <Typography
                                         sx={{
@@ -411,6 +433,7 @@ const ProductTabs = ({
                             <Divider />
                         </Box>
                     ))}
+                    </Box>
 
                     {/* Write a Review Section */}
                     <Box sx={{ mt: 3 }}>
@@ -435,7 +458,7 @@ const ProductTabs = ({
                             >
                                 How would you rate this product?
                             </Typography>
-                            <Rating name="half-rating" size="medium" precision={1}
+                            <Rating name="half-rating" size="medium" precision={1} value={formData.rating}
                                 onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })} />
 
                             {/* Responsive TextFields */}

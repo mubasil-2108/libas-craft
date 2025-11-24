@@ -17,7 +17,7 @@ const ProductTile = ({ product }) => {
 
     // ✅ Truncate helper
     const truncateText = (text, maxLength) =>
-        text?.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+        text?.length > maxLength ? text?.slice(0, maxLength) + "..." : text;
 
     return (
         <Grid item xs={12} sm={6} md={4} lg={3}>

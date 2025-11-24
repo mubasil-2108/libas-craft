@@ -15,7 +15,7 @@ import {
     PaginationItem,
     Pagination,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors } from "../../../services/utils/color";
 import ProductTile from "../../../components/client/product-tile";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -24,24 +24,36 @@ import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRound
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { FilterSortDrawer } from "../../../components/client/drawer";
 import { dummyCatalog } from "../../../services";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../../../store/slices/productSlice";
+import { fetchAllReviews } from "../../../store/slices/reviewsSlice";
 
 const Catalog = () => {
     // const products = [1, 2, 3, 4, 5, 6, 7];
     const theme = useTheme();
+    const dispatch = useDispatch();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            await dispatch(getAllProducts());
+        };
+        fetchProducts();
+    }, [dispatch]);
+
+    const { isLoading, products } = useSelector((state) => state.product);
     const [page, setPage] = useState(1);
     const rowsPerPage = 6; // show 6 products per page
 
     // Calculate paginated products
-    const paginatedProducts = dummyCatalog.slice(
+    const paginatedProducts = products.slice(
         (page - 1) * rowsPerPage,
         page * rowsPerPage
     );
 
-    const totalPages = Math.ceil(dummyCatalog.length / rowsPerPage);
+    const totalPages = Math.ceil(products.length / rowsPerPage);
 
     const [priceRange, setPriceRange] = useState([20, 80]);
     const [showPriceFilter, setShowPriceFilter] = useState(false);
@@ -144,7 +156,7 @@ const Catalog = () => {
                             fontSize: "14px",
                         }}
                     >
-                        {dummyCatalog.length} products
+                        {products.length} products
                     </Typography>
                 </Box>
 
@@ -376,7 +388,7 @@ const Catalog = () => {
                                 color: colors.textColor_1,
                             }}
                         >
-                            {dummyCatalog.length} products
+                            {products.length} products
                         </Typography>
                     </Box>
                 </Box>
@@ -394,9 +406,20 @@ const Catalog = () => {
                         gap: { xs: 2, sm: 3, md: 4, lg: 5 },
                     }}
                 >
-                    {paginatedProducts.map((item) => (
+                    {paginatedProducts && paginatedProducts.length > 0 ? paginatedProducts.map((item) => (
                         <ProductTile key={item.id} item={item} />
-                    ))}
+                    ))
+                        : (
+                            <Typography
+                                sx={{
+                                    fontFamily: "roboto-regular",
+                                    fontSize: "16px",
+                                    color: colors.textColor_1,
+                                }}
+                            >
+                                No products found
+                            </Typography>
+                        )}
                 </Box>
 
                 {totalPages > 1 && (

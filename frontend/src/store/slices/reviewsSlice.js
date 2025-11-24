@@ -4,7 +4,7 @@ import axios from "axios";
 const initialState = {
     list: [],
     productReviews: [],
-    selectedReview: null,
+    selectedReview: [],
     isLoading: false,
     error: null,
 };

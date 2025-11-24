@@ -15,12 +15,16 @@ import { colors } from '../../../services';
 const initialState = {
     productName: '',
     productDescription: '',
+    productExtraDetails: '',
+    productDetails: [],
+    productBenefits: [],
     category: '',
     images: [],
     sku: '',
     stockQuantity: '',
     regularPrice: '',
     salePrice: '',
+    sizes: [],
     tags: []
 };
 
@@ -95,23 +99,27 @@ const ProductDetail = () => {
     useEffect(() => {
         if (selectedProduct) {
             setFormData({
-                productName: selectedProduct.productName || '',
-                productDescription: selectedProduct.productDescription || '',
-                category: selectedProduct.category || '',
-                sku: selectedProduct.sku || '',
-                stockQuantity: selectedProduct.stockQuantity?.toString() || '',
-                regularPrice: selectedProduct.regularPrice?.toString() || '',
-                salePrice: selectedProduct.salePrice?.toString() || '',
-                tags: selectedProduct.tags || [],
+                productName: selectedProduct?.productName || '',
+                productDescription: selectedProduct?.productDescription || '',
+                productExtraDetails: selectedProduct?.productExtraDetails || '',
+                category: selectedProduct?.category || '',
+                sku: selectedProduct?.sku || '',
+                stockQuantity: selectedProduct?.stockQuantity?.toString() || '',
+                regularPrice: selectedProduct?.regularPrice?.toString() || '',
+                salePrice: selectedProduct?.salePrice?.toString() || '',
+                tags: selectedProduct?.tags || [],
+                productDetails: selectedProduct?.productDetails || [],
+                productBenefits: selectedProduct?.productBenefits || [],
+                sizes: selectedProduct?.sizes || [],
                 images: [],
             });
         }
     }, [selectedProduct]);
 
-    const allImages = useMemo(()=> [
+    const allImages = useMemo(() => [
         ...(selectedProduct?.productPhoto || []),
         ...(formData.images || []),
-    ], [selectedProduct?.productPhoto, formData.images]) 
+    ], [selectedProduct?.productPhoto, formData.images])
 
     const handleUpdate = async () => {
         // Implement update logic here
@@ -119,11 +127,15 @@ const ProductDetail = () => {
         const form = new FormData();
         form.append("productName", formData.productName);
         form.append("productDescription", formData.productDescription);
+        form.append("productExtraDetails", formData.productExtraDetails);
+        formData.productDetails.forEach(detail => form.append("productDetails[]", detail));
+        formData.productBenefits.forEach(benefit => form.append("productBenefits[]", benefit));
         form.append("category", formData.category);
         form.append("sku", formData.sku);
         form.append("stockQuantity", formData.stockQuantity);
         form.append("regularPrice", formData.regularPrice);
         form.append("salePrice", formData.salePrice);
+        formData.sizes.forEach(size => form.append("sizes[]", size));
         formData.tags.forEach(tag => form.append("tags[]", tag));
 
         // append files
@@ -175,13 +187,13 @@ const ProductDetail = () => {
         setCurrentIndex((prevIndex) =>
             prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
         )
-    }, [allImages.length]); 
+    }, [allImages.length]);
 
     const handleNext = useCallback(() => {
         setCurrentIndex((prevIndex) =>
             prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
         )
-    }, [allImages.length]); 
+    }, [allImages.length]);
 
     const handleProductDelete = async () => {
         setIsDeleting(true);
@@ -212,7 +224,7 @@ const ProductDetail = () => {
             });
         }
         navigate('/admin/products');
-    }, [selectedProduct, navigate]); 
+    }, [selectedProduct, navigate]);
 
     return (
         <Box component='div' sx={{
@@ -240,12 +252,6 @@ const ProductDetail = () => {
                                     setFormData({ ...formData, productName: e.target.value })
                                 }
                                 placeholder='Lorem Ipsum' />
-                            <Admin.Inputs title='Description'
-                                value={formData.productDescription}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, productDescription: e.target.value })
-                                }
-                                placeholder='Lorem Ipsum Is A Dummy Text' multiline />
                             <Admin.Inputs title='Category'
                                 value={formData.category}
                                 onChange={(e) =>
@@ -272,19 +278,58 @@ const ProductDetail = () => {
                                     onChange={
                                         (e) => setFormData({ ...formData, regularPrice: e.target.value })
                                     }
-                                    placeholder='₹110.40' style={{ flex: 1 }} />
+                                    placeholder='Rs.110.40' style={{ flex: 1 }} />
                                 <Admin.Inputs title='Sale Price'
                                     value={formData.salePrice}
                                     onChange={
                                         (e) => setFormData({ ...formData, salePrice: e.target.value })
                                     }
-                                    placeholder='₹450' style={{ flex: 1 }} />
+                                    placeholder='Rs.450' style={{ flex: 1 }} />
                             </Box>
-                            <Admin.Tags title='Tags' placeholder='Lorem'
+                            <Admin.Tags title='Sizes' placeholder='Small, Medium, Large'
+                                value={formData.sizes}
+                                onChange={
+                                    (newTags) => setFormData({ ...formData, sizes: newTags })
+                                } />
+                            <Admin.Tags
                                 value={formData.tags}
                                 onChange={
                                     (newTags) => setFormData({ ...formData, tags: newTags })
-                                } />
+                                }
+                                title='Tags'
+                                placeholder='Lorem Ipsum' />
+                            {/* Product Details */}
+                            <Admin.Inputs title='Description'
+                                value={formData.productDescription}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, productDescription: e.target.value })
+                                }
+                                placeholder='Lorem Ipsum Is A Dummy Text' multiline />
+                            {/* Benefits */}
+                            <Admin.Tags
+                                value={formData.productBenefits}
+                                onChange={
+                                    (newTags) => setFormData({ ...formData, productBenefits: newTags })
+                                }
+                                title='Benefits'
+                                placeholder='Lorem Ipsum' />
+                            {/* Product Details */}
+                            <Admin.Tags
+                                value={formData.productDetails}
+                                onChange={
+                                    (newTags) => setFormData({ ...formData, productDetails: newTags })
+                                }
+                                title='Product Details'
+                                placeholder='Lorem Ipsum' />
+                            {/* More Details */}
+                            <Admin.Inputs
+                                value={formData.productExtraDetails}
+                                onChange={
+                                    (e) => setFormData({ ...formData, productExtraDetails: e.target.value })
+                                }
+                                title='Extra Detail'
+                                placeholder='Lorem Ipsum Is A Dummy Text'
+                                multiline />
                         </Box>
                     </Grid>
 
@@ -537,11 +582,11 @@ const ProductDetail = () => {
                                         <ImageTile key={imageTile.id} apiData={imageTile} onDelete={() => handleApiDelete(imageTile.id)} />
                                     ))
                                 ) : (
-                                    <Typography fontSize={16} fontWeight={600} color= {colors.textColor_3}>No Images Found</Typography>
+                                    <Typography fontSize={16} fontWeight={600} color={colors.textColor_3}>No Images Found</Typography>
                                 )}
                                 {
                                     formData.images.length > 0 && (
-                                        <Typography fontSize={16} fontWeight={600} color= {colors.textColor_3}>New Images</Typography>
+                                        <Typography fontSize={16} fontWeight={600} color={colors.textColor_3}>New Images</Typography>
                                     )
                                 }
                                 {formData.images.length > 0 && (

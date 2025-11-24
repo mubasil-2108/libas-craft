@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Chip, Divider, Icon, IconButton, LinearProgress, linearProgressClasses, List, ListItem, ListItemIcon, ListItemText, Rating, Tab, Tabs, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { colors, images, productSections, ratings, reviews, stringAvatar } from '../../../services'
 import ReactImageMagnify from 'react-image-magnify'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
@@ -21,16 +21,28 @@ import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 // import { BorderLinearProgress } from '../../../components/client/progress-bar'
 import { ProductTabs } from '../../../components/client'
 import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProductById } from '../../../store/slices/productSlice'
+import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice'
 
 const ClientProductDetail = () => {
 
     const theme = useTheme();
     const { id } = useParams();
-
+    const dispatch = useDispatch();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
-    
+    useEffect(() => {
+        const fetchProduct = async () => {
+            await dispatch(getProductById(id)).then(async () => {
+                await dispatch(fetchReviewsByProduct(id));
+            })
+        };
+        fetchProduct();
+    }, [dispatch, id]);
+    const { isLoading, selectedProduct } = useSelector((state) => state.product);
+    const { productReviews } = useSelector((state) => state.reviews);
 
     const [currentImage, setCurrentImage] = useState(0)
     const thumbnailsRef = useRef(null); // ✅ ref for the thumbnails container
@@ -40,7 +52,7 @@ const ClientProductDetail = () => {
     const [likes, setLikes] = useState(199);
     const [selectedTab, setSelectedTab] = useState('details');
     const [selectedColor, setSelectedColor] = useState('#000000');
-    const [selectedSize, setSelectedSize] = useState('Medium');
+    const [selectedSize, setSelectedSize] = useState('');
 
     const [quantity, setQuantity] = useState(1);
 
@@ -113,6 +125,12 @@ const ClientProductDetail = () => {
             });
         }
     };
+    // Images from selectedProduct
+    const allImages = useMemo(() => [
+        ...(selectedProduct?.productPhoto || []),
+    ], [selectedProduct?.productPhoto])
+
+
     return (
         <Box component='div' sx={{
             display: 'flex',
@@ -165,11 +183,12 @@ const ClientProductDetail = () => {
                                     alt: 'Smart Watch',
                                     width: 500, // fixed width
                                     height: 500, // fixed height
-                                    src: images[currentImage],
+                                    // src: images[currentImage],
+                                    src: `https://www.googleapis.com/drive/v3/files/${allImages[currentImage]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`
                                     // sizes: '100vw',
                                 },
                                 largeImage: {
-                                    src: images[currentImage],
+                                    src: `https://www.googleapis.com/drive/v3/files/${allImages[currentImage]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`,
                                     width: 1200,
                                     height: 1200,
                                 },
@@ -235,7 +254,7 @@ const ClientProductDetail = () => {
                                 scrollbarWidth: 'none', // Firefox
                                 '&::-webkit-scrollbar': { display: 'none' },
                             }}>
-                            {images.map((img, index) => (
+                            {allImages.map((img, index) => (
                                 <Box
                                     key={index}
                                     component="div"
@@ -255,7 +274,7 @@ const ClientProductDetail = () => {
                                 >
                                     <Box
                                         component='img'
-                                        src={img}
+                                        src={`https://www.googleapis.com/drive/v3/files/${img?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
                                         alt={`Thumbnail ${index}`}
                                         sx={{
                                             width: '100%',
@@ -313,7 +332,7 @@ const ClientProductDetail = () => {
                                     fontSize: { xs: '22px', sm: '26px', md: '28px' },
                                 }}
                             >
-                                Embrace Sideboard
+                                {selectedProduct?.productName || 'Dummy Product Name'}
                             </Typography>
                             <Typography
                                 sx={{
@@ -322,7 +341,7 @@ const ClientProductDetail = () => {
                                     fontSize: { xs: '14px', md: '16px' },
                                 }}
                             >
-                                Teixeira Design Studio
+                                {selectedProduct?.category || 'Category Name'} | <b>SKU: {selectedProduct?.sku || 'XXXXXX'}</b>
                             </Typography>
                         </Box>
 
@@ -414,7 +433,7 @@ const ClientProductDetail = () => {
                                     fontSize: { xs: '26px', md: '34px' },
                                 }}
                             >
-                                Rs.71.56
+                                Rs.{selectedProduct?.salePrice.toFixed(2) || '0.00'}
                             </Typography>
                             <Typography
                                 sx={{
@@ -425,7 +444,7 @@ const ClientProductDetail = () => {
                                     textDecoration: 'line-through',
                                 }}
                             >
-                                Rs.71.56
+                                Rs.{selectedProduct?.regularPrice.toFixed(2) || '0.00'}
                             </Typography>
                         </Box>
 
@@ -616,7 +635,7 @@ const ClientProductDetail = () => {
                                 maxWidth: { xs: '100%', md: '600px' },
                             }}
                         >
-                            {['Small', 'Medium', 'Large', 'Extra Large', 'XXL'].map((size) => (
+                            {selectedProduct?.sizes.map((size) => (
                                 <Chip
                                     key={size}
                                     label={size}
@@ -828,8 +847,8 @@ const ClientProductDetail = () => {
                 selectedTab={selectedTab}
                 productId={id}
                 setSelectedTab={setSelectedTab}
-                reviews={reviews}
-                productSections={productSections}
+                reviews={productReviews}
+                productSections={selectedProduct}
                 averageRating={averageRating}
                 ratings={ratings}
             />

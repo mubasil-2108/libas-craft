@@ -19,11 +19,15 @@ const createProduct = asyncHandler(async (req, res) => {
     const {
         productName,
         productDescription,
+        productDetails,
+        productBenefits,
+        productExtraDetails,
         category,
         sku,
         stockQuantity,
         regularPrice,
         salePrice,
+        sizes,
         tags
     } = req.body;
 
@@ -86,7 +90,11 @@ const createProduct = asyncHandler(async (req, res) => {
         stockQuantity: stockQuantityNum,
         regularPrice: regularPriceNum,
         salePrice: salePriceNum,
-        tags
+        tags,
+        sizes,
+        productDetails,
+        productBenefits,
+        productExtraDetails
     });
 
     if (product) {
@@ -137,7 +145,8 @@ const updateProduct = asyncHandler(async (req, res) => {
 
     if (product) {
         const { productName, productDescription, category, sku, stockQuantity, regularPrice,
-            salePrice, tags } = product;
+            productBenefits, productDetails, productExtraDetails, sizes, tags,
+            salePrice } = product;
 
         // Upload new images to Google Drive and get URLs
         // Append new URLs to existing productPhoto array
@@ -197,6 +206,10 @@ const updateProduct = asyncHandler(async (req, res) => {
         product.regularPrice = req.body.regularPrice || regularPrice;
         product.salePrice = req.body.salePrice || salePrice;
         product.tags = req.body.tags || tags;
+        product.sizes = req.body.sizes || sizes;
+        product.productDetails = req.body.productDetails || productDetails;
+        product.productBenefits = req.body.productBenefits || productBenefits;
+        product.productExtraDetails = req.body.productExtraDetails || productExtraDetails;
 
         const updatedProduct = await product.save();
 

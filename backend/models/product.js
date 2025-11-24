@@ -1,3 +1,4 @@
+const { tagmanager } = require('googleapis/build/src/apis/tagmanager');
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
@@ -10,6 +11,16 @@ const productSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: [true, 'Product description is required'],
+    },
+    productDetails: {
+        type: [String],
+    },
+    productBenefits: {
+        type: [String],
+    },
+    productExtraDetails: {
+        type: String,
+        trim: true
     },
     productPhoto: [
         {
@@ -47,10 +58,14 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    sizes: {
+        type: [String],
+        required: [true, 'Product Sizes are required'],
+    },
     tags: {
         type: [String],
         required: [true, 'Product tags are required'],
-    }
+    },
 })
 
 const Product = mongoose.model('Product', productSchema);

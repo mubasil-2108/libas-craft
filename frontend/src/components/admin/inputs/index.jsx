@@ -71,7 +71,7 @@ export const Tags = ({ title, placeholder, style, value, onChange}) => {
           ...style,
         }}
       >
-        {value.map((tag, index) => (
+        {value?.map((tag, index) => (
           <Chip
             key={index}
             label={tag}

@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Rating, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
 import { colors } from '../../../services';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../../../store/slices/cartSlice';
+import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice';
 
 const ProductTile = ({ item }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const productId = item?._id;
+  useEffect(() => {
+    const fetchProduct = async () => {
+      await dispatch(fetchReviewsByProduct(productId));
+    };
+    if (productId) {
+      fetchProduct();
+    }
+  }, [dispatch, productId]);
+  const { productReviews } = useSelector((state) => state.reviews);
+
+  const averageRating = productReviews?.length
+    ? productReviews?.reduce((sum, r) => sum + r.rating, 0) / productReviews?.length
+    : 0;
+    const discountAmount = item.regularPrice - item.salePrice;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -41,10 +57,15 @@ const ProductTile = ({ item }) => {
         p: { xs: 1, sm: 2, md: 3 },
         width: "100%",
       }}
-      onClick={() => navigate(`/collections/${item.id}`)}
+      onClick={() => navigate(`/collections/${item?._id}`)}
     >
       <CardBox isMobile={isMobile}>
-        <Ribbon isMobile={isMobile} />
+        {
+          item && item?.salePrice && (
+            <Ribbon isMobile={isMobile} title={`"Save - Rs. ${discountAmount}"`}/>
+          )
+        }
+
 
         <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -59,7 +80,7 @@ const ProductTile = ({ item }) => {
             >
               <Box
                 component='img'
-                src={item?.image}
+                src={`https://www.googleapis.com/drive/v3/files/${item?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
                 alt='Product'
                 sx={{
                   width: "100%",
@@ -90,7 +111,7 @@ const ProductTile = ({ item }) => {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {item?.name}
+                  {item?.productName?.slice(0, 10) + "..."}
                 </Typography>
                 <Typography
                   sx={{
@@ -99,14 +120,14 @@ const ProductTile = ({ item }) => {
                     color: colors.textColor_10,
                   }}
                 >
-                  Rs.{item?.price}
+                  Rs.{item?.salePrice}
                 </Typography>
               </Box>
 
               <Rating
                 size={isMobile ? "small" : "medium"}
                 name="read-only"
-                value={item?.rating}
+                value={averageRating}
                 precision={0.5}
                 readOnly
                 sx={{ color: colors.iconColor_16, mb: isMobile ? 0.5 : 1 }}
@@ -121,7 +142,7 @@ const ProductTile = ({ item }) => {
                   lineHeight: 1.4,
                 }}
               >
-                {item?.description.slice(0, isMobile ? 60 : 70) + "..."}
+                {item?.productDescription?.slice(0, isMobile ? 60 : 70) + "..."}
               </Typography>
             </Box>
           </Box>
@@ -169,7 +190,7 @@ const CardBox = styled(Box)(({ isMobile }) => ({
 }));
 
 // Responsive ribbon
-const Ribbon = styled(Typography)(({ isMobile }) => ({
+const Ribbon = styled(Typography)(({ isMobile, title }) => ({
   position: 'absolute',
   overflow: 'hidden',
   width: isMobile ? '90px' : '120px',
@@ -180,7 +201,7 @@ const Ribbon = styled(Typography)(({ isMobile }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   "&::before": {
-    content: '"Premium"',
+    content: `${title}`,
     position: "absolute",
     width: "150%",
     height: isMobile ? 25 : 35,

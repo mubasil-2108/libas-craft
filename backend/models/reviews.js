@@ -9,9 +9,9 @@ const reviewSchema = new mongoose.Schema(
             set: v => Types.ObjectId.isValid(v) ? new Types.ObjectId(v) : v,
         },
         product: {
-            type: Schema.Types.Mixed,
+            type: Schema.Types.ObjectId,
+            ref: "Product",
             required: true,
-            set: v => Types.ObjectId.isValid(v) ? new Types.ObjectId(v) : v,
         },
         rating: {
             type: Number,

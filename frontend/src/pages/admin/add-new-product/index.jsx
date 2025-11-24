@@ -14,12 +14,16 @@ import { colors } from '../../../services';
 const initialState = {
     productName: '',
     productDescription: '',
+    productExtraDetails: '',
+    productDetails: [],
+    productBenefits: [],
     category: '',
     images: [],
     sku: '',
     stockQuantity: '',
     regularPrice: '',
     salePrice: '',
+    sizes: [],
     tags: []
 };
 
@@ -106,11 +110,15 @@ const AddProduct = () => {
         const form = new FormData();
         form.append("productName", formData.productName);
         form.append("productDescription", formData.productDescription);
+        form.append("productExtraDetails", formData.productExtraDetails);
+        formData.productDetails.forEach(detail => form.append("productDetails[]", detail));
+        formData.productBenefits.forEach(benefit => form.append("productBenefits[]", benefit));
         form.append("category", formData.category);
         form.append("sku", formData.sku);
         form.append("stockQuantity", formData.stockQuantity);
         form.append("regularPrice", formData.regularPrice);
         form.append("salePrice", formData.salePrice);
+        formData.sizes.forEach(size => form.append("sizes[]", size));
         formData.tags.forEach(tag => form.append("tags[]", tag));
 
         // append files
@@ -164,14 +172,6 @@ const AddProduct = () => {
                                 title='Product Name'
                                 placeholder='Lorem Ipsum' />
                             <Admin.Inputs
-                                value={formData.productDescription}
-                                onChange={
-                                    (e) => setFormData({ ...formData, productDescription: e.target.value })
-                                }
-                                title='Description'
-                                placeholder='Lorem Ipsum Is A Dummy Text'
-                                multiline />
-                            <Admin.Inputs
                                 value={formData.category}
                                 onChange={
                                     (e) => setFormData({ ...formData, category: e.target.value })
@@ -203,7 +203,7 @@ const AddProduct = () => {
                                         (e) => setFormData({ ...formData, regularPrice: e.target.value })
                                     }
                                     title='Regular Price'
-                                    placeholder='₹110.40'
+                                    placeholder='Rs.110.40'
                                     style={{ flex: 1 }} />
                                 <Admin.Inputs
                                     value={formData.salePrice}
@@ -211,16 +211,58 @@ const AddProduct = () => {
                                         (e) => setFormData({ ...formData, salePrice: e.target.value })
                                     }
                                     title='Sale Price'
-                                    placeholder='₹450'
+                                    placeholder='Rs.450'
                                     style={{ flex: 1 }} />
                             </Box>
+                            <Admin.Tags
+                                value={formData.sizes}
+                                onChange={
+                                    (newTags) => setFormData({ ...formData, sizes: newTags })
+                                }
+                                title='Sizes'
+                                placeholder='Small, Medium, Large' />
                             <Admin.Tags
                                 value={formData.tags}
                                 onChange={
                                     (newTags) => setFormData({ ...formData, tags: newTags })
                                 }
                                 title='Tags'
-                                placeholder='Lorem' />
+                                placeholder='Lorem Ipsum' />
+                            {/* Product Details */}
+                            {/* Description */}
+                            <Admin.Inputs
+                                value={formData.productDescription}
+                                onChange={
+                                    (e) => setFormData({ ...formData, productDescription: e.target.value })
+                                }
+                                title='Description'
+                                placeholder='Lorem Ipsum Is A Dummy Text'
+                                multiline />
+                            {/* Benefits */}
+                            <Admin.Tags
+                                value={formData.productBenefits}
+                                onChange={
+                                    (newTags) => setFormData({ ...formData, productBenefits: newTags })
+                                }
+                                title='Benefits'
+                                placeholder='Lorem Ipsum' />
+                            {/* Product Details */}
+                            <Admin.Tags
+                                value={formData.productDetails}
+                                onChange={
+                                    (newTags) => setFormData({ ...formData, productDetails: newTags })
+                                }
+                                title='Product Details'
+                                placeholder='Lorem Ipsum' />
+                            {/* More Details */}
+                            <Admin.Inputs
+                                value={formData.productExtraDetails}
+                                onChange={
+                                    (e) => setFormData({ ...formData, productExtraDetails: e.target.value })
+                                }
+                                title='Extra Detail'
+                                placeholder='Lorem Ipsum Is A Dummy Text'
+                                multiline />
                         </Box>
                     </Grid>
 
@@ -466,7 +508,7 @@ const AddProduct = () => {
                                         <ImageTile key={index} imageTile={image} onDelete={() => handleRemoveImage(index)} />
                                     ))
                                 ) : (
-                                    <Typography fontSize={16} fontWeight={600} color= {colors.textColor_3}>No Images Found</Typography>
+                                    <Typography fontSize={16} fontWeight={600} color={colors.textColor_3}>No Images Found</Typography>
                                 )}
                             </Box>
 
