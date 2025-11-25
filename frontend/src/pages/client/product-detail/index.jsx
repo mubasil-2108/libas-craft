@@ -24,6 +24,7 @@ import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProductById } from '../../../store/slices/productSlice'
 import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice'
+import { addToCart, removeFromCart } from '../../../store/slices/cartSlice'
 
 const ClientProductDetail = () => {
 
@@ -33,6 +34,7 @@ const ClientProductDetail = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+    const [visibleReviews, setVisibleReviews] = useState(3);
     useEffect(() => {
         const fetchProduct = async () => {
             await dispatch(getProductById(id)).then(async () => {
@@ -41,9 +43,33 @@ const ClientProductDetail = () => {
         };
         fetchProduct();
     }, [dispatch, id]);
+    useEffect(() => {
+        const fetchProductReviews = async () => {
+            await dispatch(fetchReviewsByProduct(id));
+        };
+        fetchProductReviews();
+    }, [dispatch, id]);
     const { isLoading, selectedProduct } = useSelector((state) => state.product);
     const { productReviews } = useSelector((state) => state.reviews);
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    const isInCart = cartItems.some(i => i.id === selectedProduct?._id);
 
+
+
+
+    const averageRating = productReviews?.length
+        ? productReviews?.reduce((sum, r) => sum + r.rating, 0) / productReviews?.length
+        : 0;
+    // Count positive ratings (3, 4, 5 stars)
+    const positiveRatingsCount = productReviews?.filter(r => r.rating >= 3).length || 0;
+
+    // Total reviews
+    const totalReviews = productReviews?.length || 0;
+
+    // Percentage of positive ratings
+    const positiveRatingPercentage = totalReviews > 0
+        ? (positiveRatingsCount / totalReviews) * 100
+        : 0;
     const [currentImage, setCurrentImage] = useState(0)
     const thumbnailsRef = useRef(null); // ✅ ref for the thumbnails container
 
@@ -53,15 +79,31 @@ const ClientProductDetail = () => {
     const [selectedTab, setSelectedTab] = useState('details');
     const [selectedColor, setSelectedColor] = useState('#000000');
     const [selectedSize, setSelectedSize] = useState('');
-
     const [quantity, setQuantity] = useState(1);
+
+    const handleLoadMore = () => {
+        setVisibleReviews((prev) => prev + 3); // load 3 more reviews each time
+    };
+
+    const handleCartAction = (e) => {
+        e.stopPropagation(); // prevent navigation
+        if (isInCart) {
+            dispatch(removeFromCart(selectedProduct?._id));
+        } else {
+            dispatch(addToCart({
+                id: selectedProduct?._id,
+                name: selectedProduct?.productName,
+                price: selectedProduct?.salePrice ? selectedProduct?.salePrice : selectedProduct?.regularPrice,
+                image: selectedProduct?.productPhoto[0]?.id,
+                description: selectedProduct?.productDescription,
+                rating: averageRating,
+                quantity: 1, // initial quantity
+            }));
+        }
+    };
 
     const handleIncrement = () => setQuantity((prev) => prev + 1);
     const handleDecrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
-    const totalRatings = ratings.reduce((sum, r) => sum + r.value, 0);
-    const weightedSum = ratings.reduce((sum, r) => sum + r.stars * r.value, 0);
-    const averageRating = weightedSum / totalRatings;
 
     // 📤 Share handler
     const handleShare = async () => {
@@ -477,7 +519,7 @@ const ClientProductDetail = () => {
                                             color: colors.textColor_13,
                                         }}
                                     >
-                                        4.8
+                                        {averageRating.toFixed(1) || '0.0'}
                                     </Typography>
                                 </Box>
                                 <Box
@@ -506,7 +548,7 @@ const ClientProductDetail = () => {
                                             color: colors.textColor_10,
                                         }}
                                     >
-                                        67 Reviews
+                                        {productReviews?.length} Reviews
                                     </Typography>
                                 </Box>
                             </Box>
@@ -518,7 +560,7 @@ const ClientProductDetail = () => {
                                     color: colors.textColor_10,
                                 }}
                             >
-                                93%{' '}
+                                {positiveRatingPercentage}%{' '}
                                 <Typography
                                     component="span"
                                     sx={{
@@ -742,6 +784,7 @@ const ClientProductDetail = () => {
                         {/* Add to Cart Button */}
                         <Button
                             variant="contained"
+                            onClick={handleCartAction}
                             startIcon={<Icon component={ShoppingBagOutlinedIcon} />}
                             sx={{
                                 color: colors.textColor_5,
@@ -757,7 +800,7 @@ const ClientProductDetail = () => {
                                 },
                             }}
                         >
-                            Add To Cart
+                            {isInCart ? "Remove from Cart" : "Add to Cart"}
                         </Button>
                     </Box>
 
@@ -850,7 +893,8 @@ const ClientProductDetail = () => {
                 reviews={productReviews}
                 productSections={selectedProduct}
                 averageRating={averageRating}
-                ratings={ratings}
+                visibleReviews={visibleReviews}
+                handleLoadMore={handleLoadMore}
             />
         </Box>
     )

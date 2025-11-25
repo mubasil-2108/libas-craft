@@ -29,20 +29,21 @@ const ProductTile = ({ item }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
 
-  const isInCart = cartItems.some(i => i.id === item.id);
+  const isInCart = cartItems.some(i => i.id === item?._id);
+
 
   const handleCartAction = (e) => {
     e.stopPropagation(); // prevent navigation
     if (isInCart) {
-      dispatch(removeFromCart(item.id));
+      dispatch(removeFromCart(item?._id));
     } else {
       dispatch(addToCart({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        image: item.image,
-        description: item.description,
-        rating: item.rating,
+        id: item?._id,
+        name: item?.productName,
+        price: item?.salePrice ? item?.salePrice : item?.regularPrice,
+        image: item?.productPhoto[0]?.id,
+        description: item?.productDescription,
+        rating: averageRating,
         quantity: 1, // initial quantity
       }));
     }

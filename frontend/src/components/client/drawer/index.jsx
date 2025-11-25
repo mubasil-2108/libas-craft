@@ -176,7 +176,7 @@ export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItem
                         cartItems.map((item) => (
                             <Box
                                 component='div'
-                                key={item.id}
+                                key={item?.id}
                                 sx={{
                                     display: "flex",
                                     alignItems: "center",
@@ -193,7 +193,7 @@ export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItem
                                 <Box
                                     component='div'
                                     onClick={() => {
-                                        navigate(`/collections/${item.id}`)
+                                        navigate(`/collections/${item?.id}`)
                                         handleCloseCart();
                                     }}
                                     sx={{
@@ -209,7 +209,7 @@ export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItem
                                 >
                                     <Box
                                         component="img"
-                                        src={item.image}
+                                        src={`https://www.googleapis.com/drive/v3/files/${item?.image}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
                                         sx={{
                                             width: "100%",
                                             height: "100%",
@@ -227,7 +227,7 @@ export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItem
                                             fontSize: { xs: "14px", sm: "16px", md: "18px" },
                                         }}
                                     >
-                                        {item.name?.slice(0, 10).concat("...")}
+                                        {item?.name?.slice(0, 10).concat("...")}
                                     </Typography>
                                     <Typography
                                         sx={{
@@ -236,7 +236,7 @@ export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItem
                                             fontSize: { xs: "12px", sm: "14px", md: "16px" },
                                         }}
                                     >
-                                        Rs.{item.price}
+                                        Rs.{item?.price}
                                     </Typography>
                                 </Box>
 
@@ -263,23 +263,23 @@ export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItem
                                                 width: "40px",
                                             },
                                         }}
-                                        value={item.quantity}
+                                        value={item?.quantity}
                                         onChange={(e) => {
                                             const value = Math.max(1, parseInt(e.target.value) || 1);
-                                            dispatch(updateQuantity({ id: item.id, quantity: value }));
+                                            dispatch(updateQuantity({ id: item?.id, quantity: value }));
                                         }}
                                         sx={{
                                             "& .MuiInputBase-root:before": { borderBottom: "none" },
                                             "& .MuiInputBase-root:after": { borderBottom: "none" },
                                         }}
                                     />
-                                    <IconButton size="small" onClick={() => dispatch(increment(item.id))}>
+                                    <IconButton size="small" onClick={() => dispatch(increment(item?.id))}>
                                         <AddIcon fontSize="small" />
                                     </IconButton>
                                 </Box>
                                 <IconButton
                                     size="small"
-                                    onClick={() => dispatch(removeFromCart(item.id))}
+                                    onClick={() => dispatch(removeFromCart(item?.id))}
                                     sx={{
                                         // ml: 0.5,
                                         position: "absolute",

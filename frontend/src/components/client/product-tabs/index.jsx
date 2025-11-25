@@ -44,17 +44,35 @@ const ProductTabs = ({
     productId,
     productSections,
     averageRating,
-    ratings,
+    visibleReviews,
+    handleLoadMore
 }) => {
     const theme = useTheme();
     const thumbRef = useRef(null);
     const dispatch = useDispatch();
+    // const { user } = useSelector((state) => state.auth);
     const { isLoading } = useSelector((state) => state.reviews);
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     const [formData, setFormData] = useState(initialState);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    const ratingCounts = [1, 2, 3, 4, 5].reduce((acc, rating) => {
+        acc[rating] = reviews.filter(r => r.rating === rating).length;
+        return acc;
+    }, {});
+
+    const totalRatings = reviews.length;
+
+    const ratingSummary = [1, 2, 3, 4, 5].map(rating => ({
+        rating,
+        count: ratingCounts[rating],
+        value: totalRatings > 0 ? ((ratingCounts[rating] / totalRatings) * 100).toFixed(0) : 0,
+    }));
+
+
+    let guestId = localStorage.getItem("guestId");
 
     const productDetails = [
         productSections?.productDescription && {
@@ -96,7 +114,8 @@ const ProductTabs = ({
     const handleCreateReview = useCallback(async () => {
         console.log("Submitting review with data:", formData);
         const form = new FormData();
-        form.append('user', '64a7f0c2e4b0f5a3c8d6e1b2'); // Example user ID
+        // user?._id ? user._id :
+        form.append('user', guestId); // Example user ID
         form.append('product', productId); // Example product ID
         form.append('title', formData.title);
         form.append('comment', formData.comment);
@@ -105,7 +124,7 @@ const ProductTabs = ({
             form.append('images', img.file);
         });
 
-        await dispatch(createReview(form)).then(async(data) => {
+        await dispatch(createReview(form)).then(async (data) => {
             if (data?.type !== 'product/add-new-product/rejected') {
                 setFormData(initialState);
                 setCurrentIndex(0);
@@ -117,7 +136,7 @@ const ProductTabs = ({
         }).catch((error) => {
             toast.error(error?.message || 'Failed to add product');
         });
-    }, [dispatch, formData, productId]);
+    }, [dispatch, formData, productId, guestId]);
 
     return (
         <Box
@@ -274,8 +293,8 @@ const ProductTabs = ({
                             </Typography>
                             <Rating
                                 name="half-rating-read"
-                                defaultValue={averageRating}
-                                precision={0.5}
+                                defaultValue={averageRating.toFixed(1)}
+                                precision={0.1}
                                 readOnly
                             />
                             <Typography
@@ -302,17 +321,18 @@ const ProductTabs = ({
                                 background: colors.grayLight_11,
                             }}
                         >
-                            {ratings.map((item, index) => (
+                            {ratingSummary.map((item, index) => (
                                 <Box
                                     key={index}
                                     sx={{
                                         display: "flex",
                                         alignItems: "center",
+                                        justifyContent: "space-between",
                                         width: "100%",
                                         gap: 1,
                                     }}
                                 >
-                                    <Box sx={{ flexGrow: 1 }}>
+                                    <Box sx={{ flexGrow: 1, maxWidth: '500px', }}>
                                         <BorderLinearProgress
                                             sx={{
                                                 height: 7,
@@ -322,117 +342,30 @@ const ProductTabs = ({
                                                 },
                                             }}
                                             variant="determinate"
-                                            value={item.value}
+                                            value={item?.value}
                                         />
                                     </Box>
-                                    <Rating
-                                        name="half-rating-read"
-                                        size="small"
-                                        defaultValue={item.stars}
-                                        precision={1}
-                                        readOnly
-                                    />
-                                    <Typography
-                                        sx={{
-                                            fontFamily: "inter-regular",
-                                            fontSize: { xs: "13px", sm: "15px" },
-                                            color: colors.textColor_11,
-                                        }}
-                                    >
-                                        {item.value}%
-                                    </Typography>
+                                    <Box component='div' sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", maxWidth: "150px", flexGrow: 1, alignItems: "center", gap: 1 }}>
+                                        <Rating
+                                            name="half-rating-read"
+                                            size="small"
+                                            defaultValue={item?.rating}
+                                            precision={1}
+                                            readOnly
+                                        />
+                                        <Typography
+                                            sx={{
+                                                fontFamily: "inter-regular",
+                                                fontSize: { xs: "13px", sm: "15px" },
+                                                color: colors.textColor_11,
+                                            }}
+                                        >
+                                            {item?.value}%
+                                        </Typography>
+                                    </Box>
                                 </Box>
                             ))}
                         </Box>
-                    </Box>
-
-                    {/* Individual Reviews */}
-                    <Typography
-                        sx={{
-                            fontFamily: "inter-semibold",
-                            fontSize: { xs: "18px", md: "24px" },
-                            color: colors.textColor_10,
-                            mt: 2,
-                        }}
-                    >
-                        Reviews
-                    </Typography>
-                        <Box component='div' sx={{ display: "flex", flexDirection: "column-reverse",  }}>
-                    {reviews?.slice(0, 3).map((item) => (
-                        <Box key={item._id}>
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: { xs: "column", sm: "row" },
-                                    gap: 2,
-                                    alignItems: { xs: "flex-start", md: "flex-start" },
-                                    p: 2,
-                                }}
-                            >
-                                <Avatar
-                                    {...stringAvatar(item?.title || "Unknown User")}
-                                    sx={{
-                                        ...stringAvatar(item?.title || "Unknown User").sx,
-                                        width: 50,
-                                        height: 50,
-                                    }}
-                                />
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: 1,
-                                        maxWidth: { xs: "100%", md: "700px" },
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            fontFamily: "inter-medium",
-                                            fontSize: { xs: "15px", sm: "17px" },
-                                            color: colors.textColor_4,
-                                        }}
-                                    >
-                                        {item?.title}
-                                    </Typography>
-                                    <Rating
-                                        name="half-rating-read"
-                                        size="small"
-                                        defaultValue={item?.rating}
-                                        precision={1}
-                                        readOnly
-                                    />
-                                    {/* Images/ Screenshots */}
-                                    <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-                                        {item?.images.map((img, index) => (
-                                            <Box
-                                                sx={{
-                                                    width: 80,
-                                                    height: 80,
-                                                    borderRadius: "10px",
-                                                    overflow: "hidden",
-                                                }}>
-                                                <Box
-                                                    component='img'
-                                                    src={`https://www.googleapis.com/drive/v3/files/${img?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
-                                                    sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                                />
-                                            </Box>
-                                        ))}
-                                    </Box>
-                                    <Typography
-                                        sx={{
-                                            fontFamily: "inter-regular",
-                                            fontSize: { xs: "14px", sm: "15px" },
-                                            color: colors.textColor_11,
-                                        }}
-                                    >
-                                        {item.comment}
-                                    </Typography>
-                                </Box>
-                            </Box>
-                            <Divider />
-                        </Box>
-                    ))}
                     </Box>
 
                     {/* Write a Review Section */}
@@ -645,6 +578,120 @@ const ProductTabs = ({
                             </Button>
                         </Box>
                     </Box>
+
+                    {/* Individual Reviews */}
+                    <Typography
+                        sx={{
+                            fontFamily: "inter-semibold",
+                            fontSize: { xs: "18px", md: "24px" },
+                            color: colors.textColor_10,
+                            mt: 2,
+                        }}
+                    >
+                        Reviews
+                    </Typography>
+                    <Box component='div' sx={{ display: "flex", flexDirection: "column-reverse", }}>
+                        {reviews?.slice(0, visibleReviews).map((item) => (
+                            <Box key={item._id}>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: { xs: "column", sm: "row" },
+                                        gap: 2,
+                                        alignItems: { xs: "flex-start", md: "flex-start" },
+                                        p: 2,
+                                    }}
+                                >
+                                    <Avatar
+                                        {...stringAvatar(item?.title || "Unknown User")}
+                                        sx={{
+                                            ...stringAvatar(item?.title || "Unknown User").sx,
+                                            width: 50,
+                                            height: 50,
+                                        }}
+                                    />
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: 1,
+                                            maxWidth: { xs: "100%", md: "700px" },
+                                        }}
+                                    >
+                                        <Typography
+                                            sx={{
+                                                fontFamily: "inter-medium",
+                                                fontSize: { xs: "15px", sm: "17px" },
+                                                color: colors.textColor_4,
+                                            }}
+                                        >
+                                            {item?.title}
+                                        </Typography>
+                                        <Rating
+                                            name="half-rating-read"
+                                            size="small"
+                                            defaultValue={item?.rating}
+                                            precision={1}
+                                            readOnly
+                                        />
+                                        {/* Images/ Screenshots */}
+                                        <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                                            {item?.images.map((img, index) => (
+                                                <Box
+                                                    sx={{
+                                                        width: 80,
+                                                        height: 80,
+                                                        borderRadius: "10px",
+                                                        overflow: "hidden",
+                                                    }}>
+                                                    <Box
+                                                        component='img'
+                                                        src={`https://www.googleapis.com/drive/v3/files/${img?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
+                                                        sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                                    />
+                                                </Box>
+                                            ))}
+                                        </Box>
+                                        <Typography
+                                            sx={{
+                                                fontFamily: "inter-regular",
+                                                fontSize: { xs: "14px", sm: "15px" },
+                                                color: colors.textColor_11,
+                                            }}
+                                        >
+                                            {item.comment}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                                <Divider />
+                            </Box>
+                        ))}
+                    </Box>
+                    {/* Load More */}
+                    {
+                        visibleReviews < reviews?.length && (
+                            <Box component='div' sx={{ display: "flex", justifyContent: "center", my: 2 }}>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleLoadMore}
+                                    disabled={isLoading}
+                                    loading={isLoading}
+                                    sx={{
+                                        backgroundColor: colors.buttonColor_1,
+                                        color: colors.textColor_5,
+                                        textTransform: "none",
+                                        px: 3,
+                                        py: 1.5,
+                                        fontFamily: "inter-semibold",
+                                        fontSize: { xs: "14px", sm: "16px" },
+                                        borderRadius: "10px",
+                                    }}
+                                >
+                                    Load More
+                                </Button>
+                            </Box>
+                        )
+                    }
                 </Box>
             )}
 
