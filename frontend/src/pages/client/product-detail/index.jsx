@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getProductById } from '../../../store/slices/productSlice'
 import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice'
 import { addToCart, removeFromCart } from '../../../store/slices/cartSlice'
+import { addLike, fetchLikes, removeLike } from '../../../store/slices/likesSlice'
 
 const ClientProductDetail = () => {
 
@@ -35,6 +36,8 @@ const ClientProductDetail = () => {
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     const [visibleReviews, setVisibleReviews] = useState(3);
+
+
     useEffect(() => {
         const fetchProduct = async () => {
             await dispatch(getProductById(id)).then(async () => {
@@ -51,11 +54,19 @@ const ClientProductDetail = () => {
     }, [dispatch, id]);
     const { isLoading, selectedProduct } = useSelector((state) => state.product);
     const { productReviews } = useSelector((state) => state.reviews);
+    const likesCount = useSelector(
+        (state) => state.likes.likesByProduct[selectedProduct?._id] || 0
+    );
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    useEffect(() => {
+        if (selectedProduct?._id) {
+            dispatch(fetchLikes(selectedProduct._id));
+        }
+    }, [dispatch, selectedProduct?._id])
+
     const cartItems = useSelector((state) => state.cart.cartItems);
     const isInCart = cartItems.some(i => i.id === selectedProduct?._id);
-
-
-
 
     const averageRating = productReviews?.length
         ? productReviews?.reduce((sum, r) => sum + r.rating, 0) / productReviews?.length
@@ -73,7 +84,6 @@ const ClientProductDetail = () => {
     const [currentImage, setCurrentImage] = useState(0)
     const thumbnailsRef = useRef(null); // ✅ ref for the thumbnails container
 
-    const [isFavorite, setIsFavorite] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [likes, setLikes] = useState(199);
     const [selectedTab, setSelectedTab] = useState('details');
@@ -131,8 +141,16 @@ const ClientProductDetail = () => {
 
     // ❤️ Favorite toggle
     const handleFavorite = () => {
+
+        if (!selectedProduct?._id) return;
+
+        if (isFavorite) {
+            dispatch(removeLike(selectedProduct._id));
+        } else {
+            dispatch(addLike(selectedProduct._id));
+        }
+
         setIsFavorite(!isFavorite);
-        setLikes(prev => (isFavorite ? prev - 1 : prev + 1));
     };
 
     // 🔖 Bookmark toggle
@@ -422,11 +440,11 @@ const ClientProductDetail = () => {
                                         color: colors.textColor_12,
                                     }}
                                 >
-                                    {likes}
+                                    {likesCount}
                                 </Typography>
                             </IconButton>
 
-                            <IconButton
+                            {/* <IconButton
                                 size="medium"
                                 onClick={handleBookmark}
                                 sx={{ backgroundColor: colors.iconBgColor_8 }}
@@ -440,7 +458,7 @@ const ClientProductDetail = () => {
                                     }
                                     sx={{ color: colors.iconColor_12 }}
                                 />
-                            </IconButton>
+                            </IconButton> */}
 
                             <IconButton
                                 size="medium"
@@ -655,6 +673,8 @@ const ClientProductDetail = () => {
                             ))}
                         </Box>
                     </Box>
+
+                    {/* For ads of GoogleAdsense */}
 
                     <Divider sx={{ my: 2 }} />
 

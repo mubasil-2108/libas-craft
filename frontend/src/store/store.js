@@ -3,6 +3,7 @@ import productReducer from './slices/productSlice';
 import cartReducer from './slices/cartSlice';
 import orderReducer from './slices/orderSlice';
 import reviewsReducer from './slices/reviewsSlice';
+import likesReducer from './slices/likesSlice';
 
 const store = configureStore({
     reducer:{
@@ -10,6 +11,7 @@ const store = configureStore({
         cart: cartReducer,
         order: orderReducer,
         reviews: reviewsReducer,
+        likes: likesReducer
     },
     middleware: (getDefaultMiddleware)=> getDefaultMiddleware({
         serializableCheck: false,
