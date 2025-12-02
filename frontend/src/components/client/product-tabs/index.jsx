@@ -43,6 +43,7 @@ const ProductTabs = ({
     reviews,
     productId,
     productSections,
+    reviewsError,
     averageRating,
     visibleReviews,
     handleLoadMore
@@ -51,7 +52,7 @@ const ProductTabs = ({
     const thumbRef = useRef(null);
     const dispatch = useDispatch();
     // const { user } = useSelector((state) => state.auth);
-    const { isLoading } = useSelector((state) => state.reviews);
+    const { isLoading,} = useSelector((state) => state.reviews);
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -591,7 +592,7 @@ const ProductTabs = ({
                         Reviews
                     </Typography>
                     <Box component='div' sx={{ display: "flex", flexDirection: "column-reverse", }}>
-                        {reviews?.slice(0, visibleReviews).map((item) => (
+                        {!reviewsError && reviews?.slice(0, visibleReviews).map((item) => (
                             <Box key={item._id}>
                                 <Box
                                     sx={{

@@ -38,7 +38,7 @@ export const addLike = createAsyncThunk(
 // Remove a like
 export const removeLike = createAsyncThunk(
     'likes/removeLike',
-    async (productId, thunkAPI) => {
+    async (productId,  thunkAPI) => {
         try {
             const result = await axios.delete(`${API_URL}/${productId}`);
             return { productId, likesCount: result.data.likesCount };

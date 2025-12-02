@@ -37,6 +37,7 @@ const ClientProductDetail = () => {
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     const [visibleReviews, setVisibleReviews] = useState(3);
 
+    console.log(id, "ID");
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -53,7 +54,8 @@ const ClientProductDetail = () => {
         fetchProductReviews();
     }, [dispatch, id]);
     const { isLoading, selectedProduct } = useSelector((state) => state.product);
-    const { productReviews } = useSelector((state) => state.reviews);
+    const {error, productReviews } = useSelector((state) => state.reviews);
+
     const likesCount = useSelector(
         (state) => state.likes.likesByProduct[selectedProduct?._id] || 0
     );
@@ -84,13 +86,10 @@ const ClientProductDetail = () => {
     const [currentImage, setCurrentImage] = useState(0)
     const thumbnailsRef = useRef(null); // ✅ ref for the thumbnails container
 
-    const [isBookmarked, setIsBookmarked] = useState(false);
-    const [likes, setLikes] = useState(199);
     const [selectedTab, setSelectedTab] = useState('details');
     const [selectedColor, setSelectedColor] = useState('#000000');
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
-
     const handleLoadMore = () => {
         setVisibleReviews((prev) => prev + 3); // load 3 more reviews each time
     };
@@ -141,7 +140,7 @@ const ClientProductDetail = () => {
 
     // ❤️ Favorite toggle
     const handleFavorite = () => {
-
+        // let guestId = localStorage.getItem("guestId");
         if (!selectedProduct?._id) return;
 
         if (isFavorite) {
@@ -151,11 +150,6 @@ const ClientProductDetail = () => {
         }
 
         setIsFavorite(!isFavorite);
-    };
-
-    // 🔖 Bookmark toggle
-    const handleBookmark = () => {
-        setIsBookmarked(!isBookmarked);
     };
 
     const handlePrev = () => {
@@ -679,69 +673,76 @@ const ClientProductDetail = () => {
                     <Divider sx={{ my: 2 }} />
 
                     {/* Size Selection */}
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <Typography
-                            sx={{
-                                fontFamily: 'inter-medium',
-                                fontSize: '16px',
-                                color: colors.textColor_11,
-                            }}
-                        >
-                            Choose a Size
-                        </Typography>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                gap: 1,
-                                maxWidth: { xs: '100%', md: '600px' },
-                            }}
-                        >
-                            {selectedProduct?.sizes.map((size) => (
-                                <Chip
-                                    key={size}
-                                    label={size}
-                                    icon={
-                                        <Icon
-                                            fontSize="small"
-                                            component={
-                                                selectedSize === size
-                                                    ? IoIosRadioButtonOn
-                                                    : IoIosRadioButtonOff
-                                            }
-                                            sx={{
-                                                color:
-                                                    selectedSize === size
-                                                        ? `${colors.iconColor_12} !important`
-                                                        : colors.iconColor_19,
-                                            }}
-                                        />
-                                    }
-                                    onClick={() => setSelectedSize(size)}
-                                    sx={{
-                                        backgroundColor:
-                                            selectedSize === size
-                                                ? colors.iconBgColor_8
-                                                : colors.grayLight_4,
-                                        color:
-                                            selectedSize === size
-                                                ? colors.textColor_10
-                                                : colors.textColor_14,
-                                        fontFamily: 'inter-medium',
-                                        fontSize: '14px',
-                                        px: 1,
-                                        borderRadius: '10px',
-                                        cursor: 'pointer',
-                                        '&:hover': {
-                                            backgroundColor: colors.iconBgColor_8,
-                                        },
-                                    }}
-                                />
-                            ))}
-                        </Box>
-                    </Box>
+                    {
+                        selectedProduct?.sizes && selectedProduct?.sizes?.length !== 0 && (
+                            <>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'inter-medium',
+                                            fontSize: '16px',
+                                            color: colors.textColor_11,
+                                        }}
+                                    >
+                                        Choose a Size
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            gap: 1,
+                                            maxWidth: { xs: '100%', md: '600px' },
+                                        }}
+                                    >
+                                        {selectedProduct?.sizes.map((size) => (
+                                            <Chip
+                                                key={size}
+                                                label={size}
+                                                icon={
+                                                    <Icon
+                                                        fontSize="small"
+                                                        component={
+                                                            selectedSize === size
+                                                                ? IoIosRadioButtonOn
+                                                                : IoIosRadioButtonOff
+                                                        }
+                                                        sx={{
+                                                            color:
+                                                                selectedSize === size
+                                                                    ? `${colors.iconColor_12} !important`
+                                                                    : colors.iconColor_19,
+                                                        }}
+                                                    />
+                                                }
+                                                onClick={() => setSelectedSize(size)}
+                                                sx={{
+                                                    backgroundColor:
+                                                        selectedSize === size
+                                                            ? colors.iconBgColor_8
+                                                            : colors.grayLight_4,
+                                                    color:
+                                                        selectedSize === size
+                                                            ? colors.textColor_10
+                                                            : colors.textColor_14,
+                                                    fontFamily: 'inter-medium',
+                                                    fontSize: '14px',
+                                                    px: 1,
+                                                    borderRadius: '10px',
+                                                    cursor: 'pointer',
+                                                    '&:hover': {
+                                                        backgroundColor: colors.iconBgColor_8,
+                                                    },
+                                                }}
+                                            />
+                                        ))}
+                                    </Box>
+                                </Box>
 
-                    <Divider sx={{ my: 2 }} />
+                                <Divider sx={{ my: 2 }} />
+                            </>
+                        )
+                    }
+
 
                     {/* Quantity & Add to Cart */}
                     <Box
@@ -911,6 +912,7 @@ const ClientProductDetail = () => {
                 productId={id}
                 setSelectedTab={setSelectedTab}
                 reviews={productReviews}
+                reviewsError={error}
                 productSections={selectedProduct}
                 averageRating={averageRating}
                 visibleReviews={visibleReviews}

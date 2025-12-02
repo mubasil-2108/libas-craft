@@ -29,7 +29,6 @@ import { getAllProducts } from "../../../store/slices/productSlice";
 import { fetchAllReviews } from "../../../store/slices/reviewsSlice";
 
 const Catalog = () => {
-    // const products = [1, 2, 3, 4, 5, 6, 7];
     const theme = useTheme();
     const dispatch = useDispatch();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -47,15 +46,7 @@ const Catalog = () => {
     const [page, setPage] = useState(1);
     const rowsPerPage = 6; // show 6 products per page
 
-    // Calculate paginated products
-    const paginatedProducts = products.slice(
-        (page - 1) * rowsPerPage,
-        page * rowsPerPage
-    );
-
-    const totalPages = Math.ceil(products.length / rowsPerPage);
-
-    const [priceRange, setPriceRange] = useState([20, 80]);
+    const [priceRange, setPriceRange] = useState([0, 80]);
     const [showPriceFilter, setShowPriceFilter] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [sortOption, setSortOption] = useState("Default");
@@ -95,6 +86,51 @@ const Catalog = () => {
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    // 1) APPLY PRICE FILTER
+    const filteredByPrice = (products).filter((item) => {
+        const price = Number(item?.salePrice ? item?.salePrice : item?.regularPrice) || 0;
+        return price >= priceRange[0] && price <= priceRange[1];
+    });
+
+
+    // 2) APPLY SORTING
+    const sortedProducts = [...filteredByPrice].sort((a, b) => {
+        const titleA = a?.productName || "";
+        const titleB = b?.productName || "";
+        const priceA = Number(a?.salePrice ? a?.salePrice : a?.regularPrice) || 0;
+        const priceB = Number(b?.salePrice ? b?.salePrice : b?.regularPrice) || 0;
+
+        switch (sortOption) {
+            case "Alphabetically: A → Z":
+                return titleA.localeCompare(titleB);
+
+            case "Alphabetically: Z → A":
+                return titleB.localeCompare(titleA);
+
+            case "Price: Low → High":
+                return priceA - priceB;
+
+            case "Price: High → Low":
+                return priceB - priceA;
+
+            case "Newest":
+                return new Date(b?.createdAt || "") - new Date(a?.createdAt || "");
+
+            case "Oldest":
+                return new Date(a?.createdAt || "") - new Date(b?.createdAt || "");
+
+            default:
+                return 0;
+        }
+    });
+    // Calculate paginated products
+    const paginatedProducts = sortedProducts.slice(
+        (page - 1) * rowsPerPage,
+        page * rowsPerPage
+    );
+
+    const totalPages = Math.ceil(sortedProducts.length / rowsPerPage);
 
     return (
         <Box
@@ -156,7 +192,7 @@ const Catalog = () => {
                             fontSize: "14px",
                         }}
                     >
-                        {products.length} products
+                        {sortedProducts.length} products
                     </Typography>
                 </Box>
 
@@ -388,7 +424,7 @@ const Catalog = () => {
                                 color: colors.textColor_1,
                             }}
                         >
-                            {products.length} products
+                            {sortedProducts.length} products
                         </Typography>
                     </Box>
                 </Box>

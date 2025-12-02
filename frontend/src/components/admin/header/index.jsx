@@ -133,7 +133,7 @@ const AdminHeader = () => {
                                         {(showAllResults ? filteredProducts : filteredProducts.slice(0, 3))
                                             .map((product) => (
                                                 <MenuItem
-                                                    key={product.id}
+                                                    key={product?._id}
                                                     sx={{ p: 0 }}
                                                     onClick={() => handleSearchProductClick(product)}
                                                 >
@@ -154,7 +154,7 @@ const AdminHeader = () => {
                                                             variant="body2"
                                                             sx={{ color: colors.textColor_3, fontWeight: 'bold' }}
                                                         >
-                                                            {product.productName}
+                                                            {product?.productName}
                                                         </Typography>
                                                     </Box>
                                                 </MenuItem>
