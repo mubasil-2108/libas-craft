@@ -26,6 +26,7 @@ import { getProductById } from '../../../store/slices/productSlice'
 import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice'
 import { addToCart, removeFromCart } from '../../../store/slices/cartSlice'
 import { addLike, fetchLikes, removeLike } from '../../../store/slices/likesSlice'
+import toast from "react-hot-toast";
 
 const ClientProductDetail = () => {
 
@@ -54,7 +55,7 @@ const ClientProductDetail = () => {
         fetchProductReviews();
     }, [dispatch, id]);
     const { isLoading, selectedProduct } = useSelector((state) => state.product);
-    const {error, productReviews } = useSelector((state) => state.reviews);
+    const { error, productReviews } = useSelector((state) => state.reviews);
 
     const likesCount = useSelector(
         (state) => state.likes.likesByProduct[selectedProduct?._id] || 0
@@ -116,27 +117,44 @@ const ClientProductDetail = () => {
 
     // 📤 Share handler
     const handleShare = async () => {
+        const shareUrl = window.location.href;
+        const shareTitle = selectedProduct?.productName || "Product Details";
+        const shareText = `Check out this product: ${shareTitle}`;
+
         const shareData = {
-            title: 'Embrace Sideboard',
-            text: 'Check out this beautiful product!',
-            url: window.location.href,
+            title: shareTitle,
+            text: shareText,
+            url: shareUrl,
         };
 
         try {
-            if (navigator.share) {
+            // ---- Native Web Share API (mobile, Safari, Chrome mobile) ----
+            if (navigator.share && window.isSecureContext) {
                 await navigator.share(shareData);
-            } else if (navigator.clipboard) {
-                // fallback: copy link to clipboard
-                await navigator.clipboard.writeText(shareData.url);
-                alert('🔗 Link copied to clipboard!');
-            } else {
-                // fallback: show manual message
-                alert('Sharing not supported on this browser.');
+                return;
             }
+
+            // ---- Clipboard API (desktop modern browsers) ----
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(shareUrl);
+                return;
+            }
+
+            // ---- Full Fallback (older browsers) ----
+            const tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.value = shareUrl;
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            toast.success("Link copied to clipboard!");
         } catch (err) {
-            console.error('Error sharing:', err);
+            console.error("Error during share:", err);
+            toast.error("Unable to share. Please try again.");
         }
     };
+
 
     // ❤️ Favorite toggle
     const handleFavorite = () => {

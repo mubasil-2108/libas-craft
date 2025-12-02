@@ -29,6 +29,7 @@ import { getAllProducts } from "../../../store/slices/productSlice";
 import { fetchAllReviews } from "../../../store/slices/reviewsSlice";
 
 const Catalog = () => {
+
     const theme = useTheme();
     const dispatch = useDispatch();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
