@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../../../store/slices/cartSlice';
 import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice';
 
-const ProductTile = ({ item }) => {
+const ProductTile = ({ item, categorySlug }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const productId = item?._id;
@@ -24,7 +24,7 @@ const ProductTile = ({ item }) => {
   const averageRating = productReviews?.length
     ? productReviews?.reduce((sum, r) => sum + r.rating, 0) / productReviews?.length
     : 0;
-    const discountAmount = item.regularPrice - item.salePrice;
+  const discountAmount = item.regularPrice - item.salePrice;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -58,12 +58,14 @@ const ProductTile = ({ item }) => {
         p: { xs: 1, sm: 2, md: 3 },
         width: "100%",
       }}
-      onClick={() => navigate(`/collections/${item?._id}`)}
     >
-      <CardBox isMobile={isMobile}>
+      <CardBox isMobile={isMobile} 
+            onClick={() => navigate(categorySlug ? `/categories/${categorySlug}/${item?._id}` : `/collections/${item?._id}`)}
+
+      >
         {
           item && item?.salePrice && (
-            <Ribbon isMobile={isMobile} title={`"Save - Rs. ${discountAmount}"`}/>
+            <Ribbon isMobile={isMobile} title={`"Save - Rs. ${discountAmount}"`} />
           )
         }
 

@@ -1,5 +1,5 @@
 import { Box, Icon, Pagination, PaginationItem, Typography } from '@mui/material'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { colors, dummyOrders } from '../../../services'
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -33,17 +33,21 @@ const Account = () => {
     const { isLoading, userOrders } = useSelector((state) => state.order);
 
     const orders = useMemo(() => userOrders || [], [userOrders]);
-    console.log(orders, "userOrders in Account page");
 
     // Calculate paginated data
-    const totalPages = Math.ceil(orders.length / itemsPerPage);
-    const startIndex = (page - 1) * itemsPerPage;
-    const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
+    const totalPages = useMemo(() =>
+        Math.ceil(orders.length / itemsPerPage),
+        [orders.length, itemsPerPage]);
 
-    const handleChange = (event, value) => {
+    const currentOrders = useMemo(() => {
+        const startIndex = (page - 1) * itemsPerPage;
+        return orders.slice(startIndex, startIndex + itemsPerPage);
+    }, [orders, page, itemsPerPage]);
+
+    const handleChange = useCallback((event, value) => {
         setPage(value);
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // optional scroll to top
-    };
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
 
     return (
         <Box component='div' sx={{

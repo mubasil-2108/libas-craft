@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
     Dialog,
     DialogTitle,
@@ -42,44 +42,54 @@ export const ShoppingFormDialog = ({ open, handleCloseCart, handleClose, cartIte
 
     const [formData, setFormData] = useState(initialFormData);
 
-    let guestId = localStorage.getItem("guestId");
-    if (!guestId) {
-        guestId = uuidv4();
-        localStorage.setItem("guestId", guestId);
-    }
+    // 🟩 Memoized guestId (persists for user without re-render cost)
+    const guestId = useMemo(() => {
+        let id = localStorage.getItem("guestId");
+        if (!id) {
+            id = uuidv4();
+            localStorage.setItem("guestId", id);
+        }
+        return id;
+    }, []);
 
     const [selectedValue, setSelectedValue] = useState("cash-on-delivery");
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    // 🟩 Memoized Order Items (reduces unnecessary recalculation)
+    const orderItems = useMemo(
+        () =>
+            cartItems.map((item) => ({
+                productId: item.id,
+                productName: item.name,
+                productPhoto: item.image,
+                productPrice: item.price,
+                quantity: item.quantity,
+                total: item.price * item.quantity,
+            })),
+        [cartItems]
+    );
 
-    const handleChangePayment = (event) => {
+    // 🟩 useCallback — prevents re-creation on every render
+    const handleChange = useCallback((e) => {
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    }, []);
+
+    const handleChangePayment = useCallback((event) => {
         setSelectedValue(event.target.value);
-    };
+    }, []);
 
-    const handleSubmit = async () => {
+
+    const handleSubmit = useCallback(async () => {
         if (!cartItems.length) {
             toast.error("Cart is empty!");
             return;
         }
-
-        const orderItems = cartItems.map((item) => ({
-            productId: item.id,
-            productName: item.name,
-            productPhoto: item.image,
-            productPrice: item.price,
-            quantity: item.quantity,
-            total: item.price * item.quantity,
-        }));
-
 
         const orderData = {
             user: guestId,
             orderItems,
             shippingAddress: formData,
             totalAmount,
-        }
+        };
 
         try {
             await dispatch(createOrder(orderData)).unwrap();
@@ -92,8 +102,16 @@ export const ShoppingFormDialog = ({ open, handleCloseCart, handleClose, cartIte
             console.error("Failed to place order:", error);
             toast.error("Failed to place order. Please try again.");
         }
-    }
-
+    }, [
+        cartItems.length,
+        guestId,
+        orderItems,
+        formData,
+        totalAmount,
+        dispatch,
+        handleClose,
+        handleCloseCart,
+    ]);
 
     return (
         <Dialog

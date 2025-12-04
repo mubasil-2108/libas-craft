@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { colors } from "../../../services";
 import CircleIcon from "@mui/icons-material/Circle";
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
@@ -58,32 +58,35 @@ const ClientOrders = ({ order, steps }) => {
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const stepIndex = steps.findIndex(
-        (step) => step.toLowerCase() === order?.status?.toLowerCase()
+    const stepIndex = useMemo(
+        () => steps.findIndex((step) => step.toLowerCase() === order?.status?.toLowerCase()),
+        [steps, order?.status]
     );
 
-    const totalItems = order?.orderItems?.length || 0;
-    const hasMultipleItems = totalItems > 1;
+    const totalItems = useMemo(() => order?.orderItems?.length || 0, [order]);
+    const hasMultipleItems = useMemo(() => totalItems > 1, [totalItems]);
 
-    const handlePrevOrder = () => {
-        // Logic to navigate to the previous order
-        if (currentIndex > 0) {
-            setCurrentIndex((prev) => prev - 1);
-        }
-    }
+    const currentItem = useMemo(
+        () => order?.orderItems?.[currentIndex],
+        [order, currentIndex]
+    );
 
-    const handleNextOrder = () => {
-        // Logic to navigate to the next order
-        if (currentIndex < totalItems - 1) {
-            setCurrentIndex((prev) => prev + 1);
-        }
-    }
+     const handlePrevOrder = useCallback(() => {
+        setCurrentIndex((prev) => Math.max(prev - 1, 0));
+    }, []);
 
-    const handleCancelOrder = async () => {
-        // Logic to cancel the order
+    const handleNextOrder = useCallback(() => {
+        setCurrentIndex((prev) => Math.min(prev + 1, totalItems - 1));
+    }, [totalItems]);
+
+    const handleNavigate = useCallback(() => {
+        navigate(`/collections/${currentItem?.productId}`);
+    }, [navigate, currentItem]);
+
+    const handleCancelOrder = useCallback(async () => {
         await dispatch(updateOrderStatus({ orderId: order?._id, status: 'Cancelled' })).unwrap();
-        await dispatch(getUserOrders(order?.user))
-    }
+        await dispatch(getUserOrders(order?.user));
+    }, [dispatch, order]);
 
     return (
         <Box component='div' sx={{
@@ -121,7 +124,7 @@ const ClientOrders = ({ order, steps }) => {
                 }}
             >
                 <Box component='div'
-                    onClick={() => navigate(`/collections/${order?.orderItems[currentIndex]?.productId}`)}
+                    onClick={handleNavigate}
                     sx={{
                         width: '100%',
                         display: "flex",
@@ -147,7 +150,8 @@ const ClientOrders = ({ order, steps }) => {
                             justifyContent: 'center', // ✅ centers horizontally & vertically
                         }}
                     >
-                        <Box component='img' src={order?.orderItems[currentIndex]?.productPhoto} sx={{
+                        {/* order?.orderItems[currentIndex]?.productPhoto */}
+                        <Box component='img' src={`https://www.googleapis.com/drive/v3/files/${currentItem?.productPhoto}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`} sx={{
                             width: { xs: '80px', sm: '100px', md: '120px' },
                             height: { xs: 80, sm: 100, md: 120 },
                             objectFit: 'cover',
@@ -265,7 +269,7 @@ const ClientOrders = ({ order, steps }) => {
 
                     <Button
                         variant="contained"
-                         onClick={handleCancelOrder}
+                        onClick={handleCancelOrder}
                         disabled={order?.status === "Cancelled" || order?.status === "Shipped" || order?.status === "Delivered"}
                         sx={{
                             flex: 1,

@@ -65,7 +65,9 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
 const getUserOrders = asyncHandler(async (req, res) => {
     const { userId } = req.params;
+    console.log(userId, "userId in getUserOrders");
     const orders = await Order.find({ user: userId }).sort({ createdAt: -1 });
+    console.log(orders, "orders in getUserOrders");
     res.status(200).json({
         orders,
     });

@@ -6,6 +6,7 @@ const initialState = {
     searchProducts: [],
     selectedProduct: null,
     selectedCategory: null,
+    selectedCategoryProducts: [],
     isLoading: false,
 };
 
@@ -53,6 +54,22 @@ export const getProductById = createAsyncThunk(
             const result = await axios.get(`http://localhost:5000/api/products/single-product/${id}`);
             if (result.status !== 200) {
                 throw new Error('Failed to get product');
+            }
+            return result.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+)
+
+export const getProductsByCategory = createAsyncThunk(
+    'product/get-products-by-category',
+    async (category, thunkAPI) => {
+        console.log(category, "category in getProductsByCategory");
+        try {
+            const result = await axios.get(`http://localhost:5000/api/products/category/${category}`);
+            if (result.status !== 200) {
+                throw new Error('Failed to get products by category');
             }
             return result.data;
         } catch (error) {
@@ -135,7 +152,7 @@ const productSlice = createSlice({
     name: 'product',
     initialState,
     reducers: {
-        setCategory: (state, action) =>{
+        setCategory: (state, action) => {
             state.selectedCategory = action.payload;
         }
     },
@@ -169,6 +186,16 @@ const productSlice = createSlice({
                 state.selectedProduct = action.payload.product;
             })
             .addCase(getProductById.rejected, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(getProductsByCategory.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getProductsByCategory.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.selectedCategoryProducts = action.payload.products;
+            })
+            .addCase(getProductsByCategory.rejected, (state) => {
                 state.isLoading = false;
             })
             .addCase(deleteProductImage.pending, (state) => {

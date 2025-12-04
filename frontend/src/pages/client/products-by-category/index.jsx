@@ -1,49 +1,34 @@
-import {
-    Box,
-    Typography,
-    useTheme,
-    useMediaQuery,
-    Button,
-    Icon,
-    ClickAwayListener,
-    Slider,
-    TextField,
-    MenuItem,
-    Popper,
-    Paper,
-    Drawer,
-    PaginationItem,
-    Pagination,
-} from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { colors } from "../../../services/utils/color";
-import ProductTile from "../../../components/client/product-tile";
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { colors } from '../../../services'
+import { Box, Button, ClickAwayListener, Icon, MenuItem, Pagination, PaginationItem, Paper, Popper, Slider, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { useParams } from 'react-router-dom';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TuneIcon from "@mui/icons-material/Tune";
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import { FilterSortDrawer } from "../../../components/client/drawer";
-import { dummyCatalog } from "../../../services";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllProducts } from "../../../store/slices/productSlice";
-import { fetchAllReviews } from "../../../store/slices/reviewsSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import { FilterSortDrawer } from '../../../components/client/drawer';
+import ProductTile from '../../../components/client/product-tile';
+import { getProductsByCategory } from '../../../store/slices/productSlice';
 
-const Catalog = () => {
-
+const ProductsByCategory = () => {
+    const { categorySlug } = useParams();
+    const CategoryName = decodeURIComponent(categorySlug);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
-
+    console.log(categorySlug, "categorySlug");
     useEffect(() => {
         const fetchProducts = async () => {
-            await dispatch(getAllProducts());
+            await dispatch(getProductsByCategory(CategoryName));
         };
         fetchProducts();
-    }, [dispatch]);
+    }, [dispatch, CategoryName]);
 
-    const { isLoading, products } = useSelector((state) => state.product);
+    const { isLoading, selectedCategoryProducts } = useSelector((state) => state.product);
+    console.log(selectedCategoryProducts, "selectedCategoryProducts");
     const [page, setPage] = useState(1);
     const rowsPerPage = 6; // show 6 products per page
 
@@ -101,11 +86,11 @@ const Catalog = () => {
 
     // 1) APPLY PRICE FILTER
     const filteredByPrice = useMemo(() => {
-        return products.filter((item) => {
+        return selectedCategoryProducts.filter((item) => {
             const price = Number(item?.salePrice ? item?.salePrice : item?.regularPrice) || 0;
             return price >= priceRange[0] && price <= priceRange[1];
         });
-    }, [products, priceRange]);
+    }, [selectedCategoryProducts, priceRange]);
 
 
     // 2) APPLY SORTING
@@ -165,7 +150,7 @@ const Catalog = () => {
                         mb: { xs: 2, sm: 4 },
                     }}
                 >
-                    Products
+                    '{CategoryName}'
                 </Typography>
 
                 {/* ===== MOBILE FILTER BAR ===== */}
@@ -457,7 +442,7 @@ const Catalog = () => {
                     }}
                 >
                     {paginatedProducts && paginatedProducts.length > 0 ? paginatedProducts.map((item) => (
-                        <ProductTile key={item.id} item={item} />
+                        <ProductTile categorySlug={categorySlug} key={item.id} item={item} />
                     ))
                         : (
                             <Typography
@@ -537,7 +522,7 @@ const Catalog = () => {
                 )}
             </Box>
         </Box>
-    );
-};
+    )
+}
 
-export default Catalog;
+export default ProductsByCategory

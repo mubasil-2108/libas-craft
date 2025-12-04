@@ -43,6 +43,7 @@ export const getAllOrders = createAsyncThunk(
 export const getUserOrders = createAsyncThunk(
     'order/getUserOrders',
     async (userId, thunkAPI) => {
+        console.log(userId, "userId in OrderSlice");
         try {
             const response = await axios.get(`${API_URL}/user/${userId}`);
             return response.data;

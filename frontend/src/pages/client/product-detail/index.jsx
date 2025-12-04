@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Chip, Divider, Icon, IconButton, LinearProgress, linearProgressClasses, List, ListItem, ListItemIcon, ListItemText, Rating, Tab, Tabs, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { colors, images, productSections, ratings, reviews, stringAvatar } from '../../../services'
 import ReactImageMagnify from 'react-image-magnify'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
@@ -69,21 +69,24 @@ const ClientProductDetail = () => {
     }, [dispatch, selectedProduct?._id])
 
     const cartItems = useSelector((state) => state.cart.cartItems);
-    const isInCart = cartItems.some(i => i.id === selectedProduct?._id);
 
-    const averageRating = productReviews?.length
-        ? productReviews?.reduce((sum, r) => sum + r.rating, 0) / productReviews?.length
-        : 0;
-    // Count positive ratings (3, 4, 5 stars)
-    const positiveRatingsCount = productReviews?.filter(r => r.rating >= 3).length || 0;
+    const isInCart = useMemo(() => {
+        return cartItems.some(i => i.id === selectedProduct?._id);
+    }, [cartItems, selectedProduct?._id]);
 
-    // Total reviews
-    const totalReviews = productReviews?.length || 0;
+    const averageRating = useMemo(() => {
+        if (!productReviews?.length) return 0;
+        return productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length;
+    }, [productReviews]);
+
 
     // Percentage of positive ratings
-    const positiveRatingPercentage = totalReviews > 0
-        ? (positiveRatingsCount / totalReviews) * 100
-        : 0;
+    const positiveRatingPercentage = useMemo(() => {
+        if (!productReviews?.length) return 0;
+        const positives = productReviews.filter(r => r.rating >= 3).length;
+        return (positives / productReviews.length) * 100;
+    }, [productReviews]);
+
     const [currentImage, setCurrentImage] = useState(0)
     const thumbnailsRef = useRef(null); // ✅ ref for the thumbnails container
 
@@ -95,70 +98,71 @@ const ClientProductDetail = () => {
         setVisibleReviews((prev) => prev + 3); // load 3 more reviews each time
     };
 
-    const handleCartAction = (e) => {
-        e.stopPropagation(); // prevent navigation
+    const handleCartAction = useCallback((e) => {
+        e.stopPropagation();
+        if (!selectedProduct) return;
+
         if (isInCart) {
-            dispatch(removeFromCart(selectedProduct?._id));
+            dispatch(removeFromCart(selectedProduct._id));
         } else {
             dispatch(addToCart({
-                id: selectedProduct?._id,
-                name: selectedProduct?.productName,
-                price: selectedProduct?.salePrice ? selectedProduct?.salePrice : selectedProduct?.regularPrice,
-                image: selectedProduct?.productPhoto[0]?.id,
-                description: selectedProduct?.productDescription,
+                id: selectedProduct._id,
+                name: selectedProduct.productName,
+                price: selectedProduct.salePrice || selectedProduct.regularPrice,
+                image: selectedProduct.productPhoto[0]?.id,
+                description: selectedProduct.productDescription,
                 rating: averageRating,
-                quantity: 1, // initial quantity
+                quantity: 1,
             }));
         }
-    };
+    }, [dispatch, isInCart, selectedProduct, averageRating]);
 
-    const handleIncrement = () => setQuantity((prev) => prev + 1);
-    const handleDecrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+    const handleIncrement = useCallback(() => {
+        setQuantity(q => q + 1);
+    }, []);
+    const handleDecrement = useCallback(() => {
+        setQuantity(q => (q > 1 ? q - 1 : 1));
+    }, []);
 
     // 📤 Share handler
-    const handleShare = async () => {
+    const handleShare = useCallback(async () => {
         const shareUrl = window.location.href;
         const shareTitle = selectedProduct?.productName || "Product Details";
         const shareText = `Check out this product: ${shareTitle}`;
 
-        const shareData = {
-            title: shareTitle,
-            text: shareText,
-            url: shareUrl,
-        };
+        const shareData = { title: shareTitle, text: shareText, url: shareUrl };
 
         try {
-            // ---- Native Web Share API (mobile, Safari, Chrome mobile) ----
             if (navigator.share && window.isSecureContext) {
                 await navigator.share(shareData);
+                toast.success("Shared successfully!");
                 return;
             }
 
-            // ---- Clipboard API (desktop modern browsers) ----
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(shareUrl);
+                toast.success("Link copied to clipboard!");
                 return;
             }
 
-            // ---- Full Fallback (older browsers) ----
             const tempInput = document.createElement("input");
-            document.body.appendChild(tempInput);
             tempInput.value = shareUrl;
+            document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand("copy");
             document.body.removeChild(tempInput);
 
             toast.success("Link copied to clipboard!");
         } catch (err) {
-            console.error("Error during share:", err);
-            toast.error("Unable to share. Please try again.");
+            console.error(err);
+            toast.error("Unable to share.");
         }
-    };
+    }, [selectedProduct?.productName]);
+
 
 
     // ❤️ Favorite toggle
-    const handleFavorite = () => {
-        // let guestId = localStorage.getItem("guestId");
+    const handleFavorite = useCallback(() => {
         if (!selectedProduct?._id) return;
 
         if (isFavorite) {
@@ -166,42 +170,42 @@ const ClientProductDetail = () => {
         } else {
             dispatch(addLike(selectedProduct._id));
         }
+        setIsFavorite(prev => !prev);
+    }, [dispatch, isFavorite, selectedProduct?._id]);
 
-        setIsFavorite(!isFavorite);
-    };
-
-    const handlePrev = () => {
-        if (currentImage > 0) {
-            const newIndex = currentImage - 1;
-            setCurrentImage(newIndex);
-            scrollToThumbnail(newIndex);
-        }
-    };
-
-    const handleNext = () => {
-        if (currentImage < images.length - 1) {
-            const newIndex = currentImage + 1;
-            setCurrentImage(newIndex);
-            scrollToThumbnail(newIndex);
-        }
-    };
-
-    // ✅ Automatically scrolls the thumbnail into view
-    const scrollToThumbnail = (index) => {
-        const container = thumbnailsRef.current;
-        const thumbnail = container.children[index];
-        if (thumbnail) {
-            container.scrollTo({
-                left: thumbnail.offsetLeft - container.clientWidth / 2 + thumbnail.clientWidth / 2,
-                behavior: 'smooth',
-            });
-        }
-    };
     // Images from selectedProduct
     const allImages = useMemo(() => [
         ...(selectedProduct?.productPhoto || []),
-    ], [selectedProduct?.productPhoto])
+    ], [selectedProduct?.productPhoto]);
 
+    // ✅ Automatically scrolls the thumbnail into view
+    const scrollToThumbnail = useCallback((index) => {
+        const container = thumbnailsRef.current;
+        if (!container) return;
+        const thumb = container.children[index];
+        if (thumb) {
+            container.scrollTo({
+                left: thumb.offsetLeft - container.clientWidth / 2 + thumb.clientWidth / 2,
+                behavior: "smooth",
+            });
+        }
+    }, []);
+
+    const handlePrev = useCallback(() => {
+        setCurrentImage(i => {
+            const newIndex = Math.max(0, i - 1);
+            scrollToThumbnail(newIndex);
+            return newIndex;
+        });
+    }, [scrollToThumbnail]);
+
+    const handleNext = useCallback(() => {
+        setCurrentImage(i => {
+            const newIndex = Math.min(allImages.length - 1, i + 1);
+            scrollToThumbnail(newIndex);
+            return newIndex;
+        });
+    }, [allImages?.length, scrollToThumbnail]);
 
     return (
         <Box component='div' sx={{
@@ -361,12 +365,12 @@ const ClientProductDetail = () => {
                         {/* Right Arrow */}
                         <IconButton
                             onClick={handleNext}
-                            disabled={currentImage === images.length - 1}
+                            disabled={currentImage === allImages.length - 1}
                             sx={{
                                 backgroundColor: colors.white,
                                 boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
                                 '&:hover': { backgroundColor: colors.buttonColor_1, color: colors.white },
-                                opacity: currentImage === images.length - 1 ? 0.4 : 1,
+                                opacity: currentImage === allImages.length - 1 ? 0.4 : 1,
                                 width: 36,
                                 height: 36,
                             }}

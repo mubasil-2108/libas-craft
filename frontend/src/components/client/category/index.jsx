@@ -12,7 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { colors, dummyCategories } from "../../../services";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -20,14 +20,23 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Scrollbars } from "react-custom-scrollbars";
 import CategoryTile from "../category-tile";
+import { useNavigate } from "react-router-dom";
 
-const Categories = () => {
+const Categories = ({ categoryList }) => {
   const listRef = useRef(null);
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filtered categories based on search term
+  const filteredCategories = useMemo(() => {
+    return categoryList.filter((cat) =>
+      cat.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, categoryList]);
 
   // Smooth scrolling for custom scrollbar
   const smoothScroll = (target, distance, duration = 200) => {
@@ -45,6 +54,10 @@ const Categories = () => {
 
   const scrollUp = () => listRef.current && smoothScroll(listRef.current, -40);
   const scrollDown = () => listRef.current && smoothScroll(listRef.current, 40);
+
+  const handleCategories = () => {
+    navigate("/categories");
+  };
 
   return (
     <Box
@@ -102,6 +115,18 @@ const Categories = () => {
             variant="outlined"
             placeholder="Search"
             size="small"
+            value={searchTerm}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchTerm(value);
+
+              // Update the DOM URL dynamically
+              if (value) {
+                window.history.replaceState(null, '', `/categorie/search?q=${encodeURIComponent(value)}`);
+              } else {
+                window.history.replaceState(null, '', `/`);
+              }
+            }}
             sx={{
               background: colors.inputBgColor_1,
               borderRadius: "8px",
@@ -165,9 +190,9 @@ const Categories = () => {
               style={{ width: '100%', borderColor: 'black', borderLeftColor: 'black' }}
             >
               <List>
-                {dummyCategories.map((item) => (
+                {filteredCategories.map((item, index) => (
                   <ListItem
-                    key={item.id}
+                    key={index}
                     button
                     sx={{
                       width: "100%",
@@ -182,7 +207,7 @@ const Categories = () => {
                         color: colors.textColor_8,
                       }}
                     >
-                      {item.name}
+                      {item}
                     </ListItemText>
                   </ListItem>
                 ))}
@@ -191,68 +216,74 @@ const Categories = () => {
           </Box>
 
           {/* Buttons Section */}
-          <Box
-            component="div"
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-              alignItems: "center",
-            }}
-          >
-            <Button
-              variant="contained"
-              endIcon={<ArrowForwardIcon />}
-              sx={{
-                flex: 1,
-                backgroundColor: colors.buttonColor_1,
-                color: colors.textColor_5,
-                fontFamily: "openSans-bold",
-                textTransform: "none",
-                fontSize: { xs: "12px", sm: "14px" },
-                "&:hover": { backgroundColor: colors.greenDark_2 },
-              }}
-            >
-              All Categories
-            </Button>
+          {
+            filteredCategories && filteredCategories.length > 10 ? (
+              <Box
+                component="div"
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  endIcon={<ArrowForwardIcon />}
+                  onClick={handleCategories}
+                  sx={{
+                    flex: 1,
+                    backgroundColor: colors.buttonColor_1,
+                    color: colors.textColor_5,
+                    fontFamily: "openSans-bold",
+                    textTransform: "none",
+                    fontSize: { xs: "12px", sm: "14px" },
+                    "&:hover": { backgroundColor: colors.greenDark_2 },
+                  }}
+                >
+                  All Categories
+                </Button>
 
-            <Box
-              component="div"
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                gap: 0.5,
-                ml: 1,
-              }}
-            >
-              <IconButton
-                onClick={scrollUp}
-                size="small"
-                sx={{
-                  backgroundColor: colors.iconBgColor_5,
-                  "&:hover": { backgroundColor: colors.grayLight_1 },
-                }}
-              >
-                <ArrowUpwardIcon
-                  sx={{ fontSize: 14, color: colors.iconColor_14 }}
-                />
-              </IconButton>
-              <IconButton
-                onClick={scrollDown}
-                size="small"
-                sx={{
-                  backgroundColor: colors.iconBgColor_6,
-                  "&:hover": { backgroundColor: colors.grayLight_1 },
-                }}
-              >
-                <ArrowDownwardIcon
-                  sx={{ fontSize: 14, color: colors.iconColor_14 }}
-                />
-              </IconButton>
-            </Box>
-          </Box>
+                <Box
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: 0.5,
+                    ml: 1,
+                  }}
+                >
+                  <IconButton
+                    onClick={scrollUp}
+                    size="small"
+                    sx={{
+                      backgroundColor: colors.iconBgColor_5,
+                      "&:hover": { backgroundColor: colors.grayLight_1 },
+                    }}
+                  >
+                    <ArrowUpwardIcon
+                      sx={{ fontSize: 14, color: colors.iconColor_14 }}
+                    />
+                  </IconButton>
+                  <IconButton
+                    onClick={scrollDown}
+                    size="small"
+                    sx={{
+                      backgroundColor: colors.iconBgColor_6,
+                      "&:hover": { backgroundColor: colors.grayLight_1 },
+                    }}
+                  >
+                    <ArrowDownwardIcon
+                      sx={{ fontSize: 14, color: colors.iconColor_14 }}
+                    />
+                  </IconButton>
+                </Box>
+              </Box>
+            ) : null
+          }
+
         </Box>
 
         {/* --- Right Column (Tiles) --- */}
@@ -270,9 +301,9 @@ const Categories = () => {
             justifyContent="center"
             alignItems="center"
           >
-            {[...Array(6)].map((_, index) => (
+            {filteredCategories.slice(0, 6).map((item, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <CategoryTile />
+                <CategoryTile category={item} />
               </Grid>
             ))}
           </Grid>

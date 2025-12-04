@@ -139,6 +139,23 @@ const getProductById = asyncHandler(async (req, res) => {
     });
 });
 
+// Get products by category
+
+const getProductsByCategory = asyncHandler(async (req, res) => {
+    const { category } = req.params;
+    const products = await Product.find({ category });
+
+    if (!products) {
+        return res.status(404).json({
+            message: "No products found"
+        });
+    }
+
+    res.status(200).json({
+        products
+    });
+});
+
 const updateProduct = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
@@ -300,6 +317,7 @@ module.exports = {
     getAllProducts,
     getProductById,
     updateProduct,
+    getProductsByCategory,
     searchProducts,
     deleteProduct,
     deleteProductImage
