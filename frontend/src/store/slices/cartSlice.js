@@ -13,10 +13,13 @@ const cartSlice = createSlice({
         addToCart: (state, action) => {
             const newItem = action.payload;
             const existingItem = state.cartItems.find((item) => item.id === newItem.id);
+
             if (existingItem) {
-                existingItem.quantity += 1;
+                // Add the quantity selected by user
+                existingItem.quantity += newItem.quantity;
             } else {
-                state.cartItems.push({ ...newItem, quantity: 1 });
+                // Add product with the correct quantity
+                state.cartItems.push({ ...newItem, quantity: newItem.quantity });
             }
         },
         increment: (state, action) => {

@@ -5,7 +5,7 @@ import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRound
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getAllProducts } from '../../../store/slices/productSlice';
+import { getAllProducts, setMainProduct } from '../../../store/slices/productSlice';
 import toast from 'react-hot-toast';
 import { colors } from '../../../services';
 
@@ -44,6 +44,19 @@ const AllProducts = () => {
         fetchAllProducts();
     }, [dispatch]);
 
+    const handleMainProduct = (id) => {
+        dispatch(setMainProduct(id))
+            .unwrap()
+            .then((data) => {
+                if (data?.type === 'product/set-main-product/fulfilled') {
+                    toast.success(data?.payload?.message);
+                }
+            })
+            .catch((error) => {
+                toast.error(error?.message || 'Failed to set main product');
+            })
+    }
+
     return (
         <Box component='div' sx={{
             width: '100%',
@@ -58,7 +71,7 @@ const AllProducts = () => {
                 {
                     paginatedProducts.length > 0 ?
                         paginatedProducts.map((product) => (
-                            <ProductTile key={product._id} product={product} />
+                            <ProductTile key={product._id} handleMainProduct={handleMainProduct} product={product} />
                         ))
                         :
                         <Typography variant='body1' component='p' sx={{

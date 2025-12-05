@@ -66,6 +66,10 @@ const productSchema = new mongoose.Schema({
         type: [String],
         required: [true, 'Product tags are required'],
     },
+    mainProduct: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const Product = mongoose.model('Product', productSchema);

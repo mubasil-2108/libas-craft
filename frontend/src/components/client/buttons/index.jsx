@@ -16,13 +16,18 @@ export const CartButton = ({
   successColor1 = "#2D6A4F",
   successColor2 = "#1E4434",
   progressColor = "#F5FFF5",
+  handleCartAction,
+  isInCart
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleClick = () => {
     if (isAnimating) return; // prevent double-click
     setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 1500); // reset after animation
+    setTimeout(() => {
+      setIsAnimating(false);
+        handleCartAction();
+    }, 1500); // reset after animation
   };
 
   return (
@@ -66,7 +71,7 @@ export const CartButton = ({
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </Box>
           </Typography>
-          Add to Cart
+          {isInCart ? "Remove from Cart" : "Add to Cart"}
           <Box component='div' className="progress-bar" />
         </Box>
       </Box>

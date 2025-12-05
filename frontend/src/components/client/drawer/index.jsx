@@ -108,7 +108,6 @@ export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItem
     // Responsive breakpoints
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-
     return (
         <Drawer anchor="right" open={openCart} onClose={handleCloseCart}>
             <Box

@@ -24,7 +24,7 @@ const ProductTile = ({ item, categorySlug }) => {
   const averageRating = productReviews?.length
     ? productReviews?.reduce((sum, r) => sum + r.rating, 0) / productReviews?.length
     : 0;
-  const discountAmount = item.regularPrice - item.salePrice;
+  const discountAmount = item?.regularPrice - item?.salePrice;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();

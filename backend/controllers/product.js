@@ -270,6 +270,43 @@ const searchProducts = asyncHandler(async (req, res) => {
     });
 });
 
+const setMainProduct = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+        return res.status(404).json({
+            message: "Product not found"
+        });
+    }
+
+    if (product.mainProduct === true) {
+        product.mainProduct = false;
+
+        await product.save();
+
+        return res.status(200).json({
+            message: `${product.productName} is no longer the main product`,
+            product
+        });
+    }
+
+    await Product.updateMany(
+        { mainProduct: true },
+        { $set: { mainProduct: false } }
+    );
+
+    product.mainProduct = true;
+    await product.save();
+
+    res.status(200).json({
+        message: `${product.productName} is now the main product`,
+        product
+    });
+
+});
+
 const deleteProduct = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
@@ -317,6 +354,7 @@ module.exports = {
     getAllProducts,
     getProductById,
     updateProduct,
+    setMainProduct,
     getProductsByCategory,
     searchProducts,
     deleteProduct,

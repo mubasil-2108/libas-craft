@@ -9,32 +9,120 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { colors } from "../../../services";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { CartButton } from "../buttons";
 import ReactImageMagnify from "react-image-magnify";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "../../../store/slices/cartSlice";
 
-const MainProduct = () => {
-    const bottleQuantity = [
-        { id: 1, quantity: 1, type: "Bottle" },
-        { id: 2, quantity: 2, type: "Bottles" },
-        { id: 3, quantity: 3, type: "Bottles" },
-        { id: 4, quantity: 4, type: "Bottles" },
-    ];
-
+const MainProduct = ({ product }) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart.cartItems);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
-
     const [selectedQuantity, setSelectedQuantity] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
-    const handleIncrement = () => setQuantity((prev) => prev + 1);
-    const handleDecrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+    // ----------------- MEMOS -----------------
+    const discountAmount = useMemo(
+        () => (product?.regularPrice - product?.salePrice) || 0,
+        [product?.regularPrice, product?.salePrice]
+    );
+
+    const isInCart = useMemo(
+        () => cartItems.some((i) => i.id === product?._id),
+        [cartItems, product?._id]
+    );
+
+    const imageURL = useMemo(
+        () =>
+            `https://www.googleapis.com/drive/v3/files/${product?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`,
+        [product?.productPhoto]
+    );
+
+    const renderedSizeChips = useMemo(
+        () =>
+            product?.sizes?.map((item, index) => (
+                <Chip
+                    key={index}
+                    label={item}
+                    clickable
+                    onClick={() => handleSelectQuantity(index)}
+                    sx={{
+                        px: 2,
+                        py: 1.5,
+                        borderRadius: "30px",
+                        fontSize: { xs: "13px", sm: "15px" },
+                        fontFamily: "roboto-regular",
+                        backgroundColor:
+                            selectedQuantity === index
+                                ? colors.greenDark_1
+                                : colors.transparent,
+                        color:
+                            selectedQuantity === index
+                                ? colors.textColor_5
+                                : colors.textColor_7,
+                        border: `2px solid ${colors.greenDark_1}`,
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                            backgroundColor: `${colors.greenDark_1} !important`,
+                            color: `${colors.textColor_5} !important`,
+                        },
+                    }}
+                />
+            )),
+        [product?.sizes, selectedQuantity]
+    );
+
+
+    const handleIncrement = useCallback(
+        () => setQuantity((prev) => prev + 1),
+        []
+    );
+    const handleDecrement = useCallback(
+        () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1)),
+        []
+    );
+
+    const handleSelectQuantity = useCallback(
+        (index) => setSelectedQuantity(index),
+        []
+    );
+
+    const handleCartAction = useCallback(() => {
+        if (isInCart) {
+            dispatch(removeFromCart(product?._id));
+        } else {
+            dispatch(
+                addToCart({
+                    id: product?._id,
+                    name: product?.productName,
+                    price: product?.salePrice || product?.regularPrice,
+                    image: product?.productPhoto[0]?.id,
+                    description: product?.productDescription,
+                    quantity,
+                })
+            );
+        }
+    }, [
+        isInCart,
+        quantity,
+        product?._id,
+        product?.productName,
+        product?.salePrice,
+        product?.regularPrice,
+        product?.productPhoto,
+        product?.productDescription,
+        dispatch,
+    ]);
 
     return (
         <Box
@@ -68,7 +156,7 @@ const MainProduct = () => {
                 }}
             />
             {/* Main Row */}
-            
+
             <Box
                 component="div"
                 sx={{
@@ -101,14 +189,14 @@ const MainProduct = () => {
                     <ReactImageMagnify
                         {...{
                             smallImage: {
-                                alt: 'Smart Watch',
+                                alt: product?.productName,
                                 width: 500, // fixed width
                                 height: 500, // fixed height
-                                src: '/watch.jpg',
+                                src: imageURL,
                                 // sizes: '100vw',
                             },
                             largeImage: {
-                                src: '/watch.jpg',
+                                src: `https://www.googleapis.com/drive/v3/files/${product?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`,
                                 width: 1200,
                                 height: 1200,
                             },
@@ -157,7 +245,7 @@ const MainProduct = () => {
                             lineHeight: 1.2,
                         }}
                     >
-                        Smart Watch
+                        {product?.productName}
                     </Typography>
 
                     {/* Price Row */}
@@ -180,7 +268,7 @@ const MainProduct = () => {
                                 fontSize: { xs: "14px", md: "16px" },
                             }}
                         >
-                            Rs.1,000.00
+                            Rs.{product?.regularPrice?.toFixed(2)}
                         </Typography>
                         <Typography
                             component="span"
@@ -190,76 +278,50 @@ const MainProduct = () => {
                                 fontSize: { xs: "16px", md: "18px" },
                             }}
                         >
-                            Rs.1,000.00
+                            Rs.{product?.salePrice?.toFixed(2)}
                         </Typography>
                         <Chip
-                            label="Sale"
+                            label={`Save - Rs. ${discountAmount}`}
                             sx={{
-                                width: "60px",
                                 borderRadius: "10px",
                                 backgroundColor: colors.greenDark_1,
                                 color: colors.textColor_5,
                                 fontSize: "14px",
-                                fontFamily: "roboto-regular",
+                                fontFamily: "roboto-bold",
                             }}
                         />
                     </Box>
 
                     {/* Quantity Chips */}
-                    <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-                        <Typography
-                            component="p"
-                            sx={{
-                                color: colors.textColor_4,
-                                fontFamily: "roboto-regular",
-                                fontSize: { xs: "14px", md: "16px" },
-                                textAlign: { xs: "center", md: "left" },
-                            }}
-                        >
-                            Quantity
-                        </Typography>
-                        <Box
-                            component="div"
-                            sx={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                alignItems: "center",
-                                justifyContent: { xs: "center", md: "flex-start" },
-                                gap: 1.5,
-                            }}
-                        >
-                            {bottleQuantity.map((item) => (
-                                <Chip
-                                    key={item.id}
-                                    label={`${item.quantity} ${item.type}`}
-                                    clickable
-                                    onClick={() => setSelectedQuantity(item.id)}
+                    {
+                        product && product?.sizes.length > 0 && (
+                            <Box component="div" sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                                <Typography
+                                    component="p"
                                     sx={{
-                                        px: 2,
-                                        py: 1.5,
-                                        borderRadius: "30px",
-                                        fontSize: { xs: "13px", sm: "15px" },
+                                        color: colors.textColor_4,
                                         fontFamily: "roboto-regular",
-                                        backgroundColor:
-                                            selectedQuantity === item.id
-                                                ? colors.greenDark_1
-                                                : colors.transparent,
-                                        color:
-                                            selectedQuantity === item.id
-                                                ? colors.textColor_5
-                                                : colors.textColor_7,
-                                        border: `2px solid ${colors.greenDark_1}`,
-                                        transition: "all 0.3s ease",
-                                        "&:hover": {
-                                            backgroundColor: `${colors.greenDark_1} !important`,
-                                            color: `${colors.textColor_5} !important`,
-                                        },
+                                        fontSize: { xs: "14px", md: "16px" },
+                                        textAlign: { xs: "center", md: "left" },
                                     }}
-                                />
-                            ))}
-                        </Box>
-                    </Box>
-
+                                >
+                                    Quantity
+                                </Typography>
+                                <Box
+                                    component="div"
+                                    sx={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        alignItems: "center",
+                                        justifyContent: { xs: "center", md: "flex-start" },
+                                        gap: 1.5,
+                                    }}
+                                >
+                                    {renderedSizeChips}
+                                </Box>
+                            </Box>
+                        )
+                    }
                     {/* Quantity Counter */}
                     <Typography
                         component="p"
@@ -303,7 +365,7 @@ const MainProduct = () => {
                             }}
                             value={quantity}
                             onChange={(e) =>
-                                setQuantity(Math.max(0, parseInt(e.target.value) || 0))
+                                setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                             }
                             sx={{
                                 "& .MuiInputBase-root:before": { borderBottom: "none" },
@@ -330,6 +392,8 @@ const MainProduct = () => {
                         <CartButton
                             width={isMobile ? "280px" : isTablet ? "450px" : "580px"}
                             height="50px"
+                            handleCartAction={handleCartAction}
+                            isInCart={isInCart}
                             borderRadius="8px"
                             fontSize="15px"
                             textColor={colors.greenLight_1}
@@ -346,6 +410,7 @@ const MainProduct = () => {
                         <Button
                             variant="outlined"
                             endIcon={<Icon component={ArrowForwardIcon} />}
+                            onClick={() => navigate(`/main-product/${product?._id}`)}
                             sx={{
                                 color: colors.greenDark_1,
                                 borderColor: colors.greenDark_1,

@@ -78,6 +78,27 @@ export const getProductsByCategory = createAsyncThunk(
     }
 )
 
+export const setMainProduct = createAsyncThunk(
+    'product/set-main-product',
+    async (id, thunkAPI) => {
+        try {
+            const result = await axios.put(
+                `http://localhost:5000/api/products/main-product/${id}`
+            );
+
+            if (result.status !== 200) {
+                throw new Error('Failed to set main product');
+            }
+
+            return result.data.product;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data?.message || error.message
+            );
+        }
+    }
+);
+
 export const deleteProductImage = createAsyncThunk(
     'product/delete-product-image',
     async ({ productId, fileId }, thunkAPI) => {
@@ -196,6 +217,24 @@ const productSlice = createSlice({
                 state.selectedCategoryProducts = action.payload.products;
             })
             .addCase(getProductsByCategory.rejected, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(setMainProduct.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(setMainProduct.fulfilled, (state, action) => {
+                state.isLoading = false;
+                // Update in product list
+                state.products = state.products.map((p) => ({
+                    ...p,
+                    mainProduct: p._id === action.payload._id
+                }))
+                // Update selected product (if viewing details)
+                if (state.selectedProduct && state.selectedProduct._id === action.payload._id) {
+                    state.selectedProduct = action.payload;
+                }
+            })
+            .addCase(setMainProduct.rejected, (state) => {
                 state.isLoading = false;
             })
             .addCase(deleteProductImage.pending, (state) => {

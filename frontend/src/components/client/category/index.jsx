@@ -299,7 +299,8 @@ const Categories = ({ categoryList }) => {
             container
             spacing={{ xs: 2, sm: 3 }}
             justifyContent="center"
-            alignItems="center"
+            flexDirection={{ xs: 'column', sm: 'row', md: 'row' }}
+            alignItems="stretch"
           >
             {filteredCategories.slice(0, 6).map((item, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>

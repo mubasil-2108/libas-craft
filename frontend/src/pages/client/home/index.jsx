@@ -23,7 +23,13 @@ const Home = () => {
 
     return uniqueCategories;
   }, [products]);
+
+  // Find the product marked as mainProduct
+  const mainProduct = useMemo(() => {
+    return products.find((p) => p?.mainProduct === true) || null;
+  }, [products]);
   // const {}= useSelector((state) => state.someSlice);
+  console.log(mainProduct, "mainProduct");
   return (
     <Box
       sx={{
@@ -35,7 +41,8 @@ const Home = () => {
           <Categories categoryList={categories} />
         )
       }
-      <MainProduct />
+      {/* Show only if main product exists */}
+      {mainProduct && <MainProduct product={mainProduct} />}
       <SpecialPackage />
       <BenefitsSection />
       <PopularProduct />
