@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
-import { AddProduct, AllProducts, Dashboard, OrderDetail, OrderList, Orders, ProductDetail, Products } from './pages/admin'
+import { AddPackage, AddProduct, AllPackages, AllProducts, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products } from './pages/admin'
 import { Account, Catalog, Category, ClientProductDetail, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
 import { NotFound, UnAuth } from './pages/common'
@@ -34,6 +34,13 @@ function App() {
           <Route path='orders' element={<Orders />}>
             <Route index element={<OrderList />} />
             <Route path=':id' element={<OrderDetail />} />
+          </Route>
+
+          {/* Packages */}
+          <Route path='packages' element={<Products />} >
+            <Route index element={<AllPackages />} />
+            <Route path=':id' element={<PackageDetail />} />
+            <Route path='add-new-package' element={<AddPackage />} />
           </Route>
         </Route>
         {/* <Route index element={<Home/>}/> */}

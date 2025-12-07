@@ -9,19 +9,17 @@ import { useNavigate } from 'react-router-dom';
 import { colors } from '../../../services';
 import { useDispatch } from 'react-redux';
 
-const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
+const PackageTile = ({ product, handleDeletePackage, handleMainProduct }) => {
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
-    const priceValue = product?.salePrice
-        ? product?.salePrice
-        : product?.regularPrice;
+    const priceValue = product?.packageSalePrice
+        ? product?.packageSalePrice
+        : product?.packageRegularPrice;
 
     const formattedPrice = `Rs. ${priceValue?.toFixed(2)?.toLocaleString()}`;
-
-    const salesPercentage = (product.sales / product.stockQuantity) * 100;
 
     // ✅ Truncate helper
     const truncateText = (text, maxLength) =>
@@ -37,7 +35,7 @@ const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
 
     const handleViewDetails = () => {
         handleMenuClose();
-        navigate(`/admin/products/${product?._id}`);
+        navigate(`/admin/packages/${product?._id}`);
     };
 
     const handleSelectMain = () => {
@@ -46,7 +44,7 @@ const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
     };
 
     const handleDelete = () => {
-        handleDeleteProduct(product?._id);
+        handleDeletePackage(product?._id);
         handleMenuClose();
     };
 
@@ -69,7 +67,7 @@ const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
                     flexDirection: 'row',
                     gap: 1
                 }}>
-                    <Box component='img' src={`https://www.googleapis.com/drive/v3/files/${product.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
+                    <Box component='img' src={`https://www.googleapis.com/drive/v3/files/${product?.packageImage?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
                         alt={product.productPhoto?.[0]?.name}
                         sx={{
                             width: '84px',
@@ -105,25 +103,7 @@ const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
                                     flexShrink: 1,
                                     fontSize: '16px',
                                     fontWeight: 600
-                                }}>{truncateText(product?.productName, 15)}</Typography>
-                                <Box component='div' sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    gap: 2
-                                }}>
-                                    <Typography variant='h6' sx={{
-                                        color: colors.textColor_4,
-                                        opacity: 0.6,
-                                        fontSize: '14px',
-                                        fontWeight: 600
-                                    }}>{product?.category}</Typography>
-                                    {
-                                        product?.mainProduct && (
-                                            <Icon fontSize='inherit' component={GradeIcon} sx={{ fontSize: '16px', color: colors.iconColor_3 }} />
-                                        )
-                                    }
-                                </Box>
+                                }}>{truncateText(product?.packageName, 15)}</Typography>
                             </Box>
                             <Box component='div' sx={{ alignItems: 'start' }}>
                                 <IconButton onClick={handleMenuOpen} size='small' sx={{
@@ -154,17 +134,23 @@ const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
                                         View Details</MenuItem>
                                     <MenuItem onClick={handleSelectMain} sx={{ gap: 1, alignItems: 'center', }}>
                                         <Icon fontSize='small' component={GradeIcon} />
-                                        Select to Main Product</MenuItem>
+                                        Select to Main Package</MenuItem>
                                     <MenuItem
                                         onClick={handleDelete}
                                         sx={{ color: 'red', gap: 1, alignItems: 'center', }}
                                     >
                                         <Icon fontSize='small' component={DeleteOutlineOutlinedIcon} />
-                                        Delete Product
+                                        Delete Package
                                     </MenuItem>
                                 </Menu>
                             </Box>
                         </Box>
+                         <Box component='div' sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    gap: 2
+                                }}>
                         <Typography variant='h5' component='span' sx={{
                             color: colors.textColor_3,
                             fontSize: '14px',
@@ -172,6 +158,12 @@ const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
                         }}>
                             {formattedPrice}
                         </Typography>
+                        {
+                                        product?.mainPackage && (
+                                            <Icon fontSize='inherit' component={GradeIcon} sx={{ fontSize: '16px', color: colors.iconColor_3 }} />
+                                        )
+                                    }
+                        </Box>
                     </Box>
                 </Box>
 
@@ -192,81 +184,11 @@ const ProductTile = ({ product, handleDeleteProduct, handleMainProduct }) => {
                         fontWeight: 500,
                         opacity: 0.6,
                         color: colors.textColor_3,
-                    }}>{truncateText(product?.productDescription, 40)}</Typography>
-                </Box>
-
-                <Box component='div' sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    p: '10px',
-                    borderRadius: '8px',
-                    gap: 1,
-                    border: `1px solid ${colors.borderColor_1}`,
-                }}>
-                    <Box component='div' sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}>
-                        <Typography component='p' sx={{
-                            fontSize: '14px',
-                            fontWeight: 500,
-                            opacity: 0.8,
-                            color: colors.textColor_3,
-                        }}>Sales</Typography>
-                        <Box component='div' sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            gap: 1
-                        }}>
-                            <Icon component={ArrowUpwardOutlinedIcon} sx={{
-                                color: colors.iconColor_3,
-                                fontSize: '18px'
-                            }} />
-                            <Typography component='span' sx={{
-                                fontSize: '14px',
-                                fontWeight: 500,
-                                opacity: 0.6,
-                                color: colors.textColor_4,
-                            }}>{salesPercentage}%</Typography>
-                        </Box>
-                    </Box>
-
-                    <Divider variant='fullWidth' />
-
-                    <Box component='div' sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}>
-                        <Typography component='p' sx={{
-                            fontSize: '14px',
-                            fontWeight: 500,
-                            opacity: 0.8,
-                            color: colors.textColor_3,
-                        }}>Remaining Products</Typography>
-                        <Box component='div' sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            gap: 1
-                        }}>
-                            <LinearProgress variant='determinate' value={((product.stockQuantity - product.sales) / product.stockQuantity) * 100} color='inherit' sx={{ width: '50px', borderRadius: '10px', color: colors.iconColor_3 }} />
-                            <Typography component='span' sx={{
-                                fontSize: '14px',
-                                fontWeight: 500,
-                                opacity: 0.6,
-                                color: colors.textColor_4,
-                            }}>{product.stockQuantity - product.sales}</Typography>
-                        </Box>
-                    </Box>
+                    }}>{truncateText(product?.packageDescription, 40)}</Typography>
                 </Box>
             </Box>
         </Grid>
     )
 }
 
-export default ProductTile
+export default PackageTile

@@ -1,28 +1,22 @@
 import { Box, Divider, Grid, Icon, IconButton, LinearProgress, Pagination, PaginationItem, Typography } from '@mui/material'
 import React, { useMemo, useState } from 'react'
-import { ProductTile } from '../../../components/admin';
+import { PackageTile, ProductTile } from '../../../components/admin';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { deleteProduct, getAllProducts, setMainProduct } from '../../../store/slices/productSlice';
+import { getAllProducts, setMainProduct } from '../../../store/slices/productSlice';
 import toast from 'react-hot-toast';
 import { colors } from '../../../services';
+import { deletePackage, getAllPackages, setMainPackage } from '../../../store/slices/packageSlice';
 
-const AllProducts = () => {
+const AllPackages = () => {
     const dispatch = useDispatch();
-    const { products, selectedCategory } = useSelector((state) => state.product);
+    const { packages, } = useSelector((state) => state.packages);
+
+    console.log(packages, "packages");
     const [page, setPage] = useState(1);
     const rowsPerPage = 6;
-
-    const filterProducts = useMemo(() => {
-        if (selectedCategory === "All" || !selectedCategory) return products;
-        return products.filter(p => p.category === selectedCategory);
-    }, [products, selectedCategory]);
-
-    useEffect(() => {
-        setPage(1); // reset to first page when category changes
-    }, [selectedCategory]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -30,48 +24,50 @@ const AllProducts = () => {
 
     const startIndex = (page - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
+    const paginatedPackages = useMemo(() => {
+    // Sort packages: latest first
+    const sortedPackages = [...packages].sort((a, b) => b._id.localeCompare(a._id));
+    return sortedPackages.slice(startIndex, endIndex) || [];
+}, [packages, startIndex, endIndex]);
 
-    const paginatedProducts = useMemo(() => {
-        // Sort packages: latest first
-        const sortedPackages = [...filterProducts].sort((a, b) => b._id.localeCompare(a._id));
-        return sortedPackages.slice(startIndex, endIndex) || [];
-    }, [filterProducts, startIndex, endIndex]);
     useEffect(() => {
-        const fetchAllProducts = async () => {
-            await dispatch(getAllProducts())
+        const fetchAllPackages = async () => {
+            await dispatch(getAllPackages())
                 .catch((error) => {
                     toast.error(error?.message || 'Failed to add product');
                 });
         }
-        fetchAllProducts();
+        fetchAllPackages();
     }, [dispatch]);
 
     const handleMainProduct = async (id) => {
-        await dispatch(setMainProduct(id))
+        await dispatch(setMainPackage(id))
             .unwrap()
             .then((data) => {
-                if (data?.product?.mainProduct === true) {
+                if (data?.package?.mainPackage === true) {
                     toast.success(data?.message);
+                    // dispatch(getAllPackages());
                 }
             })
             .catch((error) => {
                 toast.error(error?.message || 'Failed to set main product');
+                console.error("Set Main Package Error:", error);
             })
     }
 
-    const handleDeleteProduct = (id) => {
-        dispatch(deleteProduct(id))
-            .unwrap()
-            .then((data) => {
-                if (data?.type === 'product/delete-product/fulfilled') {
-                    toast.success(data?.payload?.message);
-                    dispatch(getAllProducts());
-                }
-            })
-            .catch((error) => {
-                toast.error(error?.message || 'Failed to delete product');
-            })
-    }
+     const handleDeletePackage = (id) => {
+            dispatch(deletePackage(id))
+                .unwrap()
+                .then((data) => {
+                    if (data?.type === 'package/delete-package/fulfilled') {
+                        toast.success(data?.payload?.message);
+                        dispatch(getAllPackages());
+                    }
+                })
+                .catch((error) => {
+                    toast.error(error?.message || 'Failed to delete product');
+                })
+        }
 
     return (
         <Box component='div' sx={{
@@ -83,11 +79,11 @@ const AllProducts = () => {
             justifyContent: 'space-between'
             // position: 'fixed'
         }}>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} >
                 {
-                    paginatedProducts.length > 0 ?
-                        paginatedProducts.map((product) => (
-                            <ProductTile key={product._id} handleDeleteProduct={handleDeleteProduct} handleMainProduct={handleMainProduct} product={product} />
+                    paginatedPackages.length > 0 ?
+                        paginatedPackages.map((product) => (
+                            <PackageTile key={product?._id} handleDeletePackage={handleDeletePackage} handleMainProduct={handleMainProduct} product={product} />
                         ))
                         :
                         <Typography variant='body1' component='p' sx={{
@@ -107,7 +103,7 @@ const AllProducts = () => {
                             mt: 2,
                         }}>
                             <Pagination
-                                count={Math.ceil(products.length / rowsPerPage)}
+                                count={Math.ceil(packages.length / rowsPerPage)}
                                 page={page}
                                 onChange={handleChangePage}
                                 shape='rounded'
@@ -117,7 +113,7 @@ const AllProducts = () => {
                                 renderItem={(item) => {
 
                                     if (item.type === 'next') {
-                                        if (page >= Math.ceil(products.length / rowsPerPage)) return null;
+                                        if (page >= Math.ceil(packages.length / rowsPerPage)) return null;
                                         return (
                                             <PaginationItem
                                                 {...item}
@@ -223,4 +219,4 @@ const AllProducts = () => {
     )
 }
 
-export default AllProducts
+export default AllPackages

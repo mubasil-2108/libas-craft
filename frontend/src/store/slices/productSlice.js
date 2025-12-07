@@ -89,8 +89,7 @@ export const setMainProduct = createAsyncThunk(
             if (result.status !== 200) {
                 throw new Error('Failed to set main product');
             }
-
-            return result.data.product;
+            return result.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(
                 error.response?.data?.message || error.message
@@ -224,14 +223,17 @@ const productSlice = createSlice({
             })
             .addCase(setMainProduct.fulfilled, (state, action) => {
                 state.isLoading = false;
+                const updatedProduct = action.payload.product;
+
                 // Update in product list
                 state.products = state.products.map((p) => ({
                     ...p,
-                    mainProduct: p._id === action.payload._id
-                }))
-                // Update selected product (if viewing details)
-                if (state.selectedProduct && state.selectedProduct._id === action.payload._id) {
-                    state.selectedProduct = action.payload;
+                    mainProduct: p._id === updatedProduct._id
+                }));
+
+                // Update selected product if viewing details
+                if (state.selectedProduct && state.selectedProduct._id === updatedProduct._id) {
+                    state.selectedProduct = updatedProduct;
                 }
             })
             .addCase(setMainProduct.rejected, (state) => {

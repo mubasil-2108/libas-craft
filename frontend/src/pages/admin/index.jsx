@@ -6,6 +6,10 @@ import ProductDetail from "./product-detail";
 import Orders from "./orders";
 import OrderList from "./order-list";
 import OrderDetail from "./order-detail";
+import Packages from "./special-package";
+import AddPackage from "./add-new-package";
+import AllPackages from "./all-packages";
+import PackageDetail from "./package-detail";
 
 export {
     Dashboard,
@@ -15,5 +19,9 @@ export {
     ProductDetail,
     Orders,
     OrderList,
-    OrderDetail
+    OrderDetail,
+    Packages,
+    AddPackage,
+    AllPackages,
+    PackageDetail
 }

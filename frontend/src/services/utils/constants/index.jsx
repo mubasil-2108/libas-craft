@@ -32,6 +32,12 @@ export const adminBar = [
     icon: DescriptionOutlinedIcon,
     link: '/admin/orders'
   },
+  {
+    id: 4,
+    name: 'Packages',
+    icon: Inventory2OutlinedIcon,
+    link: '/admin/packages'
+  },
 ]
 
 export const reasons = [

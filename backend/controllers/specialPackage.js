@@ -7,7 +7,7 @@ const fs = require("fs");
 async function uploadWithRetry(filePath, retries = 3) {
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-            return await uploadFile(filePath);
+            return await uploadFile(filePath, "packages");
         } catch (err) {
             console.error(`Upload attempt ${attempt} failed for ${filePath}:`, err.message);
             if (attempt === retries) throw err;
@@ -19,9 +19,18 @@ async function uploadWithRetry(filePath, retries = 3) {
 // CREATE SPECIAL PACKAGE
 
 const createSpecialPackage = asyncHandler(async (req, res) => {
-    const { packageName, packageDescription, packageProducts, packageRegularPrice, packageSalePrice } = req.body;
+    const { packageName,
+        packageDescription,
+        packageDetails,
+        packageBenefits,
+        packageExtraDetails,
+        packageProducts,
+        packageRegularPrice,
+        packageSalePrice,
+        tags
+    } = req.body;
 
-    if (!packageName || !packageDescription || !packageProducts, !packageRegularPrice) {
+    if (!packageName || !packageDescription || !packageProducts || !tags || !packageRegularPrice) {
         return res.status(400).json({ message: "Products are required" });
     }
 
@@ -64,15 +73,18 @@ const createSpecialPackage = asyncHandler(async (req, res) => {
     const package = await SpecialPackage.create({
         packageName,
         packageDescription,
+        packageDetails,
+        packageBenefits,
+        packageExtraDetails,
         packageImage: imageData,
         packageProducts,
         packageRegularPrice,
-        packageSalePrice
+        packageSalePrice,
+        tags
     })
 
     res.status(201).json({
         message: "Special package created successfully",
-        data: package,
     })
 });
 
@@ -108,7 +120,14 @@ const getSpecialPackage = asyncHandler(async (req, res) => {
 
 const updateSpecialPackage = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { packageName, packageDescription, packageProducts, packageRegularPrice, packageSalePrice } = req.body;
+    const { packageName,
+        packageDescription,
+        packageDetails,
+        packageBenefits,
+        packageExtraDetails,
+        packageProducts,
+        packageRegularPrice,
+        packageSalePrice, tags } = req.body;
 
     const package = await SpecialPackage.findById(id);
 
@@ -118,7 +137,7 @@ const updateSpecialPackage = asyncHandler(async (req, res) => {
         })
     }
 
-    if (!packageName || !packageDescription || !packageProducts, !packageRegularPrice) {
+    if (!packageName || !packageDescription || !packageProducts || !tags || !packageRegularPrice) {
         return res.status(400).json({ message: "Products are required" });
     }
 
@@ -159,12 +178,72 @@ const updateSpecialPackage = asyncHandler(async (req, res) => {
         package.packageProducts = packageProducts;
         package.packageRegularPrice = packageRegularPrice;
         package.packageSalePrice = packageSalePrice;
+        package.packageDetails = packageDetails;
+        package.packageBenefits = packageBenefits;
+        package.packageExtraDetails = packageExtraDetails;
+        package.tags = tags;
 
         await package.save();
 
         res.status(200).json({
             message: "Special package updated successfully",
             data: package,
+        });
+    }
+});
+
+// SET MAIN PACKAGE
+
+const setMainPackage = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    
+    // Find the selected package
+    const specialPackage = await SpecialPackage.findById(id);
+    if (!specialPackage) {
+        return res.status(404).json({ message: "Package not found" });
+    }
+
+    // If this package is already main → unselect it
+    if (specialPackage.mainPackage) {
+        await SpecialPackage.findByIdAndUpdate(id, { mainPackage: false });
+
+        return res.status(200).json({
+            message: `${specialPackage.packageName} is no longer the main package`,
+        });
+    }
+
+    // Remove main status from all others (only one should be main)
+    await SpecialPackage.updateMany(
+        { mainPackage: true },
+        { $set: { mainPackage: false } }
+    );
+
+    // Set this package as main
+    specialPackage.mainPackage = true;
+    await specialPackage.save();
+
+    res.status(200).json({
+        message: `${specialPackage.packageName} is now the main package`,
+        package: specialPackage,  // ✅ full package object
+    });
+});
+
+
+// DELETE PACKAGE IMAGE
+
+const deletePackageImage = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const package = await SpecialPackage.findById(id);
+
+    if (package) {
+        if (package.packageImage?.id) {
+            await deleteFileFromDrive(package.packageImage.id);
+        }
+        package.packageImage = null;
+        await package.save();
+        res.status(200).json({
+            message: "Package image deleted successfully",
         });
     }
 });
@@ -190,6 +269,8 @@ module.exports = {
     createSpecialPackage,
     getAllSpecialPackages,
     getSpecialPackage,
+    setMainPackage,
     updateSpecialPackage,
-    deleteSpecialPackage
+    deleteSpecialPackage,
+    deletePackageImage
 }
