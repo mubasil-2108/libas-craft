@@ -1,5 +1,5 @@
 import { Box, Divider, Grid, Icon, IconButton, LinearProgress, Pagination, PaginationItem, Typography } from '@mui/material'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { ProductTile } from '../../../components/admin';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -24,9 +24,7 @@ const AllProducts = () => {
         setPage(1); // reset to first page when category changes
     }, [selectedCategory]);
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+    const handleChangePage = useCallback((event, newPage) => setPage(newPage), []);
 
     const startIndex = (page - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
@@ -36,6 +34,7 @@ const AllProducts = () => {
         const sortedPackages = [...filterProducts].sort((a, b) => b._id.localeCompare(a._id));
         return sortedPackages.slice(startIndex, endIndex) || [];
     }, [filterProducts, startIndex, endIndex]);
+
     useEffect(() => {
         const fetchAllProducts = async () => {
             await dispatch(getAllProducts())
@@ -46,7 +45,7 @@ const AllProducts = () => {
         fetchAllProducts();
     }, [dispatch]);
 
-    const handleMainProduct = async (id) => {
+    const handleMainProduct = useCallback(async (id) => {
         await dispatch(setMainProduct(id))
             .unwrap()
             .then((data) => {
@@ -54,12 +53,10 @@ const AllProducts = () => {
                     toast.success(data?.message);
                 }
             })
-            .catch((error) => {
-                toast.error(error?.message || 'Failed to set main product');
-            })
-    }
+            .catch((error) => toast.error(error?.message || 'Failed to set main product'));
+    }, [dispatch]);
 
-    const handleDeleteProduct = (id) => {
+    const handleDeleteProduct = useCallback((id) => {
         dispatch(deleteProduct(id))
             .unwrap()
             .then((data) => {
@@ -68,10 +65,8 @@ const AllProducts = () => {
                     dispatch(getAllProducts());
                 }
             })
-            .catch((error) => {
-                toast.error(error?.message || 'Failed to delete product');
-            })
-    }
+            .catch((error) => toast.error(error?.message || 'Failed to delete product'));
+    }, [dispatch]);
 
     return (
         <Box component='div' sx={{

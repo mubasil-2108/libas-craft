@@ -49,7 +49,6 @@ const PackageDetail = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [isImageDeleting, setIsImageDeleting] = useState(false);
     const thumbRef = useRef(null);
-    console.log(selectedPackage, 'selectedPackage');
     useEffect(() => {
         const fetchPackageById = async () => {
             // Dispatch an action to fetch product by ID
@@ -93,28 +92,28 @@ const PackageDetail = () => {
         }
     }, [selectedPackage, categories]);
 
-    const displayedImage = selectedPackage?.packageImage ? `https://www.googleapis.com/drive/v3/files/${selectedPackage?.packageImage?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}` : formData.images && formData.images[0]?.preview;
+    const displayedImage = useMemo(() => {
+        if (selectedPackage?.packageImage) {
+            return `https://www.googleapis.com/drive/v3/files/${selectedPackage.packageImage.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`;
+        }
+        return formData.images?.[0]?.preview;
+    }, [selectedPackage?.packageImage, formData.images]);
 
     const [pagination, setPagination] = useState({});
-    const handleChangePage = (category, newPage) => {
-        setPagination((prev) => ({
+    const handleChangePage = useCallback((category, newPage) => {
+        setPagination(prev => ({
             ...prev,
-            [category]: {
-                ...prev[category],
-                page: newPage,
-            },
+            [category]: { ...prev[category], page: newPage }
         }));
-    };
-    const handleChangeRowsPerPage = (category, event) => {
+    }, []);
+
+    const handleChangeRowsPerPage = useCallback((category, event) => {
         const rowsPerPage = parseInt(event.target.value, 10);
-        setPagination((prev) => ({
+        setPagination(prev => ({
             ...prev,
-            [category]: {
-                page: 0, // reset to first page
-                rowsPerPage,
-            },
+            [category]: { page: 0, rowsPerPage }
         }));
-    };
+    }, []);
 
     const handleImageUpload = useCallback((e) => {
         const file = e.target.files[0];
@@ -169,20 +168,21 @@ const PackageDetail = () => {
         }
     }, [currentIndex, formData.images])
 
-    const handleApiDelete = async (fileId) => {
+    const handleApiDelete = useCallback(async (fileId) => {
         if (!fileId) return;
         setIsImageDeleting(true);
-        await dispatch(deletePackageImage(id)).then(async (data) => {
+        try {
+            const data = await dispatch(deletePackageImage(id));
             if (data?.type === 'product/delete-product-image/fulfilled') {
                 toast.success(data?.payload?.message);
                 await dispatch(getSinglePackage(id));
-                setIsImageDeleting(false);
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error(error?.message || 'Failed to delete product image');
+        } finally {
             setIsImageDeleting(false);
-        });
-    };
+        }
+    }, [dispatch, id]);
 
     const handleUpdate = useCallback(async () => {
         setIsUpdating(true);
@@ -222,20 +222,21 @@ const PackageDetail = () => {
         });
     }, [dispatch, formData, id]);
 
-    const handleDeletePackage = async () => {
+    const handleDeletePackage = useCallback(async () => {
         setIsDeleting(true);
-        await dispatch(deletePackage(id)).then(async (data) => {
+        try {
+            const data = await dispatch(deletePackage(id));
             if (data?.type === 'package/delete-package/fulfilled') {
                 toast.success(data?.payload?.message);
-                setIsDeleting(false);
                 navigate('/admin/packages');
                 await getAllPackages();
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error(error?.message || 'Failed to delete product');
+        } finally {
             setIsDeleting(false);
-        });
-    };
+        }
+    }, [dispatch, id, navigate]);
 
     const handleCancel = useCallback(() => {
         if (selectedPackage) {

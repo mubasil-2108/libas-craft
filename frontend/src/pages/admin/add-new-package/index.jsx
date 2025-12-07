@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Checkbox, Grid, Icon, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PhotoOutlinedIcon from '@mui/icons-material/PhotoOutlined'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -42,27 +42,24 @@ const AddPackage = () => {
     const [formData, setFormData] = useState(initialState);
     const [currentIndex, setCurrentIndex] = useState(0);
     const thumbRef = useRef(null);
-    const categories = [...new Set(products.map(p => p.category))];
+    const categories = useMemo(() => [...new Set(products.map(p => p.category))], [products]);
     const [pagination, setPagination] = useState({});
-    const handleChangePage = (category, newPage) => {
-        setPagination((prev) => ({
+
+    const handleChangePage = useCallback((category, newPage) => {
+        setPagination(prev => ({
             ...prev,
-            [category]: {
-                ...prev[category],
-                page: newPage,
-            },
+            [category]: { ...prev[category], page: newPage }
         }));
-    };
-    const handleChangeRowsPerPage = (category, event) => {
+    }, []);
+
+    const handleChangeRowsPerPage = useCallback((category, event) => {
         const rowsPerPage = parseInt(event.target.value, 10);
-        setPagination((prev) => ({
+        setPagination(prev => ({
             ...prev,
-            [category]: {
-                page: 0, // reset to first page
-                rowsPerPage,
-            },
+            [category]: { page: 0, rowsPerPage }
         }));
-    };
+    }, []);
+
     const handleImageUpload = useCallback((e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -121,7 +118,7 @@ const AddPackage = () => {
             .flatMap(cat => cat.ids || [])
             .filter(Boolean); // now contains MongoDB product _id's
 
-         const form = new FormData();
+        const form = new FormData();
         form.append("packageName", formData.packageName);
         form.append("packageDescription", formData.packageDescription);
         form.append("packageExtraDetails", formData.packageExtraDetails);

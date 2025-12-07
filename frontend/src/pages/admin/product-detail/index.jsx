@@ -40,7 +40,7 @@ const ProductDetail = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [isImageDeleting, setIsImageDeleting] = useState(false);
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = useCallback((e) => {
         const files = Array.from(e.target.files);
         if (files.length > 0) {
             const newImages = files.map((file) => ({
@@ -50,8 +50,8 @@ const ProductDetail = () => {
                 size: file.size,
                 type: file.type,
                 lastModified: file.lastModified,
-                progress: 0,          // start at 0
-                status: 'uploading',  // default status
+                progress: 0,
+                status: 'uploading',
             }));
             setFormData((prev) => ({
                 ...prev,
@@ -59,8 +59,7 @@ const ProductDetail = () => {
             }));
             setCurrentIndex(0);
 
-            // 🚀 simulate upload progress (replace with Firebase/Server later)
-            newImages.forEach((img, i) => {
+            newImages.forEach((img) => {
                 const interval = setInterval(() => {
                     setFormData((prev) => ({
                         ...prev,
@@ -69,21 +68,16 @@ const ProductDetail = () => {
                                 ? {
                                     ...item,
                                     progress: Math.min(item.progress + 20, 100),
-                                    status:
-                                        item.progress + 20 >= 100
-                                            ? 'uploaded'
-                                            : 'uploading',
+                                    status: item.progress + 20 >= 100 ? 'uploaded' : 'uploading',
                                 }
                                 : item
                         ),
                     }));
                 }, 500);
-
-                // clear when done
                 setTimeout(() => clearInterval(interval), 3000);
             });
         }
-    };
+    }, [setFormData]);
 
     useEffect(() => {
         const fetchProductById = async () => {
@@ -121,8 +115,7 @@ const ProductDetail = () => {
         ...(formData.images || []),
     ], [selectedProduct?.productPhoto, formData.images])
 
-    const handleUpdate = async () => {
-        // Implement update logic here
+    const handleUpdate = useCallback(async () => {
         setIsUpdating(true);
         const form = new FormData();
         form.append("productName", formData.productName);
@@ -137,37 +130,36 @@ const ProductDetail = () => {
         form.append("salePrice", formData.salePrice);
         formData.sizes.forEach(size => form.append("sizes[]", size));
         formData.tags.forEach(tag => form.append("tags[]", tag));
+        formData.images.forEach((img) => form.append("images", img.file));
 
-        // append files
-        formData.images.forEach((img) => {
-            form.append("images", img.file);  // 👈 actual File object
-        });
-        await dispatch(updateProduct({ id, formData: form })).then(async (data) => {
+        try {
+            const data = await dispatch(updateProduct({ id, formData: form }));
             if (data?.type === 'product/update-product/fulfilled') {
                 toast.success('Product updated successfully!');
                 await dispatch(getProductById(id));
-                setIsUpdating(false);
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error(error?.message || 'Failed to update product');
+        } finally {
             setIsUpdating(false);
-        });
-    }
+        }
+    }, [dispatch, id, formData]);
 
-    const handleApiDelete = async (fileId) => {
+    const handleApiDelete = useCallback(async (fileId) => {
         if (!fileId) return;
         setIsImageDeleting(true);
-        await dispatch(deleteProductImage({ productId: id, fileId })).then(async (data) => {
+        try {
+            const data = await dispatch(deleteProductImage({ productId: id, fileId }));
             if (data?.type === 'product/delete-product-image/fulfilled') {
                 toast.success(data?.payload?.message);
                 await dispatch(getProductById(id));
-                setIsImageDeleting(false);
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error(error?.message || 'Failed to delete product image');
+        } finally {
             setIsImageDeleting(false);
-        });
-    };
+        }
+    }, [dispatch, id]);
 
     const handleRemoveImage = useCallback((index) => {
         setFormData((prev) => ({
@@ -195,19 +187,20 @@ const ProductDetail = () => {
         )
     }, [allImages.length]);
 
-    const handleProductDelete = async () => {
+    const handleProductDelete = useCallback(async () => {
         setIsDeleting(true);
-        await dispatch(deleteProduct(id)).then((data) => {
+        try {
+            const data = await dispatch(deleteProduct(id));
             if (data?.type === 'product/delete-product/fulfilled') {
                 toast.success(data?.payload?.message);
-                setIsDeleting(false);
                 navigate('/admin/products');
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error(error?.message || 'Failed to delete product');
+        } finally {
             setIsDeleting(false);
-        });
-    }
+        }
+    }, [dispatch, id, navigate]);
 
     const handleCancel = useCallback(() => {
         if (selectedProduct) {

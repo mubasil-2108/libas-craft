@@ -1,5 +1,5 @@
 import { Box, Divider, Grid, Icon, IconButton, LinearProgress, Pagination, PaginationItem, Typography } from '@mui/material'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { PackageTile, ProductTile } from '../../../components/admin';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -25,49 +25,50 @@ const AllPackages = () => {
     const startIndex = (page - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const paginatedPackages = useMemo(() => {
-    // Sort packages: latest first
-    const sortedPackages = [...packages].sort((a, b) => b._id.localeCompare(a._id));
-    return sortedPackages.slice(startIndex, endIndex) || [];
-}, [packages, startIndex, endIndex]);
+        // Sort packages: latest first
+        const sortedPackages = [...packages].sort((a, b) => b._id.localeCompare(a._id));
+        return sortedPackages.slice(startIndex, endIndex) || [];
+    }, [packages, startIndex, endIndex]);
 
     useEffect(() => {
         const fetchAllPackages = async () => {
             await dispatch(getAllPackages())
                 .catch((error) => {
-                    toast.error(error?.message || 'Failed to add product');
+                    toast.error(error?.message || 'Failed to fetch product');
                 });
         }
         fetchAllPackages();
     }, [dispatch]);
 
-    const handleMainProduct = async (id) => {
-        await dispatch(setMainPackage(id))
-            .unwrap()
-            .then((data) => {
+    const handleMainProduct = useCallback(
+        async (id) => {
+            try {
+                const data = await dispatch(setMainPackage(id)).unwrap();
                 if (data?.package?.mainPackage === true) {
                     toast.success(data?.message);
-                    // dispatch(getAllPackages());
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 toast.error(error?.message || 'Failed to set main product');
                 console.error("Set Main Package Error:", error);
-            })
-    }
+            }
+        },
+        [dispatch]
+    );
 
-     const handleDeletePackage = (id) => {
-            dispatch(deletePackage(id))
-                .unwrap()
-                .then((data) => {
-                    if (data?.type === 'package/delete-package/fulfilled') {
-                        toast.success(data?.payload?.message);
-                        dispatch(getAllPackages());
-                    }
-                })
-                .catch((error) => {
-                    toast.error(error?.message || 'Failed to delete product');
-                })
-        }
+    const handleDeletePackage = useCallback(
+        async (id) => {
+            try {
+                const data = await dispatch(deletePackage(id)).unwrap();
+                if (data?.type === 'package/delete-package/fulfilled') {
+                    toast.success(data?.payload?.message);
+                    dispatch(getAllPackages());
+                }
+            } catch (error) {
+                toast.error(error?.message || 'Failed to delete package');
+            }
+        },
+        [dispatch]
+    );
 
     return (
         <Box component='div' sx={{
