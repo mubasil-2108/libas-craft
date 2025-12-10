@@ -2,6 +2,12 @@ const asyncHandler = require('express-async-handler');
 const Order = require('../models/order');
 const Product = require('../models/product');
 
+
+// Generate unique 6-digit Order ID
+function generateOrderId() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 /**
  * @desc Create a new order (Cash on Delivery)
  * @route POST /api/orders/create
@@ -19,7 +25,20 @@ const createOrder = asyncHandler(async (req, res) => {
         });
     }
 
+    // Generate unique 6-digit Order ID
+    let orderId;
+    let isUnique = false;
+
+    while (!isUnique) {
+        orderId = generateOrderId();
+        const exists = await Order.findOne({ orderId });
+        if (!exists) {
+            isUnique = true;
+        } 
+    }
+
     const order = new Order({
+        orderId,
         user,
         orderItems: orderItems.map(item => ({
             productId: item.productId,

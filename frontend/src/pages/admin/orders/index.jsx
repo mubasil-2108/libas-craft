@@ -5,12 +5,14 @@ import { AdminFooter } from '../../../components/admin';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import { colors } from '../../../services';
+import { useSelector } from 'react-redux';
 // import { purchases } from '../../../services/utils/constants';
 
 
 const Orders = () => {
     const location = useLocation();
     const [isOrderDetail, setIsOrderDetail] = useState(false);
+    const { dateRange } = useSelector((state) => state.order);
     const capitalize = (str) =>
         str
             .split('-')
@@ -37,11 +39,11 @@ const Orders = () => {
             setIsOrderDetail(true);
             return 'Order Detail';
         }
-
+        if (/^[a-zA-Z0-9]+$/.test(segment) && pathSegments[index - 1] === 'orders') return 'Order Details';
         // Fallback for numeric product IDs
-        if (pathSegments[index - 1] === 'orders' && /^\d+$/.test(segment)) {
-            return 'Order Details';
-        }
+        // if (pathSegments[index - 1] === 'orders' && /^\d+$/.test(segment)) {
+        //     return 'Order Details';
+        // }
 
         return capitalize(segment);
     }).join(' > ');
@@ -120,7 +122,7 @@ const Orders = () => {
                                             color: colors.textColor_4,
                                             fontSize: '16px',
                                             fontWeight: 500,
-                                        }}>Feb 16,2022 - Feb 20,2022</Typography>
+                                        }}>{dateRange ? dateRange : 'No Orders Yet'}</Typography>
                                         {/* {dateRange} */}
                                     </Box>
                                 </Box>

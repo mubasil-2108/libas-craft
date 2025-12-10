@@ -6,6 +6,7 @@ const API_URL = "http://localhost:5000/api/orders";
 const initialState = {
     orders: [],
     userOrders: [],
+    dateRange: '',
     isLoading: false,
     error: null,
     success: false
@@ -88,7 +89,10 @@ const orderSlice = createSlice({
             state.isLoading = false;
             state.error = null;
             state.success = false;
-        }
+        },
+        setOrderDateRange: (state, action) => {
+            state.dateRange = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -111,7 +115,21 @@ const orderSlice = createSlice({
             })
             .addCase(getAllOrders.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.orders = action.payload;
+                state.orders = action.payload.orders;
+                if (action.payload.orders.length > 0) {
+                    // Extract earliest and latest order dates
+                    const dates = action.payload.orders.map(order => new Date(order.createdAt));
+                    console.log(dates, "dates in orderSlice");
+                    const minDate = new Date(Math.min(...dates));
+                    const maxDate = new Date(Math.max(...dates));
+
+                    // Format dates nicely (Feb 16, 2022 style)
+                    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                    state.dateRange = `${minDate.toLocaleDateString(undefined, options)} - ${maxDate.toLocaleDateString(undefined, options)}`;
+                    console.log(state.dateRange, "dateRange in orderSlice");
+                } else {
+                    state.dateRange = ''; // No orders
+                }
             })
             .addCase(getAllOrders.rejected, (state, action) => {
                 state.isLoading = false;
@@ -160,5 +178,5 @@ const orderSlice = createSlice({
 
 });
 
-export const { resetOrderState } = orderSlice.actions;
+export const { resetOrderState, setOrderDateRange } = orderSlice.actions;
 export default orderSlice.reducer;

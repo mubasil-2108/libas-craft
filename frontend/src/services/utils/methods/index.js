@@ -59,4 +59,14 @@ function hexToRGBA(hex, alpha = 0.6) {
   return `rgba(${r},${g},${b},${alpha})`;
 };
 
-export { stringToColor, stringAvatar, hexToRGBA };
+function formatDate(dateString) {
+  if (!dateString) return ""; // handle null/undefined
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+  });
+};
+
+export { stringToColor, stringAvatar, hexToRGBA, formatDate };

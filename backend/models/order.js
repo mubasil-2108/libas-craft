@@ -1,21 +1,25 @@
 const mongoose = require('mongoose');
-const {Schema, Types} = mongoose;
+const { Schema, Types } = mongoose;
 
 const orderSchema = new mongoose.Schema({
     // Reference to the user who placed the order
     user: {
         type: Schema.Types.Mixed,
         required: true,
-        set: v=> Types.ObjectId.isValid(v) ? new Types.ObjectId(v) : v,
+        set: v => Types.ObjectId.isValid(v) ? new Types.ObjectId(v) : v,
     },
     // Products in the order (can contain multiple items)
-
+    orderId: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     orderItems: [
         {
             productId: {
                 type: Schema.Types.Mixed,
                 required: true,
-                set: v=> Types.ObjectId.isValid(v) ? new Types.ObjectId(v) : v,
+                set: v => Types.ObjectId.isValid(v) ? new Types.ObjectId(v) : v,
             },
             productName: {
                 type: String,

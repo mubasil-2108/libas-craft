@@ -39,7 +39,7 @@ const AllProducts = () => {
         const fetchAllProducts = async () => {
             await dispatch(getAllProducts())
                 .catch((error) => {
-                    toast.error(error?.message || 'Failed to add product');
+                    toast.error(error?.message || 'Failed to fetch products');
                 });
         }
         fetchAllProducts();

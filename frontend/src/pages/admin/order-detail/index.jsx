@@ -13,9 +13,12 @@ import React, { useState } from 'react'
 import { productOrders } from '../../../services/utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '../../../services';
+import { useDispatch, useSelector } from 'react-redux';
 
 const OrderDetail = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { isLoading, orders } = useSelector((state) => state.order);
     const [selected, setSelected] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState('Delivered');
     const isSelected = (id) => selected.includes(id);
