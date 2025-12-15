@@ -34,6 +34,7 @@ function App() {
           <Route path='orders' element={<Orders />}>
             <Route index element={<OrderList />} />
             <Route path=':id' element={<OrderDetail />} />
+            <Route path='product/:productId' element={<ProductDetail />} />
           </Route>
 
           {/* Packages */}

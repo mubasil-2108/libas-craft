@@ -6,6 +6,7 @@ const API_URL = "http://localhost:5000/api/orders";
 const initialState = {
     orders: [],
     userOrders: [],
+    selectedOrder: null,
     dateRange: '',
     isLoading: false,
     error: null,
@@ -33,6 +34,20 @@ export const getAllOrders = createAsyncThunk(
     async (_, thunkAPI) => {
         try {
             const response = await axios.get(`${API_URL}/all-orders`);
+            return response.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+// GET order by ID
+
+export const getOrderById = createAsyncThunk(
+    'order/getOrderById',
+    async (orderId, thunkAPI) => {
+        try {
+            const response = await axios.get(`${API_URL}/${orderId}`);
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
@@ -135,6 +150,19 @@ const orderSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload;
             })
+            // Get Order By ID
+            .addCase(getOrderById.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getOrderById.fulfilled, (state, action) => {
+                state.isLoading = false;
+                console.log(action.payload.order, "action.payload in getOrderById fulfilled");
+                state.selectedOrder = action.payload.order;
+            })
+            .addCase(getOrderById.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
             // Get User Orders
             .addCase(getUserOrders.pending, (state) => {
                 state.isLoading = true;
@@ -153,10 +181,7 @@ const orderSlice = createSlice({
             })
             .addCase(updateOrderStatus.fulfilled, (state, action) => {
                 state.isLoading = false;
-                const index = state.orders.findIndex(o => o._id === action.payload._id);
-                if (index !== -1) {
-                    state.orders[index] = action.payload;
-                }
+                state.selectedOrder = action.payload.order;
             })
             .addCase(updateOrderStatus.rejected, (state, action) => {
                 state.isLoading = false;

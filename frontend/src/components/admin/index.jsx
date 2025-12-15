@@ -5,6 +5,8 @@ import ImageTile from "./image-tile";
 import * as Admin from "./inputs";
 import DashboardOrderTile from "./dashboard-order-tile";
 import PackageTile from "./package-tile";
+import * as Dialog from "./dialog";
+
 export {
     AdminLayout,
     AdminFooter,
@@ -12,5 +14,6 @@ export {
     Admin,
     ImageTile,
     PackageTile,
-    DashboardOrderTile
+    DashboardOrderTile,
+    Dialog,
 }

@@ -44,7 +44,8 @@ const createOrder = asyncHandler(async (req, res) => {
             productId: item.productId,
             productName: item.productName,
             productPhoto: item.productPhoto,
-            productPrice: item.productPrice,
+            regularPrice: item.productPrice,
+            salePrice: item.salePrice,
             quantity: item.quantity,
             total: item.total,
         })),
@@ -76,6 +77,24 @@ const getAllOrders = asyncHandler(async (req, res) => {
     });
 });
 
+// GET Order by ID
+
+const getOrderById = asyncHandler(async (req, res) => {
+    const { orderId } = req.params;
+    console.log(orderId, "orderId in getOrderById");
+    const order = await Order.findById(orderId).populate('user', 'name email');
+
+    console.log(order, "order in getOrderById");
+    if (!order) {
+        return res.status(404).json({
+            message: "Order not found"
+        });
+    }
+    res.status(200).json({
+        order,
+    });
+});
+
 /**
  * @desc Get orders for a specific user
  * @route GET /api/orders/user/:userId
@@ -84,9 +103,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
 const getUserOrders = asyncHandler(async (req, res) => {
     const { userId } = req.params;
-    console.log(userId, "userId in getUserOrders");
     const orders = await Order.find({ user: userId }).sort({ createdAt: -1 });
-    console.log(orders, "orders in getUserOrders");
     res.status(200).json({
         orders,
     });
@@ -152,6 +169,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
 module.exports = {
     createOrder,
     getAllOrders,
+    getOrderById,
     getUserOrders,
     updateOrderStatus,
     deleteOrder,

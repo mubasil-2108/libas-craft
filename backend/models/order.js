@@ -29,9 +29,12 @@ const orderSchema = new mongoose.Schema({
                 type: String,
                 required: true,
             },
-            productPrice: {
+            regularPrice: {
                 type: Number,
                 required: true,
+            },
+            salePrice: {
+                type: Number,
             },
             quantity: {
                 type: Number,

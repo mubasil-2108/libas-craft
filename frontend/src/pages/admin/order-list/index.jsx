@@ -126,8 +126,8 @@ const OrderList = () => {
     };
 
     const totalPages = useMemo(() => {
-            return Math.ceil(filteredPurchases.length / rowsPerPage);
-        }, [filteredPurchases.length]);
+        return Math.ceil(filteredPurchases.length / rowsPerPage);
+    }, [filteredPurchases.length]);
     return (
         <Box component='div' sx={{
             maxWidth: '100%',
@@ -183,11 +183,15 @@ const OrderList = () => {
                     >
                         <MenuItem onClick={() => handleStatusChange(null)} selected={selectedStatus === null} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_7 }} component={FiberManualRecordIcon} /> All</MenuItem>
                         <Divider variant='middle' />
-                        <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_5 }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
+                        <MenuItem onClick={() => handleStatusChange('Delivered')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.green }} component={FiberManualRecordIcon} /> Deliverd</MenuItem>
                         <Divider variant='middle' />
                         <MenuItem onClick={() => handleStatusChange('Pending')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_10 }} component={FiberManualRecordIcon} /> Pending</MenuItem>
                         <Divider variant='middle' />
-                        <MenuItem onClick={() => handleStatusChange('Canceled')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_8 }} component={FiberManualRecordIcon} /> Cancelled</MenuItem>
+                        <MenuItem onClick={() => handleStatusChange('Processing')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_5 }} component={FiberManualRecordIcon} /> Processing</MenuItem>
+                        <Divider variant='middle' />
+                        <MenuItem onClick={() => handleStatusChange('Shipped')} sx={{ gap: 1.5 }} ><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_8 }} component={FiberManualRecordIcon} /> Shipped</MenuItem>
+                        <Divider variant='middle' />
+                        <MenuItem onClick={() => handleStatusChange('Canceled')} sx={{ gap: 1.5 }}><Icon fontSize='inherit' sx={{ fontSize: '14px', color: colors.iconColor_2 }} component={FiberManualRecordIcon} /> Cancelled</MenuItem>
                     </Menu>
                 </Box>
             </Box>
@@ -270,10 +274,14 @@ const OrderList = () => {
                                                 width: 8,
                                                 backgroundColor:
                                                     status === 'Delivered'
-                                                        ? colors.primary // Green for Delivered
+                                                        ? colors.green // Green for Delivered
                                                         : status === 'Canceled'
-                                                            ? colors.yellow // Orange for Canceled
-                                                            : colors.grayLight_5, // Default grey
+                                                            ? colors.iconColor_2 // Orange for Canceled
+                                                            : status === 'Processing'
+                                                                ? colors.grayLight_5
+                                                                : status === 'Shipped'
+                                                                    ? colors.iconColor_8
+                                                                    : colors.iconColor_10, // Default grey
                                                 borderRadius: '50%',
                                                 display: 'inline-block',
                                                 marginRight: 8,
@@ -361,69 +369,69 @@ const OrderList = () => {
                 </TableContainer>
             </Box>
 
-         {totalPages > 1 && (
-                    <Box component="div" sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-                        <Pagination
-                            count={totalPages}
-                            page={page}
-                            onChange={handleChangePage}
-                            shape="rounded"
-                            boundaryCount={1}
-                            siblingCount={1}
-                            variant="outlined"
-                            renderItem={(item) => {
-                                if (item.type === "next" && page >= totalPages) return null;
-                                if (item.type === "previous" && page === 1) return null;
+            {totalPages > 1 && (
+                <Box component="div" sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+                    <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handleChangePage}
+                        shape="rounded"
+                        boundaryCount={1}
+                        siblingCount={1}
+                        variant="outlined"
+                        renderItem={(item) => {
+                            if (item.type === "next" && page >= totalPages) return null;
+                            if (item.type === "previous" && page === 1) return null;
 
-                                return (
-                                    <PaginationItem
-                                        {...item}
-                                        slots={{
-                                            previous: () => (
-                                                <Box sx={{ display: "flex", alignItems: "center", gap: 1, pl: 1, pr: 1 }}>
-                                                    <Icon component={ArrowBackIosNewRoundedIcon} sx={{ fontSize: "14px" }} />
-                                                    <Typography variant="button" component="p" >
-                                                        Prev
-                                                    </Typography>
-                                                </Box>
-                                            ),
-                                            next: () => (
-                                                <Box sx={{ display: "flex", alignItems: "center", gap: 1, pl: 1, pr: 1 }}>
-                                                    <Typography variant="button" component="p">
-                                                        Next
-                                                    </Typography>
-                                                    <Icon component={ArrowForwardIosRoundedIcon} sx={{ fontSize: "14px" }} />
-                                                </Box>
-                                            ),
-                                        }}
-                                        sx={{
-                                            minWidth: item.type === "page" ? 45 : 70,
-                                            mr: 1,
-                                            height: 32,
-                                            borderRadius: "8px",
-                                            fontSize: "14px",
-                                            fontWeight: 600,
-                                            color: item.selected ? colors.white : colors.grayDark_1,
-                                            border: `1px solid ${colors.borderColor_7}`,
-                                            "&.Mui-selected": {
-                                                backgroundColor: colors.greenDark_3,
-                                                color: colors.white,
-                                                "&:hover": {
-                                                    backgroundColor: colors.greenDark_1,
-                                                    color: colors.white,
-                                                },
-                                            },
+                            return (
+                                <PaginationItem
+                                    {...item}
+                                    slots={{
+                                        previous: () => (
+                                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, pl: 1, pr: 1 }}>
+                                                <Icon component={ArrowBackIosNewRoundedIcon} sx={{ fontSize: "14px" }} />
+                                                <Typography variant="button" component="p" >
+                                                    Prev
+                                                </Typography>
+                                            </Box>
+                                        ),
+                                        next: () => (
+                                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, pl: 1, pr: 1 }}>
+                                                <Typography variant="button" component="p">
+                                                    Next
+                                                </Typography>
+                                                <Icon component={ArrowForwardIosRoundedIcon} sx={{ fontSize: "14px" }} />
+                                            </Box>
+                                        ),
+                                    }}
+                                    sx={{
+                                        minWidth: item.type === "page" ? 45 : 70,
+                                        mr: 1,
+                                        height: 32,
+                                        borderRadius: "8px",
+                                        fontSize: "14px",
+                                        fontWeight: 600,
+                                        color: item.selected ? colors.white : colors.grayDark_1,
+                                        border: `1px solid ${colors.borderColor_7}`,
+                                        "&.Mui-selected": {
+                                            backgroundColor: colors.greenDark_3,
+                                            color: colors.white,
                                             "&:hover": {
                                                 backgroundColor: colors.greenDark_1,
                                                 color: colors.white,
                                             },
-                                        }}
-                                    />
-                                );
-                            }}
-                        />
-                    </Box>
-                )}
+                                        },
+                                        "&:hover": {
+                                            backgroundColor: colors.greenDark_1,
+                                            color: colors.white,
+                                        },
+                                    }}
+                                />
+                            );
+                        }}
+                    />
+                </Box>
+            )}
         </Box>
     )
 }

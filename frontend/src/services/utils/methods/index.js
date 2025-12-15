@@ -69,4 +69,27 @@ function formatDate(dateString) {
   });
 };
 
-export { stringToColor, stringAvatar, hexToRGBA, formatDate };
+function formatPakistaniPhone (phone) {
+    if (!phone) return '';
+
+    // Remove all non-digit characters
+    let digits = phone.replace(/\D/g, '');
+
+    // Remove leading 0
+    if (digits.startsWith('0')) {
+        digits = digits.slice(1);
+    }
+
+    // Remove country code if already present
+    if (digits.startsWith('92')) {
+        digits = digits.slice(2);
+    }
+
+    // Must be 10 digits after cleaning (3XXXXXXXXX)
+    if (digits.length !== 10) return phone;
+
+    return `+92 ${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+};
+
+
+export { stringToColor, stringAvatar, hexToRGBA, formatPakistaniPhone, formatDate };
