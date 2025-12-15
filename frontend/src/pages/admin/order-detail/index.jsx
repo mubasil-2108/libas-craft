@@ -130,34 +130,60 @@ const OrderDetail = () => {
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
 
-        // Canvas dimensions in pixels
+        // Canvas dimensions
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
 
-        // Convert canvas pixels to PDF mm
         const imgWidth = pdfWidth;
         const imgHeight = (canvasHeight * pdfWidth) / canvasWidth;
 
         let heightLeft = imgHeight;
         let position = 0;
 
+        // Load watermark logo as base64
+        const getBase64 = (url) =>
+            fetch(url)
+                .then((res) => res.blob())
+                .then(
+                    (blob) =>
+                        new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => resolve(reader.result);
+                            reader.readAsDataURL(blob);
+                        })
+                );
+
+        const watermarkBase64 = await getBase64('/logo-1.png');
+
+        const addWatermark = () => {
+            const logoWidth = 100;
+            const logoHeight = 100; // or scale proportionally
+            const posX = (pdfWidth - logoWidth) / 2;
+            const posY = (pdfHeight - logoHeight) / 2;
+            pdf.setGState(new pdf.GState({ opacity: 0.1 }));
+            pdf.addImage(watermarkBase64, 'PNG', posX, posY, logoWidth, logoHeight);
+            pdf.setGState(new pdf.GState({ opacity: 1 }));
+        };
+
         // Add first page
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        addWatermark();
         heightLeft -= pdfHeight;
 
-        // Add extra pages if content overflows
+        // Add extra pages if needed
         while (heightLeft > 0) {
             position = heightLeft - imgHeight;
             pdf.addPage();
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            addWatermark();
             heightLeft -= pdfHeight;
         }
 
         pdf.save(`Order_${selectedOrder?.orderId}.pdf`);
-
         handleCloseDialog();
         setIsPdfSaved(false);
     }, [selectedOrder, handleCloseDialog]);
+
 
     const handlePrint = useCallback(() => {
         window.print();
@@ -274,7 +300,7 @@ const OrderDetail = () => {
                             </Box>
                         </Box>
                         <Box >
-                            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 2 }} sx={{gap:2, mt: 2 }}>
+                            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 2 }} sx={{ gap: 2, mt: 2 }}>
                                 <Grid item xs={12} sm={6} md={6}>
                                     <Box component='div' sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: '280px', borderRadius: '15px', border: `1px solid ${colors.borderColor_5}`, p: '15px 20px' }}>
                                         <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -303,7 +329,7 @@ const OrderDetail = () => {
                                     </Box>
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6}>
-                                    <Box component='div' sx={{ display: 'flex', minHeight:'175px', flexDirection: 'column', gap: 2, minWidth: '280px', borderRadius: '15px', border: `1px solid ${colors.borderColor_6}`, p: '15px 20px' }}>
+                                    <Box component='div' sx={{ display: 'flex', minHeight: '175px', flexDirection: 'column', gap: 2, minWidth: '280px', borderRadius: '15px', border: `1px solid ${colors.borderColor_6}`, p: '15px 20px' }}>
                                         <Box component='div' sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
                                             <Box component='div' sx={{
                                                 display: 'flex',

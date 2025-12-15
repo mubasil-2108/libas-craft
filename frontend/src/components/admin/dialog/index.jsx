@@ -21,12 +21,21 @@ export const PDFDialog = ({
             <DialogContent>
                 <Box ref={printRef} sx={{ p: 2, background: '#fff' }}>
                     {/* Order Info */}
-                    <Box sx={{ mb: 3, p: 2, background: '#fff', borderRadius: 2, }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Order Information</Typography>
-                        <Typography sx={{ fontSize: 14, mb: 0.5 }}>Order ID: <strong>#{selectedOrder?.orderId}</strong></Typography>
-                        <Typography sx={{ fontSize: 14, mb: 0.5 }}>Payment Method: <strong>{selectedOrder?.paymentMethod}</strong></Typography>
-                        <Typography sx={{ fontSize: 14 }}>Total Payment: <strong>Rs. {selectedOrder?.totalAmount}</strong></Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <Box sx={{ mb: 3, p: 2, background: '#fff', borderRadius: 2, }}>
+                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Order Information</Typography>
+                            <Typography sx={{ fontSize: 14, mb: 0.5 }}>Order ID: <strong>#{selectedOrder?.orderId}</strong></Typography>
+                            <Typography sx={{ fontSize: 14, mb: 0.5 }}>Payment Method: <strong>{selectedOrder?.paymentMethod}</strong></Typography>
+                            <Typography sx={{ fontSize: 14 }}>Total Payment: <strong>Rs. {selectedOrder?.totalAmount}</strong></Typography>
+                        </Box>
+                        <Box component='img' src={'/logo-1.png'}
+                        sx={{
+                            objectFit: 'contain',
+                            maxWidth: '200px',
+                        }}
+                        />
                     </Box>
+
                     <Divider sx={{ my: 1 }} />
                     {/* Shipping Address */}
                     <Box sx={{ mb: 3, p: 2, background: '#fff', borderRadius: 2, }}>
@@ -79,7 +88,7 @@ export const PDFDialog = ({
                                                 <TableCell align='center' sx={{ fontSize: '14px', fontWeight: 600, color: colors.black, }}></TableCell>
                                                 <TableCell align='center' sx={{ fontSize: '14px', fontWeight: 600, color: colors.black, }}></TableCell>
                                                 <TableCell align='center' sx={{ fontSize: '14px', fontWeight: 600, color: colors.black, }}></TableCell>
-                                                <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} align="right">Rs. {product?.productPrice}/-</TableCell>
+                                                <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} align="right"><Typography sx={{ fontSize: product?.salePrice ? '10px' : '14px', textDecoration: product?.salePrice && 'line-through', fontWeight: 600, color: product?.salePrice ? colors.gray : colors.black }}>Rs. {product?.regularPrice}/-</Typography> {product?.salePrice && `Rs. ${product?.salePrice}/-`}</TableCell>
                                             </TableRow>
                                         )
                                     })
@@ -131,7 +140,7 @@ export const InfoDialog = ({
 }) => {
     return (
         <Dialog open={openInfoDialog} onClose={handleCloseInfoDialog} maxWidth="md" fullWidth>
-            <DialogTitle>{info === 'customer' ? 'Cutomer Information': 'Shipping Details'}</DialogTitle>
+            <DialogTitle>{info === 'customer' ? 'Cutomer Information' : 'Shipping Details'}</DialogTitle>
             <DialogContent>
                 <Box sx={{ p: 2, background: '#fff' }}>
                     {/* Order Info */}
