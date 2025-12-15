@@ -193,7 +193,7 @@ const ClientOrders = ({ order, steps }) => {
                                     textAlign: "center",
                                 }}
                             >
-                                Rs.{order?.orderItems[currentIndex]?.total}
+                                Rs.{order?.orderItems[currentIndex]?.salePrice ? order?.orderItems[currentIndex]?.salePrice : order?.orderItems[currentIndex]?.regularPrice}
                             </Typography>
                             {/* Quantity */}
                             <Typography
