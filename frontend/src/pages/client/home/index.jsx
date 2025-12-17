@@ -9,7 +9,7 @@ import { getAllPackages } from "../../../store/slices/packageSlice";
 const Home = () => {
   const dispatch = useDispatch();
   const { isLoading, products } = useSelector((state) => state.product);
-  const {isPackageLoading ,packages} = useSelector((state) => state.packages);
+  const { isPackageLoading, packages } = useSelector((state) => state.packages);
 
   useEffect(() => {
     dispatch(getAllProducts());
@@ -18,6 +18,10 @@ const Home = () => {
   useEffect(() => {
     dispatch(getAllPackages());
   }, [dispatch]);
+
+  console.log(products, "products");
+
+
 
   // Categories
   const categories = useMemo(() => {
@@ -35,12 +39,25 @@ const Home = () => {
     return products.find((p) => p?.mainProduct === true) || null;
   }, [products]);
 
-  const mainPackage = useMemo(()=>{
-    return packages.find((p)=> p?.mainPackage === true) || null;
+  const mainPackage = useMemo(() => {
+    return packages.find((p) => p?.mainPackage === true) || null;
   }, [packages]);
+
+  const newArrivals = useMemo(() => {
+    if (!products) return [];
+
+    const now = new Date();
+    const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+
+    return [...products]
+      .filter(product => {
+        const date = new Date(product.updatedAt || product.createdAt);
+        return now - date <= THIRTY_DAYS;
+      })
+      .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+  }, [products]);
   // const {}= useSelector((state) => state.someSlice);
-  console.log(mainProduct, "mainProduct");
-  console.log(mainPackage, "mainPackage");
+  console.log(newArrivals, "newArrivals");
   return (
     <Box
       sx={{
@@ -55,11 +72,11 @@ const Home = () => {
       {/* Show only if main product exists */}
       {mainProduct && <MainProduct product={mainProduct} />}
       {/* Show only if main package exists */}
-      { mainPackage && <SpecialPackage packages={packages} mainPackage={mainPackage} />}
+      {mainPackage && <SpecialPackage packages={packages} mainPackage={mainPackage} />}
       <BenefitsSection />
-      <PopularProduct />
-      <FeaturedProduct />
-      <NewArrival />
+      {/* <PopularProduct />
+      <FeaturedProduct /> */}
+      {newArrivals.length > 0 && <NewArrival products={newArrivals} />}
     </Box>
   );
 };

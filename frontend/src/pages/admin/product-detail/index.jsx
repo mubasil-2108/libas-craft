@@ -133,11 +133,12 @@ const ProductDetail = () => {
         formData.images.forEach((img) => form.append("images", img.file));
 
         try {
-            const data = await dispatch(updateProduct({ id, formData: form }));
+            const data = await dispatch(updateProduct({ id, formData: form }))
             if (data?.type === 'product/update-product/fulfilled') {
                 toast.success('Product updated successfully!');
                 await dispatch(getProductById(id));
             }
+            console.log(data, "update product data");
         } catch (error) {
             console.error(error?.message || 'Failed to update product');
         } finally {

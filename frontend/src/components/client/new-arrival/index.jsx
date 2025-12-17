@@ -6,10 +6,11 @@ import Scrollbars from 'react-custom-scrollbars';
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import { MdArrowRightAlt } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
-const NewArrival = () => {
+const NewArrival = ({products}) => {
     const listRef = useRef(null);
-
+    const navigate = useNavigate();
     const theme = useTheme();
 
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -172,8 +173,8 @@ const NewArrival = () => {
                                 flexDirection: "row",
                             }}
                         >
-                            {dummyCatalog.map((item) => (
-                                <ProductTile key={item.id} item={item} />
+                            {products.map((item) => (
+                                <ProductTile key={item._id} item={item} />
                             ))}
                         </Box>
                     </Scrollbars>
@@ -194,6 +195,7 @@ const NewArrival = () => {
                         }}
                     >
                         <IconButton
+                            disabled={products.length <= (isMobile ? 2 : isTablet ? 3 : 4)}
                             onClick={scrollLeft}
                             size="small"
                             sx={{
@@ -206,6 +208,7 @@ const NewArrival = () => {
                             />
                         </IconButton>
                         <IconButton
+                        disabled={products.length <= (isMobile ? 2 : isTablet ? 3 : 4)}
                             onClick={scrollRight}
                             size="small"
                             sx={{
@@ -220,6 +223,7 @@ const NewArrival = () => {
                     </Box>
                 </Box>
                 <Button
+                onClick={() => navigate('/collections/all')}
                     endIcon={<Icon component={MdArrowRightAlt} />}
                     sx={{
                         color: colors.textColor_9,

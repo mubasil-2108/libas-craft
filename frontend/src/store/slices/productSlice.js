@@ -65,7 +65,6 @@ export const getProductById = createAsyncThunk(
 export const getProductsByCategory = createAsyncThunk(
     'product/get-products-by-category',
     async (category, thunkAPI) => {
-        console.log(category, "category in getProductsByCategory");
         try {
             const result = await axios.get(`http://localhost:5000/api/products/category/${category}`);
             if (result.status !== 200) {
@@ -118,7 +117,6 @@ export const deleteProductImage = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
     'product/update-product',
     async ({ id, formData }, thunkAPI) => {
-        console.log('Form Data in Thunk:', formData);
         try {
             const result = await axios.put(`http://localhost:5000/api/products/update-product/${id}`,
                 formData,

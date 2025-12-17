@@ -28,7 +28,6 @@ const SpecialPackage = ({ mainPackage, packages }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.cartItems);
-    console.log(mainPackage, "mainPackage in special package component");
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));

@@ -198,10 +198,6 @@ const updateProduct = asyncHandler(async (req, res) => {
                     console.error(`Error uploading or deleting ${filePath}:`, err);
                 }
             }
-        } else {
-            return res.status(400).json({
-                message: "Product photo is required"
-            });
         }
 
         // Remove images if specified in req.body.removeImages (array of fileIds)
