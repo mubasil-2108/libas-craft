@@ -114,7 +114,8 @@ const getReviewById = asyncHandler(async (req, res) => {
 // ==========================================
 
 const getReviewsByProduct = asyncHandler(async (req, res) => {
-    const reviews = await Review.find({ product: req.params.productId })
+    const { productId } = req.params;
+    const reviews = await Review.find({ product: productId })
         .populate('user', 'name email');
 
     if (!reviews || reviews.length === 0) {

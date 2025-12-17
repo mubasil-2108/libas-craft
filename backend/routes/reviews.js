@@ -8,8 +8,8 @@ const upload = require("../middlewares/upload");
 
 router.post("/create-review", upload.array('images', 5), createReview);
 router.get("/all-reviews", getAllReviews);
-router.get("/:id", getReviewById);
 router.get("/product/:productId", getReviewsByProduct);
+router.get("/:id", getReviewById);
 router.delete("/delete/:id", deleteReview);
 
 module.exports = router;

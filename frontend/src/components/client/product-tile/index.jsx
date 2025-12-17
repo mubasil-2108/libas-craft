@@ -11,18 +11,20 @@ const ProductTile = ({ item, categorySlug }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const productId = item?._id;
+  const reviews = useSelector((state) => state.reviews.reviewsByProduct[productId] || []);
+
   useEffect(() => {
     const fetchProduct = async () => {
       await dispatch(fetchReviewsByProduct(productId));
     };
-    if (productId) {
+    if (productId && !reviews.length) {
       fetchProduct();
     }
-  }, [dispatch, productId]);
-  const { productReviews } = useSelector((state) => state.reviews);
+  }, [dispatch, productId, reviews.length]);
 
-  const averageRating = productReviews?.length
-    ? productReviews?.reduce((sum, r) => sum + r.rating, 0) / productReviews?.length
+
+  const averageRating = reviews?.length
+    ? reviews?.reduce((sum, r) => sum + r.rating, 0) / reviews?.length
     : 0;
   const discountAmount = item?.regularPrice - item?.salePrice;
   const theme = useTheme();
@@ -59,8 +61,8 @@ const ProductTile = ({ item, categorySlug }) => {
         width: "100%",
       }}
     >
-      <CardBox isMobile={isMobile} 
-            onClick={() => navigate(categorySlug ? `/categories/${categorySlug}/${item?._id}` : `/collections/${item?._id}`)}
+      <CardBox isMobile={isMobile}
+        onClick={() => navigate(categorySlug ? `/categories/${categorySlug}/${item?._id}` : `/collections/${item?._id}`)}
 
       >
         {

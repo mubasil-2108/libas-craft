@@ -1,17 +1,37 @@
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { colors } from '../../../services';
 import { Button, Icon, Rating, Typography } from '@mui/material';
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice';
+import { useNavigate } from 'react-router-dom';
 
 const SpecialPackageTile = ({ item }) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const reviews = useSelector((state) => state.reviews.reviewsByProduct[item?._id] || []);
+    useEffect(() => {
+        const fetchReview = async () => {
+            await dispatch(fetchReviewsByProduct(item?._id));
+        }
+        fetchReview();
+    }, [dispatch, item])
+    const productPrice = useMemo(() => {
+        return item?.salePrice ? item?.salePrice : item?.regularPrice;
+    }, [item]);
+
+    const averageRating = useMemo(() => {
+        if (!reviews?.length) return 0;
+        return reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+    }, [reviews]);
     return (
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: { md: 'row' },
                 // gap: { xs: 2, md: 2 },
-                gap:2,
+                gap: 2,
                 justifyContent: { xs: 'center', md: 'space-between' },
                 alignItems: { xs: 'flex-start', md: 'center' },
             }}
@@ -20,7 +40,7 @@ const SpecialPackageTile = ({ item }) => {
             <Box
                 component="div"
                 sx={{
-                    width: '220px' ,
+                    width: '220px',
                     height: { xs: 200, sm: 250, md: 160 },
                     borderRadius: "15px",
                     overflow: "hidden",
@@ -30,7 +50,7 @@ const SpecialPackageTile = ({ item }) => {
             >
                 <Box
                     component="img"
-                    src={item.image}
+                    src={`https://www.googleapis.com/drive/v3/files/${item?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
                     alt={item.title}
                     sx={{
                         width: '100%',
@@ -69,7 +89,7 @@ const SpecialPackageTile = ({ item }) => {
                             fontSize: { xs: '15px', sm: '16px', md: '17px' },
                         }}
                     >
-                        {item.title}
+                        {item?.productName}
                     </Typography>
                     <Typography
                         sx={{
@@ -78,7 +98,7 @@ const SpecialPackageTile = ({ item }) => {
                             fontFamily: 'openSans-bold',
                         }}
                     >
-                        Rs. {item.price}
+                        Rs. {productPrice.toFixed(2)}
                     </Typography>
                 </Box>
 
@@ -86,7 +106,7 @@ const SpecialPackageTile = ({ item }) => {
                 <Rating
                     size="small"
                     name="read-only"
-                    value={item.rating}
+                    value={averageRating.toFixed(1)}
                     precision={0.5}
                     readOnly
                     sx={{
@@ -108,7 +128,7 @@ const SpecialPackageTile = ({ item }) => {
                         width: { xs: '100%', sm: '90%', md: '350px' },
                     }}
                 >
-                    {item.description}
+                    {item?.productDescription.slice(0, 80)}...
                 </Typography>
 
                 {/* See Details Button */}
@@ -119,6 +139,7 @@ const SpecialPackageTile = ({ item }) => {
                             component={IoIosArrowRoundForward}
                         />
                     }
+                    onClick={()=> navigate(`/package/product/${item?._id}`)}
                     sx={{
                         textTransform: 'none',
                         width: 'fit-content',

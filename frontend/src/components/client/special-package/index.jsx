@@ -10,7 +10,7 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { colors, dummyPackages } from "../../../services";
 import { LuExpand } from "react-icons/lu";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -20,16 +20,20 @@ import ZoomInOutlinedIcon from "@mui/icons-material/ZoomInOutlined";
 import Scrollbars from "react-custom-scrollbars";
 import SpecialPackageTile from "../special-package-tile";
 import ImageDialog from "../image-dialog";
+import { addToCart, removeFromCart } from "../../../store/slices/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const SpecialPackage = () => {
+const SpecialPackage = ({ mainPackage, packages }) => {
     const listRef = useRef(null);
     const theme = useTheme();
-
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    console.log(mainPackage, "mainPackage in special package component");
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     const [expanded, setExpanded] = useState(false);
-
+    const isInCart = cartItems.some(i => i.id === mainPackage?._id);
     const toggleExpand = () => setExpanded((prev) => !prev);
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -43,6 +47,27 @@ const SpecialPackage = () => {
     const handleCloseDialog = () => {
         setOpenDialog(false);
         setSelectedImage(null);
+    };
+
+    const packgePrice = useMemo(() => {
+        return mainPackage?.packageSalePrice ? mainPackage?.packageSalePrice : mainPackage?.packageRegularPrice;
+    }, [mainPackage]);
+
+    const handleCartAction = (e) => {
+        e.stopPropagation(); // prevent navigation
+        if (isInCart) {
+            dispatch(removeFromCart(mainPackage?._id));
+        } else {
+            dispatch(addToCart({
+                id: mainPackage?._id,
+                name: mainPackage?.packageName,
+                price: mainPackage?.packageSalePrice ? mainPackage?.packageSalePrice : mainPackage?.packageRegularPrice,
+                image: mainPackage?.packageImage?.id,
+                description: mainPackage?.packageDescription,
+                rating: 0,
+                quantity: 1, // initial quantity
+            }));
+        }
     };
 
     return (
@@ -110,7 +135,7 @@ const SpecialPackage = () => {
                     >
                         <Box
                             component="img"
-                            src="/watch.jpg"
+                            src={`https://www.googleapis.com/drive/v3/files/${mainPackage?.packageImage?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
                             sx={{
                                 width: "100%",
                                 height: "100%",
@@ -118,7 +143,7 @@ const SpecialPackage = () => {
                             }}
                         />
                         <IconButton
-                            onClick={() => handleOpenDialog("/watch.jpg")}
+                            onClick={() => handleOpenDialog(mainPackage?.packageImage?.id)}
                             size="medium"
                             sx={{
                                 position: "absolute",
@@ -167,16 +192,8 @@ const SpecialPackage = () => {
                                     fontFamily: "openSans-regular",
                                 }}
                             >
-                                Larkin Wood Full Set
+                                {mainPackage?.packageName}
                             </Typography>
-                            <Rating
-                                size="medium"
-                                name="read-only"
-                                value={5}
-                                precision={0.5}
-                                readOnly
-                                sx={{ color: colors.iconColor_16 }}
-                            />
                             <Typography
                                 sx={{
                                     color: colors.textColor_4,
@@ -184,11 +201,12 @@ const SpecialPackage = () => {
                                     fontFamily: "openSans-bold",
                                 }}
                             >
-                                Rs.1200.00
+                                Rs. {packgePrice.toFixed(2)}
                             </Typography>
                         </Box>
 
                         <Button
+                            onClick={handleCartAction}
                             endIcon={<Icon component={ShoppingCartOutlinedIcon} />}
                             sx={{
                                 color: colors.textColor_9,
@@ -204,7 +222,7 @@ const SpecialPackage = () => {
                                 },
                             }}
                         >
-                            Add to cart
+                            {isInCart ? "Remove from Cart" : "Add to Cart"}
                         </Button>
                     </Box>
                 </Box>
@@ -242,12 +260,23 @@ const SpecialPackage = () => {
                                 transition: "all 0.3s ease",
                             }}
                         >
-                            Cast Aluminum Outdoor Chaise Lounge — as an elegant and classic touch
-                            to your outdoor space, this cast Aluminum Chaise Lounge combines the
-                            appearance, function, and quality together, offering comfort and
-                            durability. Perfect for relaxing by the pool or reading under the sun.
+                            {mainPackage?.packageDescription?.slice(0, 200).concat('...')}
                         </Typography>
                     </Box>
+                    {
+                        expanded && (
+                            <Typography component='a' sx={{
+                                alignSelf: 'flex-end',
+                                fontFamily: "openSans-regular",
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                                fontSize: "14px",
+                                "&:hover": {
+                                    color: colors.textColor_7,
+                                },
+                            }}>View Detail</Typography>
+                        )
+                    }
 
                     <Button
                         onClick={toggleExpand}
@@ -275,7 +304,7 @@ const SpecialPackage = () => {
                     </Button>
 
                     {/* Small product section */}
-                    <Box
+                    {/* <Box
                         sx={{
                             display: "flex",
                             flexDirection: { xs: "column-reverse", sm: "row" },
@@ -392,7 +421,7 @@ const SpecialPackage = () => {
                                 </IconButton>
                             </Box>
                         </Box>
-                    </Box>
+                    </Box> */}
 
                     {/* Scrollable List */}
                     <Scrollbars
@@ -452,15 +481,15 @@ const SpecialPackage = () => {
                             overflow: "hidden",
                         }}
                     >
-                        {dummyPackages.map((item) => (
-                            <SpecialPackageTile key={item.id} item={item} />
+                        {mainPackage?.packageProducts?.map((item) => (
+                            <SpecialPackageTile key={item._id} item={item} />
                         ))}
                     </Scrollbars>
 
                 </Box>
             </Box>
 
-            <ImageDialog openDialog={openDialog} handleCloseDialog={handleCloseDialog} selectedImage={selectedImage} />
+            <ImageDialog openDialog={openDialog} handleCloseDialog={handleCloseDialog} ImageId={selectedImage} />
         </Box>
     );
 };

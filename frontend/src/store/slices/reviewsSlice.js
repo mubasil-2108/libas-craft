@@ -5,6 +5,7 @@ const initialState = {
     list: [],
     productReviews: [],
     selectedReview: [],
+    reviewsByProduct: {},
     isLoading: false,
     error: null,
 };
@@ -49,7 +50,11 @@ export const fetchReviewsByProduct = createAsyncThunk(
     async (productId, thunkAPI) => {
         try {
             const result = await axios.get(`http://localhost:5000/api/reviews/product/${productId}`);
-            return result.data;
+            // return result.data;
+            return {
+                productId,
+                reviews: result.data,
+            };
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
         }
@@ -59,6 +64,7 @@ export const fetchReviewsByProduct = createAsyncThunk(
 export const fetchReviewById = createAsyncThunk(
     'reviews/fetchReviewById',
     async (reviewId, thunkAPI) => {
+        console.log(reviewId, "reviewId in fetchReviewById");
         try {
             const result = await axios.get(`http://localhost:5000/api/reviews/${reviewId}`);
             return result.data;
@@ -121,7 +127,9 @@ const reviewsSlice = createSlice({
             })
             .addCase(fetchReviewsByProduct.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.productReviews = action.payload;
+                const { productId, reviews } = action.payload;
+                // state.productReviews = action.payload;
+                state.reviewsByProduct[productId] = reviews;
             })
             .addCase(fetchReviewsByProduct.rejected, (state, action) => {
                 state.isLoading = false;

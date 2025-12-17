@@ -55,8 +55,9 @@ const ClientProductDetail = () => {
         fetchProductReviews();
     }, [dispatch, id]);
     const { isLoading, selectedProduct } = useSelector((state) => state.product);
-    const { error, productReviews } = useSelector((state) => state.reviews);
-
+    // const { error, productReviews } = useSelector((state) => state.reviews);
+    const reviews = useSelector((state) => state.reviews.reviewsByProduct[id] || []);
+    const { error } = useSelector((state) => state.reviews);
     const likesCount = useSelector(
         (state) => state.likes.likesByProduct[selectedProduct?._id] || 0
     );
@@ -75,17 +76,17 @@ const ClientProductDetail = () => {
     }, [cartItems, selectedProduct?._id]);
 
     const averageRating = useMemo(() => {
-        if (!productReviews?.length) return 0;
-        return productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length;
-    }, [productReviews]);
+        if (!reviews?.length) return 0;
+        return reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+    }, [reviews]);
 
 
     // Percentage of positive ratings
     const positiveRatingPercentage = useMemo(() => {
-        if (!productReviews?.length) return 0;
-        const positives = productReviews.filter(r => r.rating >= 3).length;
-        return (positives / productReviews.length) * 100;
-    }, [productReviews]);
+        if (!reviews?.length) return 0;
+        const positives = reviews.filter(r => r.rating >= 3).length;
+        return (positives / reviews.length) * 100;
+    }, [reviews]);
 
     const [currentImage, setCurrentImage] = useState(0)
     const thumbnailsRef = useRef(null); // ✅ ref for the thumbnails container
@@ -582,7 +583,7 @@ const ClientProductDetail = () => {
                                             color: colors.textColor_10,
                                         }}
                                     >
-                                        {productReviews?.length} Reviews
+                                        {reviews?.length} Reviews
                                     </Typography>
                                 </Box>
                             </Box>
@@ -933,7 +934,7 @@ const ClientProductDetail = () => {
                 selectedTab={selectedTab}
                 productId={id}
                 setSelectedTab={setSelectedTab}
-                reviews={productReviews}
+                reviews={reviews}
                 reviewsError={error}
                 productSections={selectedProduct}
                 averageRating={averageRating}
