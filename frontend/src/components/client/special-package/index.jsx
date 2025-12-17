@@ -10,7 +10,7 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { colors, dummyPackages } from "../../../services";
 import { LuExpand } from "react-icons/lu";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -53,7 +53,7 @@ const SpecialPackage = ({ mainPackage, packages }) => {
         return mainPackage?.packageSalePrice ? mainPackage?.packageSalePrice : mainPackage?.packageRegularPrice;
     }, [mainPackage]);
 
-    const handleCartAction = (e) => {
+    const handleCartAction = useCallback((e) => {
         e.stopPropagation(); // prevent navigation
         if (isInCart) {
             dispatch(removeFromCart(mainPackage?._id));
@@ -68,7 +68,16 @@ const SpecialPackage = ({ mainPackage, packages }) => {
                 quantity: 1, // initial quantity
             }));
         }
-    };
+    }, [
+        dispatch,
+        isInCart,
+        mainPackage?._id,
+        mainPackage?.packageName,
+        mainPackage?.packageSalePrice,
+        mainPackage?.packageRegularPrice,
+        mainPackage?.packageImage?.id,
+        mainPackage?.packageDescription,
+    ]);
 
     return (
         <Box
