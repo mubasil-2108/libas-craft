@@ -273,12 +273,13 @@ const SpecialPackage = ({ mainPackage, packages }) => {
                     </Box>
                     {
                         expanded && (
-                            <Typography component='a' sx={{
+                            <Typography href={`package/${mainPackage?._id}`} component='a' sx={{
                                 alignSelf: 'flex-end',
                                 fontFamily: "openSans-regular",
                                 textDecoration: 'underline',
                                 cursor: 'pointer',
                                 fontSize: "14px",
+                                color: colors.textColor_4,
                                 "&:hover": {
                                     color: colors.textColor_7,
                                 },

@@ -9,6 +9,7 @@ import FeaturedProduct from "./featured-product";
 import NewArrival from "./new-arrival";
 import ProductTabs from "./product-tabs";
 import ClientOrders from "./orders";
+import PackageTabs from "./package-tabs";
 
 export {
     ClientLayout,
@@ -21,5 +22,6 @@ export {
     FeaturedProduct,
     NewArrival,
     ProductTabs,
-    ClientOrders
+    ClientOrders,
+    PackageTabs,
 }
