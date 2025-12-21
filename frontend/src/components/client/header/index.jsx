@@ -19,6 +19,7 @@ import { CartDrawer, DrawerComponent } from '../drawer';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { ShoppingFormDialog } from '../dialog';
 import { useSelector } from 'react-redux';
+import { SignIn, SignUp } from '../../common';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -34,9 +35,19 @@ const Header = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [open, setOpen] = useState(false);
+    const [signInOpen, setSignInOpen] = useState(false);
+    const [signUpOpen, setSignUpOpen] = useState(false);
     const [openForm, setOpenForm] = useState(false);
     // Cart Drawer
     const [openCart, setOpenCart] = useState(false);
+
+    const handleSignInClose = () => {
+        setSignInOpen(false);
+    };
+
+    const handleSignUpClose = () => {
+        setSignUpOpen(false);
+    };
 
     // 🧾 Total calculation
     const totalAmount = cartItems.reduce(
@@ -159,7 +170,8 @@ const Header = () => {
                                             <Avatar alt="Remy Sharp" />
                                         </IconButton>
                                     ) : (
-                                        <IconButton onClick={() => navigate('/account/orders')}>
+                                        // onClick={() => navigate('/account/orders')}
+                                        <IconButton onClick={() => setSignInOpen(true)}>
                                             <Icon component={AccountCircleOutlinedIcon} sx={{ color: colors.iconColor_12 }} fontSize='medium' />
                                         </IconButton>
                                     )
@@ -192,6 +204,8 @@ const Header = () => {
                 </Container>
             </AppBar>
             <ShoppingFormDialog cartItems={cartItems} handleCloseCart={handleCloseCart} totalAmount={totalAmount} open={openForm} handleClose={handleCloseForm} />
+            <SignIn open={signInOpen} handleClose={handleSignInClose} setSignUpOpen={setSignUpOpen} />
+            <SignUp open={signUpOpen} handleClose={handleSignUpClose} setSignInOpen={setSignInOpen} />
         </>
     );
 }

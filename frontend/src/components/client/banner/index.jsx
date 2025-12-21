@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { colors, reasons } from "../../../services";
 import { useNavigate } from "react-router-dom";
+import Note from "../note";
 
 const Banner = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -31,6 +32,14 @@ const Banner = () => {
       }}
     >
       {/* Diagonal Curved Shape */}
+      <Box sx={{
+        position:'absolute',
+        top:0,
+        zIndex:20,
+        width:'100%',
+      }}>
+        <Note />
+      </Box>
       <Box
         component="svg"
         sx={{

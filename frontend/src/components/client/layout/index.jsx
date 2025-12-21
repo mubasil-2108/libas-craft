@@ -5,9 +5,19 @@ import Header from '../header';
 import { colors } from '../../../services';
 import Footer from '../footer';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import NewDealModal from '../modal';
 
 const ClientLayout = () => {
+const [open, setOpen] = useState(false);
 
+  // Open modal when page loads
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
     return (
         <Box component='div' sx={{
             display: 'flex',
@@ -38,6 +48,7 @@ const ClientLayout = () => {
                         // padding: '1rem',
                         background: colors.grayLight_3
                     }}>
+                        <NewDealModal open={open} handleClose={handleClose} />
                         <Outlet />
                     </Box>
                     <Footer/>
