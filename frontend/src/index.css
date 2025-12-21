@@ -96,6 +96,27 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'NotoNastaliqUrdu-Regular';
+  src: url('/fonts/NotoNastaliqUrdu-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NotoNastaliqUrdu-Medium';
+  src: url('/fonts/NotoNastaliqUrdu-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NotoNastaliqUrdu-Bold';
+  src: url('/fonts/NotoNastaliqUrdu-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

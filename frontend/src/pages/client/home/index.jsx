@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { Banner, BenefitsSection, Categories, FeaturedProduct, MainProduct, NewArrival, PopularProduct, SpecialPackage } from "../../../components/client";
+import { Banner, BenefitsSection, Categories, FeaturedProduct, IngredientCardSlider, MainProduct, NewArrival, PopularProduct, SpecialPackage } from "../../../components/client";
 import { colors } from "../../../services";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo } from "react";
@@ -74,6 +74,8 @@ const Home = () => {
       {/* Show only if main package exists */}
       {mainPackage && <SpecialPackage packages={packages} mainPackage={mainPackage} />}
       <BenefitsSection />
+      <IngredientCardSlider />
+
       {/* <PopularProduct />
       <FeaturedProduct /> */}
       {newArrivals.length > 0 && <NewArrival products={newArrivals} />}

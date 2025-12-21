@@ -10,6 +10,7 @@ import NewArrival from "./new-arrival";
 import ProductTabs from "./product-tabs";
 import ClientOrders from "./orders";
 import PackageTabs from "./package-tabs";
+import IngredientCardSlider from "./ingredient-card";
 
 export {
     ClientLayout,
@@ -24,4 +25,5 @@ export {
     ProductTabs,
     ClientOrders,
     PackageTabs,
+    IngredientCardSlider,
 }

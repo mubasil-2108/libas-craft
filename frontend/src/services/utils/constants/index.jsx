@@ -38,7 +38,121 @@ export const adminBar = [
     icon: Inventory2OutlinedIcon,
     link: '/admin/packages'
   },
-]
+];
+
+export const ingredients = [
+  {
+    id: 1,
+    name: 'خشخاش',
+    image: '/ingredients/poppy-seeds.png',
+  },
+  {
+    id: 2,
+    name: 'السی',
+    image: '/ingredients/flax-seeds.png',
+  },
+  {
+    id: 3,
+    name: 'تخم کا ہو',
+    image: '/ingredients/tukhme-khaho.png',
+  },
+  {
+    id: 4,
+    name: 'روزمیری',
+    image: '/ingredients/rosemary.png',
+  },
+  {
+    id: 5,
+    name: 'سعد کوفی',
+    image: '/ingredients/saad-kofi.png',
+  },
+  {
+    id: 6,
+    name: 'بال چھڑ',
+    image: '/ingredients/bhringraj.png',
+  },
+  {
+    id: 7,
+    name: 'سکاکائ',
+    image: '/ingredients/sika-kai.png',
+  },
+  {
+    id: 8,
+    name: 'چڑ بالا',
+    image: '/ingredients/avarampoo.png',
+  },
+  {
+    id: 9,
+    name: 'حَبُّ الْآس',
+    image: '/ingredients/hubu-allas.png',
+  },
+  {
+    id: 10,
+    name: 'ارنڈ بیج',
+    image: '/ingredients/arrnd-beej.png',
+  },
+  {
+    id: 11,
+    name: 'ریٹھا ',
+    image: '/ingredients/reetha.png',
+  },
+  {
+    id: 12,
+    name: 'آملہ',
+    image: '/ingredients/amla.png',
+  },
+  {
+    id: 13,
+    name: 'کلونجی',
+    image: '/ingredients/kalonji.png',
+  },
+  {
+    id: 14,
+    name: 'تیز پات',
+    image: '/ingredients/tez-paat.png',
+  },
+  {
+    id: 15,
+    name: 'مہندی کے پتے',
+    image: '/ingredients/mehndi-ka-patta.png',
+  },
+  {
+    id: 16,
+    name: 'ہلدی',
+    image: '/ingredients/hreed-zard.png',
+  },
+  {
+    id: 17,
+    name: 'میتھی دانہ',
+    image: '/ingredients/methi-dana.png',
+  },
+  {
+    id: 18,
+    name: 'رتن جوت',
+    image: '/ingredients/ratan-jot.png',
+  },
+  {
+    id: 19,
+    name: 'لونگ',
+    image: '/ingredients/loung.png',
+  },
+  {
+    id: 20,
+    name: 'کری پتا',
+    image: '/ingredients/kari-patta.png',
+  },
+  {
+    id: 21,
+    name: 'گڑھل کے پھول',
+    image: '/ingredients/mehsool.png',
+  },
+  {
+    id: 22,
+    name: 'میتھری',
+    image: '/ingredients/maythry.png',
+  },
+];
+
 
 export const reasons = [
   {
@@ -56,7 +170,7 @@ export const reasons = [
     reason: 'Eco-friendly\nPackagaing',
     image: '/eco-friendly.png',
   }
-]
+];
 
 export const dummyOrders = [
   {

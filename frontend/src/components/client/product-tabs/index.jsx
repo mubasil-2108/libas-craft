@@ -16,9 +16,10 @@ import {
     useMediaQuery,
     useTheme,
     linearProgressClasses,
+    Grid,
 } from "@mui/material";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import { colors, stringAvatar } from "../../../services";
+import { colors, ingredients, stringAvatar } from "../../../services";
 import { BorderLinearProgress } from "../progress-bar";
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -52,7 +53,7 @@ const ProductTabs = ({
     const thumbRef = useRef(null);
     const dispatch = useDispatch();
     // const { user } = useSelector((state) => state.auth);
-    const { isLoading,} = useSelector((state) => state.reviews);
+    const { isLoading, } = useSelector((state) => state.reviews);
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -698,17 +699,80 @@ const ProductTabs = ({
 
             {/* INGREDIENTS TAB */}
             {selectedTab === "ingredients" && (
-                <Typography
-                    sx={{
-                        fontFamily: "inter-regular",
-                        fontSize: { xs: "14px", sm: "15px" },
-                        color: colors.textColor_11,
-                        lineHeight: 1.8,
-                    }}
-                >
-                    Oak Wood, Matte Varnish Finish, Stainless Steel Handles.
-                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 3 } }}>
+                    {/* Heading */}
+                    <Typography
+                        sx={{
+                            fontFamily: "inter-bold",
+                            fontSize: { xs: "18px", sm: "20px", md: "24px" },
+                            color: colors.textColor_10,
+                        }}
+                    >
+                        Product Ingredients
+                    </Typography>
+
+                    {/* Grid */}
+                    <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ justifyContent: 'center' }}>
+                        {ingredients.map((ingredient) => (
+                            <Grid
+                                item
+                                xs={6}     // 2 per row (mobile)
+                                sm={4}     // 3 per row (tablet)
+                                md={3}     // 4 per row (small desktop)
+                                lg={2}     // 6 per row (large desktop)
+                                key={ingredient.id}
+                            >
+                                <Box
+                                    sx={{
+                                        position: "relative",
+                                        width: "100%",
+                                        maxWidth: { xs: 140, sm: 160, md: 180, lg: 200 },
+                                        mx: "auto",
+                                        overflow: "hidden",
+                                        borderRadius: { xs: "30px", md: "50px" },
+                                        aspectRatio: "1 / 1", // keeps square
+                                    }}
+                                >
+                                    {/* Image */}
+                                    <Box
+                                        component="img"
+                                        src={ingredient.image}
+                                        alt={ingredient.name}
+                                        sx={{
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
+                                            display: "block",
+                                        }}
+                                    />
+
+                                    {/* Overlay Text */}
+                                    <Typography
+                                        sx={{
+                                            position: "absolute",
+                                            top: "50%",
+                                            left: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                            fontFamily: "NotoNastaliqUrdu-Bold",
+                                            fontSize: { xs: "12px", sm: "14px", md: "16px", lg: "18px" },
+                                            color: colors.textColor_5,
+                                            backgroundColor: "rgba(0,0,0,0.45)",
+                                            px: { xs: 1.2, md: 1.5 },
+                                            py: 0.5,
+                                            borderRadius: "20px",
+                                            textAlign: "center",
+                                            whiteSpace: "nowrap",
+                                        }}
+                                    >
+                                        {ingredient.name}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
             )}
+
         </Box>
     );
 };
