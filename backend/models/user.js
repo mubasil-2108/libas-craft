@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
         trim: true,
         default: '+234'
     },
+    role: {
+        type: String,
+        enum: ['user'],
+        default: 'user'
+    }
 
 },
     {

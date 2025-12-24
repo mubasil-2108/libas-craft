@@ -17,10 +17,24 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '@mui/icons-material/Google';
 import { colors } from '../../../services';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../../store/slices/authSlice';
+import toast from 'react-hot-toast';
+
+const intialState = {
+    name: '',
+    email: '',
+    password: '',
+};
 
 const SignUp = ({ open, handleClose, setSignInOpen }) => {
+    const dipatch = useDispatch();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const [formData, setFormData] = useState(intialState);
+    const [confirmedPassword, setConfirmedPassword] = useState('');
 
     useEffect(() => {
         if (open) {
@@ -29,6 +43,28 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
             window.history.replaceState(null, '', '/');
         }
     }, [open]);
+
+    const handleSignUp = async () => {
+        // e.preventDefault();
+        console.log(formData);
+
+        if (formData.password !== confirmedPassword) {
+            toast.error('Passwords do not match');
+            return;
+        }
+
+        await dipatch(registerUser(formData)).then((data) => {
+            if (data?.type === 'auth/registerUser/fulfilled') {
+                toast.success('User registered successfully');
+                setFormData(intialState);
+                setConfirmedPassword('');
+                handleClose();
+                setSignInOpen(true);
+            } else {
+                toast.error(data?.payload?.message || 'User registration failed');
+            }
+        })
+    };
 
     return (
         <Modal
@@ -73,6 +109,10 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                             label="Full Name"
                             placeholder="Enter your Name"
                             variant="outlined"
+                            value={formData.name}
+                            onChange={
+                                (e) => setFormData({ ...formData, name: e.target.value })
+                            }
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -87,6 +127,10 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                             label="Email"
                             placeholder="Enter your Email"
                             variant="outlined"
+                            value={formData.email}
+                            onChange={
+                                (e) => setFormData({ ...formData, email: e.target.value })
+                            }
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -102,6 +146,10 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                             placeholder="Create Password"
                             type={showPassword ? 'text' : 'password'}
                             variant="outlined"
+                            value={formData.password}
+                            onChange={
+                                (e) => setFormData({ ...formData, password: e.target.value })
+                            }
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -127,6 +175,8 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                             placeholder="Confirm Password"
                             type={showConfirmPassword ? 'text' : 'password'}
                             variant="outlined"
+                            value={confirmedPassword}
+                            onChange={(e) => setConfirmedPassword(e.target.value)}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -154,6 +204,7 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
 
                         <Button
                             variant="contained"
+                            onClick={handleSignUp}
                             sx={{
                                 borderRadius: '50px',
                                 height: 50,

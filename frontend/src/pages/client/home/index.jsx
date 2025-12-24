@@ -19,10 +19,6 @@ const Home = () => {
     dispatch(getAllPackages());
   }, [dispatch]);
 
-  console.log(products, "products");
-
-
-
   // Categories
   const categories = useMemo(() => {
     if (!products) return [];
@@ -57,7 +53,6 @@ const Home = () => {
       .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
   }, [products]);
   // const {}= useSelector((state) => state.someSlice);
-  console.log(newArrivals, "newArrivals");
   return (
     <Box
       sx={{

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,16 +14,18 @@ import MenuItem from '@mui/material/MenuItem';
 import { clientBar, colors, dummyCart } from '../../../services';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { useLocation, Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Drawer, Icon, Rating, TextField, useMediaQuery, useTheme } from '@mui/material';
+import { Divider, Drawer, Icon, Rating, TextField, useMediaQuery, useTheme } from '@mui/material';
 import { CartDrawer, DrawerComponent } from '../drawer';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { ShoppingFormDialog } from '../dialog';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SignIn, SignUp } from '../../common';
+import { getUser, loginStatus, logoutUser } from '../../../store/slices/authSlice';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Orders', 'Logout'];
 
 const Header = () => {
+    const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.cartItems);
     const location = useLocation();
     const navigate = useNavigate();
@@ -32,7 +34,6 @@ const Header = () => {
     // Responsive breakpoints
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const [open, setOpen] = useState(false);
     const [signInOpen, setSignInOpen] = useState(false);
@@ -40,6 +41,18 @@ const Header = () => {
     const [openForm, setOpenForm] = useState(false);
     // Cart Drawer
     const [openCart, setOpenCart] = useState(false);
+
+    useEffect(() => {
+        const loggedInUser = async () => {
+            await dispatch(loginStatus()).then(async (data) => {
+                if (data?.type === 'auth/loginStatus/fulfilled') {
+                    await dispatch(getUser());
+                }
+            })
+        }
+        loggedInUser();
+    }, [dispatch]);
+    const { isLoggedIn, user } = useSelector((state) => state.auth);
 
     const handleSignInClose = () => {
         setSignInOpen(false);
@@ -65,6 +78,27 @@ const Header = () => {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+
+    const handleMenuClick = async (setting) => {
+        handleCloseUserMenu();
+        switch (setting) {
+            case 'Profile':
+                navigate('/account/profile');
+                break;
+
+            case 'Orders':
+                navigate('/account/orders');
+                break;
+
+            case 'Logout':
+                await dispatch(logoutUser());
+                navigate('/');
+                break;
+
+            default:
+                break;
+        }
     };
 
     // Cart Drawer handlers
@@ -165,9 +199,9 @@ const Header = () => {
                                 {/* Cart Sidebar */}
                                 <CartDrawer cartItems={cartItems} totalAmount={totalAmount} handleOpenForm={handleOpenForm} openCart={openCart} handleCloseCart={handleCloseCart} />
                                 {
-                                    isAuthenticated ? (
-                                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                            <Avatar alt="Remy Sharp" />
+                                    isLoggedIn ? (
+                                        <IconButton onClick={handleOpenUserMenu}>
+                                            <Avatar alt={user?.name} src={user?.photo} sx={{ width: 30, height: 30 }} />
                                         </IconButton>
                                     ) : (
                                         // onClick={() => navigate('/account/orders')}
@@ -178,24 +212,55 @@ const Header = () => {
                                 }
                             </Tooltip>
                             <Menu
-                                sx={{ mt: '45px' }}
                                 id="menu-appbar"
                                 anchorEl={anchorElUser}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
                                 anchorOrigin={{
                                     vertical: 'top',
                                     horizontal: 'right',
                                 }}
-                                keepMounted
                                 transformOrigin={{
                                     vertical: 'top',
                                     horizontal: 'right',
                                 }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
+                                PaperProps={{
+                                    sx: {
+                                        mt: '45px',
+                                        borderRadius: '15px',
+                                        minWidth: 220,
+                                        boxShadow: '0px 6px 20px rgba(0,0,0,0.15)',
+                                    },
+                                }}
                             >
+                                <Box sx={{ px: 2, py: 1 }}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            fontWeight: 600,
+                                            textAlign: 'center',
+                                            color: colors.textColor_7,
+                                        }}
+                                    >
+                                        {user?.name}, Welcome Back!
+                                    </Typography>
+                                </Box>
+                                <Divider />
                                 {settings.map((setting) => (
-                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                        <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                                    <MenuItem
+                                        key={setting}
+                                        onClick={() => handleMenuClick(setting)}
+                                        sx={{
+                                            py: 1,
+                                            px: 2,
+                                            '&:hover': {
+                                                backgroundColor: colors.greenLight_1,
+                                            },
+                                        }}
+                                    >
+                                        <Typography sx={{ fontSize: 14 }}>
+                                            {setting}
+                                        </Typography>
                                     </MenuItem>
                                 ))}
                             </Menu>

@@ -19,13 +19,23 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { colors } from '../../../services';
+import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
+import { loginUser } from '../../../store/slices/authSlice';
+
+const intialState = {
+  email: '',
+  password: '',
+};
 
 const SignIn = ({
   open,
   handleClose,
   setSignUpOpen
 }) => {
+  const dipatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(intialState);
 
   const handleClickShowPassword = () => setShowPassword(prev => !prev);
 
@@ -36,6 +46,18 @@ const SignIn = ({
       window.history.replaceState(null, '', '/');
     }
   }, [open]);
+
+  const handleSignIn = async () => {
+    await dipatch(loginUser(formData)).then((data) => {
+      if (data?.type === 'auth/loginUser/fulfilled') {
+        toast.success('User logged in successfully');
+        setFormData(intialState);
+        handleClose();
+      } else {
+        toast.error(data?.payload?.message || 'User login failed');
+      }
+    })
+  }
 
   return (
     <Modal
@@ -80,6 +102,8 @@ const SignIn = ({
               label="Email"
               placeholder="Enter your Email"
               variant="outlined"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -94,6 +118,8 @@ const SignIn = ({
               placeholder="Enter your Password"
               type={showPassword ? 'text' : 'password'}
               variant="outlined"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -123,8 +149,8 @@ const SignIn = ({
             </Box>
 
             <Button
-              // type="submit"
               variant="contained"
+              onClick={handleSignIn}
               sx={{
                 borderRadius: '50px',
                 height: 50,

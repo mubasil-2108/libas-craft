@@ -5,9 +5,11 @@ import orderReducer from './slices/orderSlice';
 import reviewsReducer from './slices/reviewsSlice';
 import likesReducer from './slices/likesSlice';
 import packageReducer from './slices/packageSlice';
+import authReducer from './slices/authSlice';
 
 const store = configureStore({
     reducer:{
+        auth: authReducer,
         product: productReducer,
         cart: cartReducer,
         order: orderReducer,
