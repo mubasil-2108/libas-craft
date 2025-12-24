@@ -50,7 +50,9 @@ export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
     async (_, thunkAPI) => {
         try {
-            const result = await axios.get(`${API_URL}/logout`);
+            const result = await axios.get(`${API_URL}/logout`,
+                { withCredentials: true }
+            );
             if (result.status !== 200) {
                 throw new Error('Failed to logout user');
             }
@@ -130,7 +132,8 @@ export const forgetPassword = createAsyncThunk(
     async (email, thunkAPI) => {
         try {
             const result = await axios.post(`${API_URL}/forgotpassword`,
-                { email }
+                { email },
+                { withCredentials: true }
             );
             if (result.status !== 200) {
                 throw new Error('Failed to forget password');
@@ -146,7 +149,9 @@ export const resetPassword = createAsyncThunk(
     'auth/resetPassword',
     async ({ resetToken, password }, thunkAPI) => {
         try {
-            const result = await axios.put(`${API_URL}/resetpassword/${resetToken}`, { password });
+            const result = await axios.put(`${API_URL}/resetpassword/${resetToken}`, { password },
+                { withCredentials: true }
+            );
             if (result.status !== 200) {
                 throw new Error('Failed to reset password');
             }

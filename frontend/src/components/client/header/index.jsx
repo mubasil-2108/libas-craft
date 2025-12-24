@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { clientBar, colors, dummyCart } from '../../../services';
+import { clientBar, colors, dummyCart, stringAvatar } from '../../../services';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { useLocation, Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Divider, Drawer, Icon, Rating, TextField, useMediaQuery, useTheme } from '@mui/material';
@@ -19,7 +19,7 @@ import { CartDrawer, DrawerComponent } from '../drawer';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { ShoppingFormDialog } from '../dialog';
 import { useDispatch, useSelector } from 'react-redux';
-import { SignIn, SignUp } from '../../common';
+import { ForgotPassword, SignIn, SignUp } from '../../common';
 import { getUser, loginStatus, logoutUser } from '../../../store/slices/authSlice';
 
 const settings = ['Profile', 'Orders', 'Logout'];
@@ -38,6 +38,8 @@ const Header = () => {
     const [open, setOpen] = useState(false);
     const [signInOpen, setSignInOpen] = useState(false);
     const [signUpOpen, setSignUpOpen] = useState(false);
+    const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+    const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
     const [openForm, setOpenForm] = useState(false);
     // Cart Drawer
     const [openCart, setOpenCart] = useState(false);
@@ -60,6 +62,14 @@ const Header = () => {
 
     const handleSignUpClose = () => {
         setSignUpOpen(false);
+    };
+
+    const handleForgotPasswordClose = () => {
+        setForgotPasswordOpen(false);
+    };
+
+    const handleResetPasswordClose = () => {
+        setResetPasswordOpen(false);
     };
 
     // 🧾 Total calculation
@@ -92,8 +102,12 @@ const Header = () => {
                 break;
 
             case 'Logout':
-                await dispatch(logoutUser());
-                navigate('/');
+                await dispatch(logoutUser()).then((data) => {
+                    console.log(data);
+                    if (data?.type === 'auth/logoutUser/fulfilled') {
+                        navigate('/');
+                    }
+                });
                 break;
 
             default:
@@ -200,8 +214,16 @@ const Header = () => {
                                 <CartDrawer cartItems={cartItems} totalAmount={totalAmount} handleOpenForm={handleOpenForm} openCart={openCart} handleCloseCart={handleCloseCart} />
                                 {
                                     isLoggedIn ? (
-                                        <IconButton onClick={handleOpenUserMenu}>
-                                            <Avatar alt={user?.name} src={user?.photo} sx={{ width: 30, height: 30 }} />
+                                        <IconButton onClick={handleOpenUserMenu} >
+                                            <Avatar
+                                                {...stringAvatar(user?.name || "Unknown User")}
+                                                sx={{
+                                                    ...stringAvatar(user?.name || "Unknown User").sx,
+                                                    width: 30,
+                                                    height: 30,
+                                                    p:0.2
+                                                }}
+                                            />
                                         </IconButton>
                                     ) : (
                                         // onClick={() => navigate('/account/orders')}
@@ -269,8 +291,10 @@ const Header = () => {
                 </Container>
             </AppBar>
             <ShoppingFormDialog cartItems={cartItems} handleCloseCart={handleCloseCart} totalAmount={totalAmount} open={openForm} handleClose={handleCloseForm} />
-            <SignIn open={signInOpen} handleClose={handleSignInClose} setSignUpOpen={setSignUpOpen} />
+            <SignIn open={signInOpen} handleClose={handleSignInClose} setForgotPasswordOpen={setForgotPasswordOpen} setSignUpOpen={setSignUpOpen} />
             <SignUp open={signUpOpen} handleClose={handleSignUpClose} setSignInOpen={setSignInOpen} />
+            <ForgotPassword open={forgotPasswordOpen} handleClose={handleForgotPasswordClose} setResetPasswordOpen={setResetPasswordOpen} handleCloseSignIn={handleSignInClose} setSignUpOpen={setSignUpOpen} />
+            {/* <OtpInput open={resetPasswordOpen} handleClose={handleResetPasswordClose} /> */}
         </>
     );
 }

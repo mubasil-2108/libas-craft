@@ -31,7 +31,8 @@ const intialState = {
 const SignIn = ({
   open,
   handleClose,
-  setSignUpOpen
+  setSignUpOpen,
+  setForgotPasswordOpen
 }) => {
   const dipatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -142,6 +143,10 @@ const SignIn = ({
             >
               <Typography
                 variant="body2"
+                onClick={() => {
+                  // handleClose();
+                  setForgotPasswordOpen(true);
+                }}
                 sx={{ cursor: 'pointer', color: 'white' }}
               >
                 Forgot password?

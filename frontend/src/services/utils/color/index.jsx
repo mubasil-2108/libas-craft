@@ -126,6 +126,7 @@ export const colors = {
     buttonColor_2: '#FFF0F0', // very light red
     buttonColor_3: '#D46F77', // light red
     buttonColor_4: '#FAFAFA', // very light gray
+    buttonColor_5: '#1E4434', // dark green
 
     // input background colors
     inputBgColor_1: '#F0F0F0', // very light gray

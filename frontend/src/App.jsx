@@ -1,13 +1,31 @@
-import { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Routes, Route, useLocation, useParams } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
 import { AddPackage, AddProduct, AllPackages, AllProducts, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products } from './pages/admin'
 import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
 import { NotFound, UnAuth } from './pages/common'
+import { ResetPassword } from './components/common'
 
 function App() {
+  const location = useLocation();
+  // const { resetToken } = useParams();
+  const [resetOpen, setResetOpen] = useState(false);
+  const [resetToken, setResetToken] = useState(null);
 
+  useEffect(() => {
+    const match = location.pathname.match(
+      /^\/auth\/reset-password\/(.+)$/
+    );
+
+    if (match) {
+      setResetToken(match[1]); // 👈 extract token
+      setResetOpen(true);
+    } else {
+      setResetOpen(false);
+      setResetToken(null);
+    }
+  }, [location.pathname]);
   return (
     <>
       <Routes>
@@ -47,9 +65,18 @@ function App() {
           </Route>
         </Route>
         {/* <Route index element={<Home/>}/> */}
+        <Route path="/auth/reset-password/:resetToken" element={null} />
         <Route path='/401' element={<UnAuth />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
+
+      {resetOpen && (
+        <ResetPassword
+          open={resetOpen}
+          resetToken={resetToken}
+          handleClose={() => setResetOpen(false)}
+        />
+      )}
     </>
   )
 }

@@ -257,7 +257,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
         expiresAt: Date.now() + 30 * (60 * 1000), // Thirty minutes 
     }).save();
 
-    const resetURL = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+    const resetURL = `${process.env.FRONTEND_URL}/auth/reset-password/${resetToken}`;
 
     // Reset Email
     const message = `
