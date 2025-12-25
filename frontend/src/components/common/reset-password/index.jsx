@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     Box,
     Button,
@@ -9,14 +9,11 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetPassword } from "../../../store/slices/authSlice";
-import { useParams } from "react-router-dom";
 import { colors } from "../../../services";
 import toast from "react-hot-toast";
 
-const ResetPassword = ({ open, handleClose, resetToken }) => {
+const ResetPassword = ({ open, resetToken }) => {
     const dispatch = useDispatch();
-    //   const { resetToken } = useParams();
-
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -30,10 +27,10 @@ const ResetPassword = ({ open, handleClose, resetToken }) => {
         }
     }, [open, resetToken]);
 
-    const handleReset = async () => {
+    const handleReset = useCallback(async () => {
 
         if (!password || password.length < 6) return;
-        if (password !== confirmPassword){
+        if (password !== confirmPassword) {
             toast.error('Password and Confirm Password do not match');
             return;
         };
@@ -41,18 +38,21 @@ const ResetPassword = ({ open, handleClose, resetToken }) => {
         await dispatch(
             resetPassword({ resetToken, password }).then((data) => {
                 console.log(data, "data in resetPassword");
-            } )
+            })
         );
+    }, [dispatch, password, confirmPassword, resetToken]);
 
-        // if (res?.type === "auth/resetPassword/fulfilled") {
-        //     handleClose();
-        // }
-    };
+    const handlePasswordChange = useCallback((e) => {
+        setPassword(e.target.value);
+    }, []);
+
+    const handleConfirmPasswordChange = useCallback((e) => {
+        setConfirmPassword(e.target.value);
+    }, []);
 
     return (
         <Modal
             open={open}
-            // onClose={handleClose}
             sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
         >
             <Paper sx={{ width: 400, p: 4, borderRadius: 2 }}>
@@ -77,7 +77,7 @@ const ResetPassword = ({ open, handleClose, resetToken }) => {
                         type="password"
                         margin="normal"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handlePasswordChange}
                     />
 
                     <TextField
@@ -86,7 +86,7 @@ const ResetPassword = ({ open, handleClose, resetToken }) => {
                         type="password"
                         margin="normal"
                         value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onChange={handleConfirmPasswordChange}
                     />
 
                     <Button

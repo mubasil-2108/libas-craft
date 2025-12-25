@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     Box,
     Button,
@@ -31,7 +31,7 @@ const ForgotPassword = ({
         };
     }, [open]);
 
-    const handleForgotPassword = async () => {
+    const handleForgotPassword = useCallback(async () => {
         if (!email) return;
 
         setLoading(true);
@@ -43,9 +43,12 @@ const ForgotPassword = ({
             } else {
                 setLoading(false);
             }
-            console.log(data, "data in handleForgotPassword");
         })
-    };
+    }, [dispatch, email]);
+
+    const handleEmailChange = useCallback((e) => {
+        setEmail(e.target.value);
+    }, []);
     return (
         <Modal
             open={open}
@@ -64,7 +67,7 @@ const ForgotPassword = ({
                 alignItems="center"
                 minHeight="100vh"
             >
-                
+
                 <Paper
                     elevation={3}
                     sx={{
@@ -75,15 +78,15 @@ const ForgotPassword = ({
                     }}
                 >
                     <Box component='div' sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                              <Box component='img' onClick={() => window.location.href = '/'} src='/logo-1.png' sx={{
-                                display: { xs: 'none', md: 'flex' },
-                                objectFit: 'contain',
-                                maxWidth: '120px',
-                                alignSelf: 'center',
-                                cursor: 'pointer',
-                                pointerEvents: 'auto',
-                              }} />
-                            </Box>
+                        <Box component='img' onClick={() => window.location.href = '/'} src='/logo-1.png' sx={{
+                            display: { xs: 'none', md: 'flex' },
+                            objectFit: 'contain',
+                            maxWidth: '120px',
+                            alignSelf: 'center',
+                            cursor: 'pointer',
+                            pointerEvents: 'auto',
+                        }} />
+                    </Box>
                     {/* Title */}
                     <Typography
                         variant="h6"
@@ -108,7 +111,7 @@ const ForgotPassword = ({
                             required
                             margin="normal"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
                         />
 
                         <Button
@@ -140,7 +143,7 @@ const ForgotPassword = ({
                         <Box
                             component="span"
                             fontWeight={700}
-                            sx={{ cursor: "pointer",  color: colors.textColor_10, "&:hover": { textDecoration: "underline", color: colors.textColor_7 } }}
+                            sx={{ cursor: "pointer", color: colors.textColor_10, "&:hover": { textDecoration: "underline", color: colors.textColor_7 } }}
                             onClick={() => {
                                 handleClose();
                                 handleCloseSignIn();
