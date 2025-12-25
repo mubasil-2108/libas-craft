@@ -5,6 +5,7 @@ import Account from "./account";
 import Category from "./category";
 import ProductsByCategory from "./products-by-category";
 import ClientPackageDetail from "./package-detail";
+import ClientProfile from "./profile";
 
 export {
     Home,
@@ -13,5 +14,6 @@ export {
     Account,
     Category,
     ProductsByCategory,
-    ClientPackageDetail
+    ClientPackageDetail,
+    ClientProfile
 }

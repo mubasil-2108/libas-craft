@@ -1,9 +1,11 @@
+// server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const passport = require('./config/passport');
 const errorHandler = require('./middlewares/error');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
@@ -38,7 +40,6 @@ app.use(
                 'Expires',
                 'Pragma',
             ],
-            credentials: true,
             preflightContinue: false,
             optionsSuccessStatus: 204
         }
@@ -48,6 +49,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 
 app.get("/", (req, res) => {

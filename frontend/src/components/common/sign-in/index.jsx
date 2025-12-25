@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -21,7 +21,7 @@ import AppleIcon from '@mui/icons-material/Apple';
 import { colors } from '../../../services';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
-import { loginUser } from '../../../store/slices/authSlice';
+import { getUser, loginUser } from '../../../store/slices/authSlice';
 
 const intialState = {
   email: '',
@@ -34,22 +34,17 @@ const SignIn = ({
   setSignUpOpen,
   setForgotPasswordOpen
 }) => {
-  const dipatch = useDispatch();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(intialState);
+  const hasShownToastRef = useRef(false);
 
-  const handleClickShowPassword = () => setShowPassword(prev => !prev);
+  const handleClickShowPassword = useCallback(() => {
+    setShowPassword(prev => !prev);
+  }, []);
 
-  useEffect(() => {
-    if (open) {
-      window.history.replaceState(null, '', '/auth/sign-in');
-    } else {
-      window.history.replaceState(null, '', '/');
-    }
-  }, [open]);
-
-  const handleSignIn = async () => {
-    await dipatch(loginUser(formData)).then((data) => {
+  const handleSignIn = useCallback(async () => {
+    await dispatch(loginUser(formData)).then((data) => {
       if (data?.type === 'auth/loginUser/fulfilled') {
         toast.success('User logged in successfully');
         setFormData(intialState);
@@ -58,7 +53,51 @@ const SignIn = ({
         toast.error(data?.payload?.message || 'User login failed');
       }
     })
-  }
+  }, [dispatch, formData, handleClose]);
+
+  const handleGoogleSignIn = useCallback(() => {
+    window.open('http://localhost:5000/api/auth/google', '_self');
+  }, []);
+
+  const emailAdornment = useMemo(() => (
+    <InputAdornment position="start">
+      <MailOutlineIcon />
+    </InputAdornment>
+  ), []);
+
+  const passwordStartAdornment = useMemo(() => (
+    <InputAdornment position="start">
+      <LockOutlinedIcon />
+    </InputAdornment>
+  ), []);
+
+  const passwordEndAdornment = useMemo(() => (
+    <InputAdornment position="end">
+      <IconButton onClick={handleClickShowPassword} edge="end">
+        {showPassword ? <VisibilityOff /> : <Visibility />}
+      </IconButton>
+    </InputAdornment>
+  ), [handleClickShowPassword, showPassword]);
+
+  useEffect(() => {
+    window.history.replaceState(null, '', open ? '/auth/sign-in' : '/');
+  }, [open]);
+
+  useEffect(() => {
+    // if (hasShownToastRef.current) return;
+
+    dispatch(getUser()).then((data) => {
+      if (data?.type === 'auth/getUser/fulfilled') {
+        toast.success(
+          data?.payload?.name === 'LibasCraft'
+            ? 'Admin, Welcome Back'
+            : `${data?.payload?.name} Welcome Back`,
+            { id: 'welcome-toast' }
+        );
+        // hasShownToastRef.current = true;
+      }
+    });
+  }, [dispatch]);
 
   return (
     <Modal
@@ -105,13 +144,7 @@ const SignIn = ({
               variant="outlined"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <MailOutlineIcon />
-                  </InputAdornment>
-                ),
-              }}
+              InputProps={{ startAdornment: emailAdornment }}
             />
             <TextField
               fullWidth
@@ -122,18 +155,8 @@ const SignIn = ({
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LockOutlinedIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleClickShowPassword} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
+                startAdornment: passwordStartAdornment,
+                endAdornment: passwordEndAdornment,
               }}
             />
             <Box
@@ -192,6 +215,7 @@ const SignIn = ({
             <Button
               variant="outlined"
               startIcon={<GoogleIcon />}
+              onClick={handleGoogleSignIn}
               sx={{
                 borderRadius: '50px', height: 50,
                 borderColor: colors.borderColor_3,

@@ -1,3 +1,4 @@
+// controllers/auth.js
 const asyncHandler = require("express-async-handler");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -11,6 +12,20 @@ const generateToken = (id) => {
         expiresIn: '30d',
     })
 }
+
+const googleAuthSuccess = asyncHandler(async (req, res) => {
+    const token = generateToken(req.user._id);
+
+    res.cookie('token', token, {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    });
+
+    res.redirect(`${process.env.FRONTEND_URL}`);
+});
 
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
@@ -41,6 +56,15 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
     const token = generateToken(checkUser?._id);
+
+    // res.cookie('token', token, {
+    //     path: '/',
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === 'production',
+    //     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    //     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    // });
+
 
     res.cookie('token', token, {
         path: '/',
@@ -129,7 +153,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 })
 
 const getUser = asyncHandler(async (req, res) => {
-    
+
     const user = await USER.findById(req.user._id).select("-password");;
 
     if (user) {
@@ -319,6 +343,7 @@ const resetpassword = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+    googleAuthSuccess,
     registerUser,
     loginUser,
     logoutUser,

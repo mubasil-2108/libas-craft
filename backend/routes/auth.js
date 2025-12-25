@@ -1,9 +1,13 @@
+// routes/auth.js
 const express = require('express');
-const { registerUser, loginUser, logoutUser, getUser, updateUser, changePassword, forgotPassword, resetpassword, loginStatus } = require('../controllers/auth');
+const passport = require('passport');
+const { registerUser, loginUser, logoutUser, getUser, googleAuthSuccess, updateUser, changePassword, forgotPassword, resetpassword, loginStatus } = require('../controllers/auth');
 const protect = require('../middlewares/auth');
 
 const router = express.Router();
 
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/callback', passport.authenticate('google', { session: false }), googleAuthSuccess);
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/logout', logoutUser);

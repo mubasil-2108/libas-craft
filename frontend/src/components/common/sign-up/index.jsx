@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Box,
     Button,
@@ -19,7 +19,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { colors } from '../../../services';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../../store/slices/authSlice';
+import { getUser, registerUser } from '../../../store/slices/authSlice';
 import toast from 'react-hot-toast';
 
 const intialState = {
@@ -29,22 +29,22 @@ const intialState = {
 };
 
 const SignUp = ({ open, handleClose, setSignInOpen }) => {
-    const dipatch = useDispatch();
+    const dispatch = useDispatch();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [formData, setFormData] = useState(intialState);
     const [confirmedPassword, setConfirmedPassword] = useState('');
 
-    useEffect(() => {
-        if (open) {
-            window.history.replaceState(null, '', '/auth/sign-up');
-        } else {
-            window.history.replaceState(null, '', '/');
-        }
-    }, [open]);
+    const togglePassword = useCallback(() => {
+        setShowPassword(prev => !prev);
+    }, []);
 
-    const handleSignUp = async () => {
+    const toggleConfirmPassword = useCallback(() => {
+        setShowConfirmPassword(prev => !prev);
+    }, []);
+
+    const handleSignUp = useCallback(async () => {
         // e.preventDefault();
         console.log(formData);
 
@@ -53,7 +53,7 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
             return;
         }
 
-        await dipatch(registerUser(formData)).then((data) => {
+        await dispatch(registerUser(formData)).then((data) => {
             if (data?.type === 'auth/registerUser/fulfilled') {
                 toast.success('User registered successfully');
                 setFormData(intialState);
@@ -64,7 +64,62 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                 toast.error(data?.payload?.message || 'User registration failed');
             }
         })
-    };
+    }, [dispatch, formData, confirmedPassword, handleClose, setSignInOpen]);
+
+    const handleGoogleSignIn = useCallback(async () => {
+        window.open('http://localhost:5000/api/auth/google', '_self');
+    }, []);
+
+
+    const nameAdornment = useMemo(() => (
+        <InputAdornment position="start">
+            <PersonOutlineIcon />
+        </InputAdornment>
+    ), []);
+
+    const emailAdornment = useMemo(() => (
+        <InputAdornment position="start">
+            <MailOutlineIcon />
+        </InputAdornment>
+    ), []);
+
+    const passwordStartAdornment = useMemo(() => (
+        <InputAdornment position="start">
+            <LockOutlinedIcon />
+        </InputAdornment>
+    ), []);
+
+    const passwordEndAdornment = useMemo(() => (
+        <InputAdornment position="end">
+            <IconButton onClick={togglePassword} edge="end">
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+        </InputAdornment>
+    ), [showPassword, togglePassword]);
+
+    const confirmPasswordEndAdornment = useMemo(() => (
+        <InputAdornment position="end">
+            <IconButton onClick={toggleConfirmPassword} edge="end">
+                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+        </InputAdornment>
+    ), [showConfirmPassword, toggleConfirmPassword]);
+
+    useEffect(() => {
+        window.history.replaceState(null, '', open ? '/auth/sign-up' : '/');
+    }, [open]);
+
+    useEffect(() => {
+        dispatch(getUser()).then((data) => {
+            if (data?.type === 'auth/getUser/fulfilled') {
+                toast.success(
+                    data?.payload?.name === 'LibasCraft'
+                        ? 'Admin, Welcome Back'
+                        : `${data?.payload?.name} Welcome Back`
+                );
+            }
+        });
+    }, [dispatch]);
 
     return (
         <Modal
@@ -113,13 +168,7 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                             onChange={
                                 (e) => setFormData({ ...formData, name: e.target.value })
                             }
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <PersonOutlineIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
+                            InputProps={{ startAdornment: nameAdornment }}
                         />
 
                         <TextField
@@ -131,13 +180,7 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                             onChange={
                                 (e) => setFormData({ ...formData, email: e.target.value })
                             }
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <MailOutlineIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
+                            InputProps={{ startAdornment: emailAdornment }}
                         />
 
                         <TextField
@@ -151,21 +194,8 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                                 (e) => setFormData({ ...formData, password: e.target.value })
                             }
                             InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <LockOutlinedIcon />
-                                    </InputAdornment>
-                                ),
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            onClick={() => setShowPassword(prev => !prev)}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
+                                startAdornment: passwordStartAdornment,
+                                endAdornment: passwordEndAdornment,
                             }}
                         />
 
@@ -178,27 +208,8 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                             value={confirmedPassword}
                             onChange={(e) => setConfirmedPassword(e.target.value)}
                             InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <LockOutlinedIcon />
-                                    </InputAdornment>
-                                ),
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            onClick={() =>
-                                                setShowConfirmPassword(prev => !prev)
-                                            }
-                                            edge="end"
-                                        >
-                                            {showConfirmPassword ? (
-                                                <VisibilityOff />
-                                            ) : (
-                                                <Visibility />
-                                            )}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
+                                startAdornment: passwordStartAdornment,
+                                endAdornment: confirmPasswordEndAdornment,
                             }}
                         />
 
@@ -241,6 +252,7 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
                         <Button
                             variant="outlined"
                             startIcon={<GoogleIcon />}
+                            onClick={handleGoogleSignIn}
                             sx={{
                                 borderRadius: '50px',
                                 height: 50,

@@ -17,7 +17,6 @@ const ForgotPassword = ({
     handleClose,
     setSignUpOpen,
     handleCloseSignIn,
-    setResetPasswordOpen
 }) => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");

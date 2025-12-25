@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useParams } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
 import { AddPackage, AddProduct, AllPackages, AllProducts, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products } from './pages/admin'
-import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, Home, ProductsByCategory } from './pages/client'
+import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
 import { NotFound, UnAuth } from './pages/common'
 import { ResetPassword } from './components/common'
@@ -26,6 +26,7 @@ function App() {
       setResetToken(null);
     }
   }, [location.pathname]);
+  
   return (
     <>
       <Routes>
@@ -34,6 +35,7 @@ function App() {
           <Route path='collections/all' element={<Catalog />} />
           <Route path='collections/:id' element={<ClientProductDetail />} />
           <Route path='account/orders' element={<Account />} />
+          <Route path='account/profile' element={<ClientProfile />} />
           <Route path='categories' element={<Category />} />
           <Route path="categories/:categorySlug" element={<ProductsByCategory />} />
           <Route path='categories/:categorySlug/:id' element={<ClientProductDetail />} />
@@ -65,6 +67,7 @@ function App() {
           </Route>
         </Route>
         {/* <Route index element={<Home/>}/> */}
+        <Route path='/auth/sign-in' element={null} />
         <Route path="/auth/reset-password/:resetToken" element={null} />
         <Route path='/401' element={<UnAuth />} />
         <Route path='*' element={<NotFound />} />

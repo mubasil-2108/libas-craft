@@ -39,7 +39,6 @@ const Header = () => {
     const [signInOpen, setSignInOpen] = useState(false);
     const [signUpOpen, setSignUpOpen] = useState(false);
     const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
-    const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
     const [openForm, setOpenForm] = useState(false);
     // Cart Drawer
     const [openCart, setOpenCart] = useState(false);
@@ -66,10 +65,6 @@ const Header = () => {
 
     const handleForgotPasswordClose = () => {
         setForgotPasswordOpen(false);
-    };
-
-    const handleResetPasswordClose = () => {
-        setResetPasswordOpen(false);
     };
 
     // 🧾 Total calculation
@@ -221,7 +216,8 @@ const Header = () => {
                                                     ...stringAvatar(user?.name || "Unknown User").sx,
                                                     width: 30,
                                                     height: 30,
-                                                    p:0.2
+                                                    p:0.2,
+                                                    fontSize: 14
                                                 }}
                                             />
                                         </IconButton>
@@ -293,7 +289,7 @@ const Header = () => {
             <ShoppingFormDialog cartItems={cartItems} handleCloseCart={handleCloseCart} totalAmount={totalAmount} open={openForm} handleClose={handleCloseForm} />
             <SignIn open={signInOpen} handleClose={handleSignInClose} setForgotPasswordOpen={setForgotPasswordOpen} setSignUpOpen={setSignUpOpen} />
             <SignUp open={signUpOpen} handleClose={handleSignUpClose} setSignInOpen={setSignInOpen} />
-            <ForgotPassword open={forgotPasswordOpen} handleClose={handleForgotPasswordClose} setResetPasswordOpen={setResetPasswordOpen} handleCloseSignIn={handleSignInClose} setSignUpOpen={setSignUpOpen} />
+            <ForgotPassword open={forgotPasswordOpen} handleClose={handleForgotPasswordClose} handleCloseSignIn={handleSignInClose} setSignUpOpen={setSignUpOpen} />
             {/* <OtpInput open={resetPasswordOpen} handleClose={handleResetPasswordClose} /> */}
         </>
     );
