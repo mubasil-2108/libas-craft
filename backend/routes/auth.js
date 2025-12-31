@@ -1,7 +1,7 @@
 // routes/auth.js
 const express = require('express');
 const passport = require('passport');
-const { registerUser, loginUser, logoutUser, getUser, googleAuthSuccess, updateUser, changePassword, forgotPassword, resetpassword, loginStatus } = require('../controllers/auth');
+const { registerUser, loginUser, logoutUser, getUser,  updateUser, googleAuthSuccess, changePassword, forgotPassword, resetpassword, loginStatus } = require('../controllers/auth');
 const protect = require('../middlewares/auth');
 
 const router = express.Router();

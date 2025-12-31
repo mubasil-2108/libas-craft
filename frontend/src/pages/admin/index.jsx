@@ -10,6 +10,8 @@ import Packages from "./special-package";
 import AddPackage from "./add-new-package";
 import AllPackages from "./all-packages";
 import PackageDetail from "./package-detail";
+import Settings from "./settings";
+import AllSetting from "./all-settings";
 
 export {
     Dashboard,
@@ -23,5 +25,7 @@ export {
     Packages,
     AddPackage,
     AllPackages,
-    PackageDetail
+    PackageDetail,
+    Settings,
+    AllSetting
 }

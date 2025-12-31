@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useParams } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
-import { AddPackage, AddProduct, AllPackages, AllProducts, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products } from './pages/admin'
+import { AddPackage, AddProduct, AllPackages, AllProducts, AllSetting, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products, Settings } from './pages/admin'
 import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
 import { NotFound, UnAuth } from './pages/common'
@@ -26,7 +26,7 @@ function App() {
       setResetToken(null);
     }
   }, [location.pathname]);
-  
+
   return (
     <>
       <Routes>
@@ -65,9 +65,11 @@ function App() {
             <Route path=':id' element={<PackageDetail />} />
             <Route path='add-new-package' element={<AddPackage />} />
           </Route>
+          <Route path='settings' element={<Settings />}>
+            <Route index element={<AllSetting />} />
+          </Route>
         </Route>
         {/* <Route index element={<Home/>}/> */}
-        <Route path='/auth/sign-in' element={null} />
         <Route path="/auth/reset-password/:resetToken" element={null} />
         <Route path='/401' element={<UnAuth />} />
         <Route path='*' element={<NotFound />} />

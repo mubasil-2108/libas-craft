@@ -87,6 +87,7 @@ export const Tags = ({ title, placeholder, style, value, onChange}) => {
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           multiline
+          fullWidth
           rows={3}
           InputProps={{
             disableUnderline: true,

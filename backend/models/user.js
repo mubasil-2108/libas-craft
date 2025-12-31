@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         match: [
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            "Please enter a valid emaial",
+            "Please enter a valid email",
         ],
     },
     password: {
@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
         default: '+234'
+    },
+    address: {
+        type: String,
+        trim: true
     },
     role: {
         type: String,

@@ -37,7 +37,7 @@ const SignIn = ({
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(intialState);
-  const hasShownToastRef = useRef(false);
+  const previousPathRef = useRef(null);
 
   const handleClickShowPassword = useCallback(() => {
     setShowPassword(prev => !prev);
@@ -79,25 +79,31 @@ const SignIn = ({
     </InputAdornment>
   ), [handleClickShowPassword, showPassword]);
 
+  // useEffect(() => {
+  //   // save current path
+  //   const currentPath = window.location.pathname;
+  //   console.log(currentPath, 'current path in sign in modal');
+  //   window.history.replaceState(null, '', open ? '/auth/sign-in' : `${currentPath}`);
+  // }, [open]);
   useEffect(() => {
-    window.history.replaceState(null, '', open ? '/auth/sign-in' : '/');
+    if (open) {
+      // save original path only once
+      previousPathRef.current = window.location.pathname;
+
+      window.history.replaceState(
+        null,
+        '',
+        '/auth/sign-in'
+      );
+    } else if (previousPathRef.current) {
+      // restore original path
+      window.history.replaceState(
+        null,
+        '',
+        previousPathRef.current
+      );
+    }
   }, [open]);
-
-  useEffect(() => {
-    // if (hasShownToastRef.current) return;
-
-    dispatch(getUser()).then((data) => {
-      if (data?.type === 'auth/getUser/fulfilled') {
-        toast.success(
-          data?.payload?.name === 'LibasCraft'
-            ? 'Admin, Welcome Back'
-            : `${data?.payload?.name} Welcome Back`,
-            { id: 'welcome-toast' }
-        );
-        // hasShownToastRef.current = true;
-      }
-    });
-  }, [dispatch]);
 
   return (
     <Modal

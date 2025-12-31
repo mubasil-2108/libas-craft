@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     Box,
     Button,
@@ -19,17 +19,40 @@ const ForgotPassword = ({
     handleCloseSignIn,
 }) => {
     const dispatch = useDispatch();
+          const previousPathRef = useRef(null);
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    useEffect(() => {
-        if (open) {
-            window.history.pushState(null, "", "/auth/forgot-password");
-        }
-        return () => {
-            window.history.pushState(null, "", "/");
-        };
-    }, [open]);
+//     useEffect(() => {
+//         const currentPath = window.location.pathname;
+// console.log(currentPath, 'current path in forgot modal');
+//         if (open) {
+//             window.history.pushState(null, "", "/auth/forgot-password");
+//         }
+//         return () => {
+//             window.history.pushState(null, "", currentPath);
+//         };
+//     }, [open]);
+
+useEffect(() => {
+  if (open) {
+    // save original path only once
+    previousPathRef.current = window.location.pathname;
+
+    window.history.replaceState(
+      null,
+      '',
+      '/auth/forgot-password'
+    );
+  } else if (previousPathRef.current) {
+    // restore original path
+    window.history.replaceState(
+      null,
+      '',
+      previousPathRef.current
+    );
+  }
+}, [open]);
 
     const handleForgotPassword = useCallback(async () => {
         if (!email) return;

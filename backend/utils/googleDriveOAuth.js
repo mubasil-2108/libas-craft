@@ -60,7 +60,15 @@ async function uploadFile(filePath, folderName) {
 
   const fileMetadata = {
     name: path.basename(filePath),
-    parents: folderName === 'reviews' ? [process.env.GOOGLE_DRIVE_REVIEWS_FOLDER_ID] : folderName === 'packages' ? [process.env.GOOGLE_DRIVE_PACKAGE_FOLDER_ID] : [process.env.GOOGLE_DRIVE_FOLDER_ID],
+    parents: folderName === 'reviews' ?
+      [process.env.GOOGLE_DRIVE_REVIEWS_FOLDER_ID] :
+      folderName === 'packages' ?
+        [process.env.GOOGLE_DRIVE_PACKAGE_FOLDER_ID] :
+        folderName === 'siteLogo' ?
+          [process.env.GOOGLE_DRIVE_SITELOGO_FOLDER_ID] :
+          folderName === 'newDealImage' ?
+            [process.env.GOOGLE_DRIVE_DEALIMAGE_FOLDER_ID] :
+            [process.env.GOOGLE_DRIVE_FOLDER_ID],
   };
   const media = {
     body: fs.createReadStream(filePath),

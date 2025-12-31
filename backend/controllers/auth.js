@@ -24,7 +24,7 @@ const googleAuthSuccess = asyncHandler(async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}`);
+    res.redirect(process.env.FRONTEND_URL);
 });
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -157,7 +157,7 @@ const getUser = asyncHandler(async (req, res) => {
     const user = await USER.findById(req.user._id).select("-password");;
 
     if (user) {
-        const { _id, name, email, photo, phone, role } = user;
+        const { _id, name, email, photo, phone, role, address } = user;
 
         res.status(200).json({
             _id,
@@ -165,7 +165,8 @@ const getUser = asyncHandler(async (req, res) => {
             email,
             photo,
             phone,
-            role
+            role,
+            address
         })
     } else {
         res.status(404).json({
@@ -193,11 +194,12 @@ const updateUser = asyncHandler(async (req, res) => {
     const user = await USER.findById(req.user._id);
 
     if (user) {
-        const { name, email, photo, phone } = user;
+        const { name, email, photo, phone, address } = user;
         user.email = email;
         user.name = req.body.name || name;
         user.photo = req.body.photo || photo;
         user.phone = req.body.phone || phone;
+        user.address = req.body.address || address;
 
         const updatedUser = await user.save();
 
@@ -207,6 +209,7 @@ const updateUser = asyncHandler(async (req, res) => {
             email: updatedUser.email,
             photo: updatedUser.photo,
             phone: updatedUser.phone,
+            address: updatedUser.address
         })
     } else {
         res.status(404).json({

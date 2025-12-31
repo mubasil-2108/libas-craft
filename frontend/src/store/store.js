@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import productReducer from './slices/productSlice';
 import cartReducer from './slices/cartSlice';
 import orderReducer from './slices/orderSlice';
@@ -6,18 +6,20 @@ import reviewsReducer from './slices/reviewsSlice';
 import likesReducer from './slices/likesSlice';
 import packageReducer from './slices/packageSlice';
 import authReducer from './slices/authSlice';
+import settingReducer from './slices/settingSlice';
 
 const store = configureStore({
-    reducer:{
+    reducer: {
         auth: authReducer,
         product: productReducer,
         cart: cartReducer,
         order: orderReducer,
         reviews: reviewsReducer,
         likes: likesReducer,
-        packages: packageReducer
+        packages: packageReducer,
+        settings: settingReducer
     },
-    middleware: (getDefaultMiddleware)=> getDefaultMiddleware({
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,
     }),
 });

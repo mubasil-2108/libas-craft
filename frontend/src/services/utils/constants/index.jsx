@@ -4,6 +4,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import InterestsOutlinedIcon from '@mui/icons-material/InterestsOutlined';
 import { FaSnapchatGhost, FaTiktok } from "react-icons/fa";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -38,6 +39,12 @@ export const adminBar = [
     icon: Inventory2OutlinedIcon,
     link: '/admin/packages'
   },
+  {
+    id: 5,
+    name: 'Settings',
+    icon: InterestsOutlinedIcon,
+    link: '/admin/settings'
+  }
 ];
 
 export const ingredients = [

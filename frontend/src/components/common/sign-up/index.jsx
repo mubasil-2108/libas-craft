@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     Box,
     Button,
@@ -18,7 +18,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import GoogleIcon from '@mui/icons-material/Google';
 import { colors } from '../../../services';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getUser, registerUser } from '../../../store/slices/authSlice';
 import toast from 'react-hot-toast';
 
@@ -30,6 +30,7 @@ const intialState = {
 
 const SignUp = ({ open, handleClose, setSignInOpen }) => {
     const dispatch = useDispatch();
+      const previousPathRef = useRef(null);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -105,21 +106,31 @@ const SignUp = ({ open, handleClose, setSignInOpen }) => {
         </InputAdornment>
     ), [showConfirmPassword, toggleConfirmPassword]);
 
-    useEffect(() => {
-        window.history.replaceState(null, '', open ? '/auth/sign-up' : '/');
-    }, [open]);
+//     useEffect(() => {
+//         const currentPath = window.location.pathname;
+// console.log(currentPath, 'current path in sign up modal');
+//         window.history.replaceState(null, '', open ? '/auth/sign-up' : currentPath);
+//     }, [open]);
 
-    useEffect(() => {
-        dispatch(getUser()).then((data) => {
-            if (data?.type === 'auth/getUser/fulfilled') {
-                toast.success(
-                    data?.payload?.name === 'LibasCraft'
-                        ? 'Admin, Welcome Back'
-                        : `${data?.payload?.name} Welcome Back`
-                );
-            }
-        });
-    }, [dispatch]);
+useEffect(() => {
+  if (open) {
+    // save original path only once
+    previousPathRef.current = window.location.pathname;
+
+    window.history.replaceState(
+      null,
+      '',
+      '/auth/sign-up'
+    );
+  } else if (previousPathRef.current) {
+    // restore original path
+    window.history.replaceState(
+      null,
+      '',
+      previousPathRef.current
+    );
+  }
+}, [open]);
 
     return (
         <Modal

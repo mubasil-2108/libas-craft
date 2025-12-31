@@ -101,7 +101,9 @@ export const updateUser = createAsyncThunk(
     'auth/updateUser',
     async (formData, thunkAPI) => {
         try {
-            const result = await axios.patch(`${API_URL}/updateuser`, formData);
+            const result = await axios.patch(`${API_URL}/updateuser`, formData,
+                 { withCredentials: true }
+            );
             if (result.status !== 200) {
                 throw new Error('Failed to update user');
             }
@@ -116,7 +118,9 @@ export const changePassword = createAsyncThunk(
     'auth/changePassword',
     async (passwordData, thunkAPI) => {
         try {
-            const result = await axios.patch(`${API_URL}/changepassword`, passwordData);
+            const result = await axios.patch(`${API_URL}/changepassword`, passwordData,
+                { withCredentials: true }
+            );
             if (result.status !== 200) {
                 throw new Error('Failed to change password');
             }
