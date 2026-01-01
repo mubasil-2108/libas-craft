@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useParams } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
 import { AddPackage, AddProduct, AllPackages, AllProducts, AllSetting, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products, Settings } from './pages/admin'
-import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, Home, ProductsByCategory } from './pages/client'
+import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, ContactUs, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
 import { AboutUs, CancellationPolicy, NotFound, PrivacyPolicy, RefundPolicy, ReturnPolicy, TermsConditions, UnAuth } from './pages/common'
 import { ResetPassword } from './components/common'
@@ -42,6 +42,7 @@ function App() {
           <Route path='main-product/:id' element={<ClientProductDetail />} />
           <Route path='package/:id' element={<ClientPackageDetail />} />
           <Route path='package/product/:id' element={<ClientProductDetail />} />
+          <Route path='contact' element={<ContactUs />} />
         </Route>
         <Route path='/admin' element={<AdminLayout />} >
           <Route index element={<Dashboard />} />

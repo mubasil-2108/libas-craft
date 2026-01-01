@@ -14,6 +14,7 @@ const reviewRoutes = require('./routes/reviews');
 const likesRoutes = require('./routes/likes');
 const packageRoutes = require('./routes/specialPackage');
 const settingRoutes = require('./routes/setting');
+const contactRoutes = require('./routes/contact');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -65,6 +66,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/likes', likesRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/settings', settingRoutes);
+app.use('/api/contact', contactRoutes);
 
 app.use(errorHandler);
 

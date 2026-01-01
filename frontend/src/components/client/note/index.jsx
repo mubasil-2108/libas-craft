@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import { colors } from "../../../services";
 
-const Note = () => {
+const Note = ({note}) => {
     return (
         <Box component='div' sx={{
             backgroundColor: colors.white,
@@ -40,7 +40,7 @@ const Note = () => {
                             WebkitTextFillColor: "transparent",
                         mx: 2
                     }}>
-                        پیراگراف ۔ ورڈ پروسیسنگ میں ڈاکیومنٹ کا کوئی ایسا حصہ جس سے قبل پیراگراف کی علامت آتی ہے اور اس کا اختتام ایک دوسری علامت ہوتا ہے ۔
+                        {note}
                     </Typography>
                 </Box>
 

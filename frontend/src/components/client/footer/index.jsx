@@ -84,10 +84,7 @@ const Footer = ({ data }) => {
               fontFamily: "roboto-regular",
             }}
           >
-            Our natural hair care products are carefully crafted with premium
-            botanical ingredients to nourish your scalp, strengthen roots, and
-            repair damaged hair — giving you healthy, shiny, and beautiful hair
-            every day.
+            Our premium products are carefully crafted using high-quality, natural ingredients to deliver reliable performance, everyday care, and long-lasting value. We focus on quality, safety, and effectiveness to meet modern lifestyle needs with trusted solutions you can rely on.
           </Typography>
         </Box>
         <Box sx={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 3, flexWrap: isMobile ? "wrap" : "nowrap", flexGrow: 1, }}>

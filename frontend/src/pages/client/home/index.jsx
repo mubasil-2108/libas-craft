@@ -5,18 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo } from "react";
 import { getAllProducts } from "../../../store/slices/productSlice";
 import { getAllPackages } from "../../../store/slices/packageSlice";
+import { fetchSettings } from "../../../store/slices/settingSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { isLoading, products } = useSelector((state) => state.product);
   const { isPackageLoading, packages } = useSelector((state) => state.packages);
+  const { data } = useSelector(state => state.settings);
 
   useEffect(() => {
     dispatch(getAllProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getAllPackages());
+    dispatch(fetchSettings());
   }, [dispatch]);
 
   // Categories
@@ -58,7 +58,7 @@ const Home = () => {
       sx={{
         position: "relative",
       }}>
-      <Banner />
+      <Banner data={data} />
       {
         categories && categories.length > 1 && (
           <Categories categoryList={categories} />

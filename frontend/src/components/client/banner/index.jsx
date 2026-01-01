@@ -4,7 +4,7 @@ import { colors, reasons } from "../../../services";
 import { useNavigate } from "react-router-dom";
 import Note from "../note";
 
-const Banner = () => {
+const Banner = ({ data }) => {
   const [width, setWidth] = useState(window.innerWidth);
   const theme = useTheme();
   const navigate = useNavigate();
@@ -13,12 +13,15 @@ const Banner = () => {
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
+  const note = data?.note;
+  const site = data?.site;
+
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  console.log(site?.headline, "site.headline");
   return (
     <Box
       sx={{
@@ -31,15 +34,20 @@ const Banner = () => {
         alignItems: "center",
       }}
     >
+      {
+        note && (
+          <Box sx={{
+            position: 'absolute',
+            top: 0,
+            zIndex: 20,
+            width: '100%',
+          }}>
+            <Note note={note} />
+          </Box>
+        )
+      }
       {/* Diagonal Curved Shape */}
-      <Box sx={{
-        position:'absolute',
-        top:0,
-        zIndex:20,
-        width:'100%',
-      }}>
-        <Note />
-      </Box>
+
       <Box
         component="svg"
         sx={{
@@ -140,8 +148,14 @@ const Banner = () => {
               fontWeight: isMobile ? 700 : 100,
             }}
           >
-            Nourish Your Hair,
-            <br /> Radiate Beauty
+            {site?.headline.split(",").map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>
+            ))}
+            {/* Nourish Your Hair,
+            <br /> Radiate Beauty */}
           </Typography>
 
           <Typography
@@ -152,14 +166,12 @@ const Banner = () => {
               maxWidth: isMobile ? "100%" : "500px",
             }}
           >
-            Our natural hair care products are carefully crafted with premium botanical
-            ingredients to nourish your scalp, strengthen roots, and repair damaged hair —
-            giving you healthy, shiny, and beautiful hair every day.
+           {site?.description}
           </Typography>
 
           <Button
             variant="contained"
-            onClick={()=> navigate('/collections/all')}
+            onClick={() => navigate('/collections/all')}
             sx={{
               backgroundColor: colors.greenDark_1,
               color: colors.textColor_5,

@@ -207,6 +207,7 @@ const AllSetting = () => {
         await dispatch(updateSiteSettings(form)).then(async (data) => {
             if (data?.type === 'setting/updateSiteSettings/fulfilled') {
                 dispatch(fetchSettings()).then(() => {
+                    toast.success('Settings updated successfully');
                     dispatch(clearSettingsState());
                 })
 
@@ -220,6 +221,7 @@ const AllSetting = () => {
         await dispatch(updateNote(note)).then((data) => {
             if (data?.type === 'setting/updateNote/fulfilled') {
                 dispatch(fetchSettings()).then(() => {
+                    toast.success('Note updated successfully');
                     dispatch(clearSettingsState());
                 })
             }
@@ -232,6 +234,7 @@ const AllSetting = () => {
         await dispatch(updateSocialLinks(social)).then(async (data) => {
             if (data?.type === 'setting/updateSocialLinks/fulfilled') {
                 dispatch(fetchSettings()).then(() => {
+                    toast.success('Social links updated successfully');
                     dispatch(clearSettingsState());
                 })
             }
@@ -249,6 +252,7 @@ const AllSetting = () => {
         await dispatch(updateDealModal(form)).then(async (data) => {
             if (data?.type === 'setting/updateDealModal/fulfilled') {
                 dispatch(fetchSettings()).then(() => {
+                    toast.success('Deal modal updated successfully');
                     dispatch(clearSettingsState());
                 })
             }
