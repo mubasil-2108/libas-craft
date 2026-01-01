@@ -8,14 +8,35 @@ import {
   Divider,
   Icon,
 } from "@mui/material";
-import React from "react";
-import { colors, socialMediaLinks } from "../../../services";
+import React, { useEffect, useMemo } from "react";
+import { clientBar, colors, legalSupport, selectSocialLinks } from "../../../services";
 import NewsLetter from "../news-letter";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../../../store/slices/productSlice";
 
-const Footer = () => {
+const Footer = ({ data }) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isLoading, products } = useSelector((state) => state.product);
+  const socialMediaLinks = useSelector(selectSocialLinks);
 
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, [dispatch]);
+
+  const categories = useMemo(() => {
+    if (!products?.length) return [];
+
+    return [
+      ...new Set(
+        products
+          .map(p => p.category?.trim())
+          .filter(Boolean)
+      ),
+    ];
+  }, [products]);
+  console.log(data, "data in footer");
   return (
     <Box
       component="footer"
@@ -41,7 +62,7 @@ const Footer = () => {
         }}
       >
         {/* Company Info */}
-        <Box sx={{ flex: 1, mr:{xs:0,sm:0,md:5} }}>
+        <Box sx={{ flex: 1, mr: { xs: 0, sm: 0, md: 5 } }}>
           <Box
             component="img"
             src="/logo-1.png"
@@ -69,38 +90,66 @@ const Footer = () => {
             every day.
           </Typography>
         </Box>
+        <Box sx={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 3, flexWrap: isMobile ? "wrap" : "nowrap", flexGrow: 1, }}>
+          {/* Footer Columns */}
 
-        {/* Footer Columns */}
-        {[
-          {
-            title: "Quick Links",
-            links: [
-              { text: "Home", href: "/" },
-              { text: "About Us", href: "/about" },
-              { text: "Services", href: "/services" },
-              { text: "Contact", href: "/contact" },
-            ],
-          },
-          {
-            title: "Catalog",
-            links: [
-              { text: "Hair Oils", href: "/catalog/hair-oils" },
-              { text: "Shampoos", href: "/catalog/shampoos" },
-              { text: "Hair Masks", href: "/catalog/masks" },
-              { text: "Conditioners", href: "/catalog/conditioners" },
-            ],
-          },
-          {
-            title: "Legal Stuff",
-            links: [
-              { text: "Privacy Policy", href: "/privacy" },
-              { text: "Terms of Service", href: "/terms" },
-              { text: "Refund Policy", href: "/refund" },
-              { text: "Shipping Info", href: "/shipping" },
-            ],
-          },
-        ].map((section, idx) => (
-          <Box key={idx} sx={{ flex: 1 }}>
+          {[
+            {
+              title: "Quick Links",
+              links: clientBar.map((link) => ({
+                text: link.name,
+                href: link.link,
+              })),
+            },
+            {
+              title: "Catalog",
+              links: categories.map((c) => ({ text: c, href: `/categories/${c.toLowerCase().replace(/\s+/g, "-")}` })),
+            },
+            {
+              title: "Legal Stuff",
+              links: legalSupport.map((link) => ({ text: link.name, href: link.href })),
+            },
+          ].map((section, idx) => (
+            <Box key={idx} sx={{ flex: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  mb: 1.5,
+                  alignSelf: "flex-start",
+                  fontFamily: "openSans-bold",
+                  fontSize: isMobile ? "16px" : "18px",
+                }}
+              >
+                {section.title}
+              </Typography>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 0.8 }}>
+                {section.links.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link.href}
+                    underline="none"
+                    color="#fff"
+                    sx={{
+                      fontFamily: "openSans-regular",
+                      fontSize: isMobile ? "13px" : "15px",
+                      opacity: 0.8,
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        color: colors.textColor_5,
+                        opacity: 1,
+                        pl: 1,
+                      },
+                    }}
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </Box>
+            </Box>
+          ))}
+
+          {/* Contact & Socials */}
+          <Box sx={{ flex: 1, maxWidth: 300 }}>
             <Typography
               variant="h6"
               sx={{
@@ -109,78 +158,41 @@ const Footer = () => {
                 fontSize: isMobile ? "16px" : "18px",
               }}
             >
-              {section.title}
+              Contact
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.8 }}>
-              {section.links.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.href}
-                  underline="none"
-                  color="#fff"
+            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              Email: <a href={`mailto:${data?.site?.email}`} style={{textDecoration: 'none', color: colors.textColor_5 }}>{data?.site?.email}</a>
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              Phone: <a href={`tel:${data?.site?.phone}`} style={{textDecoration: 'none', color: colors.textColor_5 }}>{data?.site?.phone}</a>
+            </Typography>
+
+            {/* Social Media */}
+            <Box sx={{ display: "flex", gap: 1.5, mt: 2 }}>
+              {socialMediaLinks.map((item) => (
+                <IconButton
+                  key={item.id}
+                  onClick={() => window.open(item.link, '_blank', 'noopener,noreferrer')}
+                  color="inherit"
+                  size="small"
                   sx={{
-                    fontFamily: "openSans-regular",
-                    fontSize: isMobile ? "13px" : "15px",
-                    opacity: 0.8,
+                    bgcolor: "rgba(255,255,255,0.08)",
                     transition: "all 0.3s ease",
                     "&:hover": {
-                      color: colors.textColor_5,
-                      opacity: 1,
-                      pl: 1,
+                      bgcolor: colors.greenDark_1,
+                      transform: "translateY(-3px)",
                     },
                   }}
                 >
-                  {link.text}
-                </Link>
+                  <Icon
+                    component={item.icon}
+                    sx={{
+                      fontSize: "20px",
+                    }}
+                  />
+                </IconButton>
               ))}
             </Box>
-          </Box>
-        ))}
-
-        {/* Contact & Socials */}
-        <Box sx={{ flex: 1 }}>
-          <Typography
-            variant="h6"
-            sx={{
-              mb: 1.5,
-              fontFamily: "openSans-bold",
-              fontSize: isMobile ? "16px" : "18px",
-            }}
-          >
-            Contact
-          </Typography>
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            Email: info@medicare.com
-          </Typography>
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
-            Phone: +92 300 1234567
-          </Typography>
-
-          {/* Social Media */}
-          <Box sx={{ display: "flex", gap: 1.5, mt: 2 }}>
-            {socialMediaLinks.map((item) => (
-              <IconButton
-                key={item.id}
-                href={item.link}
-                color="inherit"
-                size="small"
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.08)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    bgcolor: colors.greenDark_1,
-                    transform: "translateY(-3px)",
-                  },
-                }}
-              >
-                <Icon
-                  component={item.icon}
-                  sx={{
-                    fontSize: "20px",
-                  }}
-                />
-              </IconButton>
-            ))}
           </Box>
         </Box>
       </Box>
@@ -198,7 +210,7 @@ const Footer = () => {
           background: "rgba(0,0,0,0.15)",
         }}
       >
-        © {new Date().getFullYear()} <b>Bin Syed Organic</b>. All rights reserved.
+        © {new Date().getFullYear()} <b>{data?.site?.name}</b>. All rights reserved.
       </Box>
     </Box>
   );

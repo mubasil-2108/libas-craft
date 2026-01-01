@@ -18,14 +18,13 @@ import toast from 'react-hot-toast';
 import { Form } from 'react-router-dom';
 
 const settingsList_2 = [
-    { id: 1, title: 'Account' },
-    { id: 2, title: 'Terms and Conditions' },
-    { id: 3, title: 'Privacy Policy' },
-    { id: 4, title: 'Refund Policy' },
-    { id: 5, title: 'Cancellation Policy' },
-    { id: 6, title: 'Return Policy' },
-    { id: 7, title: 'FAQ' },
-    { id: 8, title: 'Contact Us' },
+    { id: 1, title: 'Terms and Conditions' },
+    { id: 2, title: 'Privacy Policy' },
+    { id: 3, title: 'Refund Policy' },
+    { id: 4, title: 'Cancellation Policy' },
+    { id: 5, title: 'Return Policy' },
+    { id: 6, title: 'FAQ' },
+    { id: 7, title: 'Contact Us' },
 ];
 
 const newDealInitialState = {
@@ -45,6 +44,7 @@ const soialLinkInitialState = {
 const siteDataInitialState = {
     images: [],
     name: '',
+    headline: '',
     description: '',
     keywords: [], // For SEO
     address: '',
@@ -89,6 +89,7 @@ const AllSetting = () => {
             setFormData({
                 siteSettings: {
                     name: settings?.site?.name || '',
+                    headline: settings?.site?.headline || '',
                     description: settings?.site?.description || '',
                     keywords: settings?.site?.keywords || [],
                     address: settings?.site?.address || '',
@@ -193,6 +194,7 @@ const AllSetting = () => {
         siteSettings.email = user?.email;
 
         form.append("name", siteSettings.name);
+        form.append("headline", siteSettings.headline);
         form.append("description", siteSettings.description);
         form.append("address", siteSettings.address);
         form.append("phone", siteSettings.phone);
@@ -408,6 +410,11 @@ const AllSetting = () => {
                                     })
                                 }
                             />
+                            <TextField variant='outlined' label='Headline'
+                                fullWidth
+                                value={formData.siteSettings.headline}
+                                onChange={(e) => setFormData({ ...formData, siteSettings: { ...formData.siteSettings, headline: e.target.value } })}
+                                size='small' />
                             <TextField variant='outlined' label='Site Description'
                                 multiline
                                 fullWidth

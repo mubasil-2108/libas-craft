@@ -229,14 +229,14 @@ export const dummyCart = [
     image: '/watch.jpg',
     quantity: 2,
   },
-   {
+  {
     id: 3,
     name: 'Smart Fitness Band',
     price: 200.0,
     image: '/watch.jpg',
     quantity: 2,
   },
-   {
+  {
     id: 4,
     name: 'Smart Fitness Band',
     price: 200.0,
@@ -367,36 +367,72 @@ export const clientBar = [
   },
 ];
 
-export const socialMediaLinks = [
+export const selectSocialLinks = (state) => {
+  const social = state.settings.data?.social || {}
+  return [
+    {
+      id: 1,
+      icon: FacebookIcon,
+      name: 'Facebook',
+      link: social?.facebook
+    },
+    {
+      id: 2,
+      icon: WhatsAppIcon,
+      name: 'WhatsApp',
+      link: social?.whatsapp
+    },
+    {
+      id: 3,
+      icon: FaSnapchatGhost,
+      name: 'Snapchat',
+      link: social?.snapchat
+    },
+    {
+      id: 4,
+      icon: FaTiktok,
+      name: 'TikTok',
+      link: social?.tiktok
+    },
+    {
+      id: 5,
+      icon: InstagramIcon,
+      name: 'Instagram',
+      link: social?.instagram
+    }
+  ].filter((item) => Boolean(item.link))
+};
+
+export const legalSupport = [
   {
     id: 1,
-    icon: FacebookIcon,
-    name: 'Facebook',
-    link: 'https://www.facebook.com/'
+    name: 'Privacy Policy',
+    href: '/privacy-policy'
   },
   {
     id: 2,
-    icon: WhatsAppIcon,
-    name: 'WhatsApp',
-    link: 'https://web.whatsapp.com/'
+    name: 'Terms & Conditions',
+    href: '/terms-&-conditions'
   },
   {
     id: 3,
-    icon: FaSnapchatGhost,
-    name: 'Snapchat',
-    link: 'https://www.snapchat.com/'
+    name: 'Refund Policy',
+    href: '/refund-policy'
   },
   {
     id: 4,
-    icon: FaTiktok,
-    name: 'TikTok',
-    link: 'https://www.tiktok.com/'
+    name: 'Cancellation Policy',
+    href: '/cancellation-policy'
   },
   {
     id: 5,
-    icon: InstagramIcon,
-    name: 'Instagram',
-    link: 'https://www.instagram.com/'
+    name: 'Return Policy',
+    href: '/return-policy'
+  },
+  {
+    id: 6,
+    name: 'About Us',
+    href: '/about-us'
   }
 ];
 

@@ -24,7 +24,10 @@ const SettingSchema = new mongoose.Schema(
                 trim: true,
                 required: [true, "Site name is required"],
             },
-
+            headline: {
+                type: String,
+                trim: true,
+            },
             description: {
                 type: String,
                 trim: true,

@@ -21,12 +21,14 @@ import { ShoppingFormDialog } from '../dialog';
 import { useDispatch, useSelector } from 'react-redux';
 import { ForgotPassword, SignIn, SignUp } from '../../common';
 import { getUser, loginStatus, logoutUser } from '../../../store/slices/authSlice';
+import { fetchSettings } from '../../../store/slices/settingSlice';
 
 const settings = ['Profile', 'Orders', 'Logout'];
 
 const Header = () => {
     const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.cartItems);
+    const social = useSelector(state => state.settings.data?.social);
     const location = useLocation();
     const navigate = useNavigate();
     const theme = useTheme();
@@ -42,6 +44,13 @@ const Header = () => {
     const [openForm, setOpenForm] = useState(false);
     // Cart Drawer
     const [openCart, setOpenCart] = useState(false);
+
+    useEffect(() => {
+        const fetchSettingsData = async () => {
+           await dispatch(fetchSettings());
+        }
+        fetchSettingsData();
+    }, [dispatch]);
 
     useEffect(() => {
         const loggedInUser = async () => {
@@ -145,7 +154,7 @@ const Header = () => {
                             >
                                 <MenuIcon sx={{ color: colors.iconColor_7 }} />
                             </IconButton>
-                            <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
+                            <DrawerComponent data={social} open={open} toggleDrawer={toggleDrawer} />
                         </Box>
                         <Box component='img' onClick={() => navigate('/')} src='/logo-1.png' sx={{
                             display: { xs: 'flex', md: 'none' },
@@ -216,7 +225,7 @@ const Header = () => {
                                                     ...stringAvatar(user?.name || "Unknown User").sx,
                                                     width: 30,
                                                     height: 30,
-                                                    p:0.2,
+                                                    p: 0.2,
                                                     fontSize: 14
                                                 }}
                                             />

@@ -12,7 +12,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import PersonIcon from '@mui/icons-material/Person';
 import { useDispatch, useSelector } from 'react-redux'
-import { clientBar, colors, dummyCart, socialMediaLinks } from '../../../services';
+import { clientBar, colors, dummyCart, selectSocialLinks, } from '../../../services';
 import { Icon, IconButton, MenuItem, Slider, TextField, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -28,6 +28,7 @@ import { clearCart, decrement, increment, removeFromCart, updateQuantity } from 
 export const DrawerComponent = ({ toggleDrawer, open }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const socialMediaLinks = useSelector(selectSocialLinks);
     return (
         <div>
             <Drawer open={open}
@@ -87,7 +88,7 @@ export const DrawerComponent = ({ toggleDrawer, open }) => {
                                         <Icon key={item.id}
                                             component={item.icon}
                                             sx={{ color: colors.iconColor_1, cursor: 'pointer' }}
-                                            onClick={() => window.open(item.link, '_blank')} />
+                                            onClick={() => window.open(item.link, '_blank', 'noopener,noreferrer')} />
                                     )
                                 })
                             }
@@ -101,7 +102,7 @@ export const DrawerComponent = ({ toggleDrawer, open }) => {
 
 export const CartDrawer = ({ openCart, handleCloseCart, handleOpenForm, cartItems, totalAmount }) => {
     const dispatch = useDispatch();
-    
+
     const theme = useTheme();
     const navigate = useNavigate();
 

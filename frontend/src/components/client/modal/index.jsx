@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Box, Typography, Button, Modal, useMediaQuery, useTheme } from "@mui/material";
 import { colors } from "../../../services";
 import { useNavigate } from "react-router-dom";
 
 const NewDealModal = ({
     open,
+    data,
     handleClose,
 }) => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const deal = data?.modal;
     // Responsive breakpoints
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-
+    const displayedDealModal = useMemo(() => {
+        return deal?.image?.id
+            ? `https://www.googleapis.com/drive/v3/files/${deal?.image?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`
+            : '/watch.jpg';
+    }, [deal?.image?.id]);
     return (
         <Modal
             open={open}
@@ -37,7 +43,7 @@ const NewDealModal = ({
                 {/* Image */}
                 <Box
                     component="img"
-                    src="/watch.jpg"
+                    src={displayedDealModal}
                     alt="New Deal"
                     sx={{
                         width: "100%",
@@ -51,20 +57,23 @@ const NewDealModal = ({
                     id="new-deal-title"
                     variant="h6"
                     component="h2"
-                    sx={{ mb: 1,
-                        fontFamily: "cinzel-bold", 
+                    sx={{
+                        mb: 1,
+                        fontFamily: "cinzel-bold",
                         fontSize: { xs: "20px", md: "24px" },
                     }}
                 >
-                    🎉 New Deal Alert!
+                    {deal?.headline}
                 </Typography>
                 <Typography
                     id="new-deal-description"
-                    sx={{ mb: 3,
+                    sx={{
+                        mb: 3,
                         fontFamily: "nunito-sans",
-                        fontSize: { xs: "14px", md: "16px" } }}
+                        fontSize: { xs: "14px", md: "16px" }
+                    }}
                 >
-                    Get 20% off on all electronics today! Limited time offer.
+                    {deal?.description}
                 </Typography>
 
                 <Button

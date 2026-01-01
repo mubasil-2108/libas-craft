@@ -4,7 +4,7 @@ import { AdminLayout } from './components/admin'
 import { AddPackage, AddProduct, AllPackages, AllProducts, AllSetting, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products, Settings } from './pages/admin'
 import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
-import { NotFound, UnAuth } from './pages/common'
+import { AboutUs, CancellationPolicy, NotFound, PrivacyPolicy, RefundPolicy, ReturnPolicy, TermsConditions, UnAuth } from './pages/common'
 import { ResetPassword } from './components/common'
 
 function App() {
@@ -71,6 +71,16 @@ function App() {
         </Route>
         {/* <Route index element={<Home/>}/> */}
         <Route path="/auth/reset-password/:resetToken" element={null} />
+
+        {/* Legal & Support */}
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+        <Route path='/terms-&-conditions' element={<TermsConditions />} />
+        <Route path='/refund-policy' element={<RefundPolicy />} />
+        <Route path='/return-policy' element={<ReturnPolicy />} />
+        <Route path='/cancellation-policy' element={<CancellationPolicy />} />
+        <Route path='/about-us' element={<AboutUs />} />
+
+        {/* Other's Pages */}
         <Route path='/401' element={<UnAuth />} />
         <Route path='*' element={<NotFound />} />
       </Routes>

@@ -88,7 +88,7 @@ const upsertSettings = asyncHandler(async (req, res) => {
  */
 
 const updateSiteSettings = asyncHandler(async (req, res) => {
-    const { name, description, keywords, address, phone, email } = req.body;
+    const { name, headline, description, keywords, address, phone, email } = req.body;
     let logoData = null;
 
     // if (!req.file) {
@@ -128,6 +128,7 @@ const updateSiteSettings = asyncHandler(async (req, res) => {
         {
             ...(logoData && { "site.logo": logoData }),
             ...(name && { "site.name": name }),
+            ...(headline && { "site.headline": headline }),
             ...(description && { "site.description": description }),
             ...(keywords && { "site.keywords": keywords }),
             ...(address && { "site.address": address }),
