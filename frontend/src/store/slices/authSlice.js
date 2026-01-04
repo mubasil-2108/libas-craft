@@ -8,7 +8,8 @@ const initialState = {
     isAuthLoading: false,
     isLoggedIn: false,
     isSuccess: false,
-    error: null
+    error: null,
+    initialized: false, // ✅ ADD THIS
 }
 
 export const registerUser = createAsyncThunk(
@@ -102,7 +103,7 @@ export const updateUser = createAsyncThunk(
     async (formData, thunkAPI) => {
         try {
             const result = await axios.patch(`${API_URL}/updateuser`, formData,
-                 { withCredentials: true }
+                { withCredentials: true }
             );
             if (result.status !== 200) {
                 throw new Error('Failed to update user');
@@ -189,10 +190,12 @@ const authSlice = createSlice({
                 state.isSuccess = true;
                 state.user = action.payload;
                 state.isLoggedIn = true;
+                state.initialized = true;
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.isAuthLoading = false;
                 state.error = action.payload;
+                state.initialized = true;
             })
 
             // ================= LOGIN =================
@@ -205,11 +208,13 @@ const authSlice = createSlice({
                 state.isSuccess = true;
                 state.user = action.payload;
                 state.isLoggedIn = true;
+                state.initialized = true;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.isAuthLoading = false;
                 state.error = action.payload;
                 state.isLoggedIn = false;
+                state.initialized = true;
             })
 
             // ================= LOGOUT =================
@@ -221,10 +226,12 @@ const authSlice = createSlice({
                 state.user = null;
                 state.isLoggedIn = false;
                 state.isSuccess = true;
+                state.initialized = true;
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.isAuthLoading = false;
                 state.error = action.payload;
+                state.initialized = true;
             })
 
             // ================= GET USER =================
@@ -235,17 +242,26 @@ const authSlice = createSlice({
                 state.isAuthLoading = false;
                 state.user = action.payload;
                 state.isLoggedIn = true;
+                state.initialized = true;
             })
             .addCase(getUser.rejected, (state, action) => {
                 state.isAuthLoading = false;
                 state.error = action.payload;
+                state.user = null;
                 state.isLoggedIn = false;
+                state.initialized = true;
             })
 
             // ================= LOGIN STATUS =================
             .addCase(loginStatus.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload;
+                state.initialized = true;
             })
+            .addCase(loginStatus.rejected, (state, action) => {
+                state.isLoggedIn = false;
+                state.initialized = true; // ✅ add this
+            })
+
 
             // ================= UPDATE USER =================
             .addCase(updateUser.pending, (state) => {

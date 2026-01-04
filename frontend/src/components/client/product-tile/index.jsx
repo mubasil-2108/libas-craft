@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Box, Button, Rating, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
 import { colors } from '../../../services';
@@ -85,7 +85,7 @@ const ProductTile = ({ item, categorySlug }) => {
             >
               <Box
                 component='img'
-                src={`https://www.googleapis.com/drive/v3/files/${item?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
+                src={`https://www.googleapis.com/drive/v3/files/${item?.productPhoto[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
                 alt='Product'
                 sx={{
                   width: "100%",

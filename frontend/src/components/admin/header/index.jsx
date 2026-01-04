@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { colors } from '../../../services';
 import { searchProduct } from '../../../store/slices/productSlice';
 import { useCallback } from 'react';
+import { logoutUser } from '../../../store/slices/authSlice';
 
 const AdminHeader = () => {
     const navigate = useNavigate();
@@ -51,6 +52,15 @@ const AdminHeader = () => {
         setShowAllResults(false);
         navigate(`/admin/products/${product?._id}`);
     }, [navigate]);
+
+    const handleLogOut = useCallback(async () => {
+        await dispatch(logoutUser()).then((data) => {
+            console.log(data);
+            if (data?.type === 'auth/logoutUser/fulfilled') {
+                navigate('/');
+            }
+        });
+    }, [dispatch, navigate]);
 
     return (
         <Box component='div' bgcolor={colors.grayLight_1} maxWidth={'100%'} minHeight={'70px'} sx={{
@@ -281,7 +291,7 @@ const AdminHeader = () => {
                     <Typography variant='h6' component='p' sx={{ color: colors.textColor_3, fontWeight: 'bold' }}>Admin</Typography>
                 </Box>
                 <MenuItem onClick={handleSortClose} sx={{ justifyContent: 'space-between', color: colors.textColor_3, fontSize: '14px', py: 1.5 }}>Change password <Icon fontSize='inherit' sx={{ fontSize: '14px' }} component={ArrowForwardIosOutlinedIcon} /></MenuItem>
-                <MenuItem onClick={handleSortClose} sx={{ justifyContent: 'space-between', color: colors.textColor_3, fontSize: '14px', py: 1.5 }}>LOG OUT <Icon fontSize='inherit' sx={{ fontSize: '14px' }} component={LogoutOutlinedIcon} /></MenuItem>
+                <MenuItem onClick={handleLogOut} sx={{ justifyContent: 'space-between', color: colors.textColor_3, fontSize: '14px', py: 1.5 }}>LOG OUT <Icon fontSize='inherit' sx={{ fontSize: '14px' }} component={LogoutOutlinedIcon} /></MenuItem>
             </Menu>
         </Box>
     )

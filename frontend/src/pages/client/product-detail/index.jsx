@@ -38,8 +38,6 @@ const ClientProductDetail = () => {
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     const [visibleReviews, setVisibleReviews] = useState(3);
 
-    console.log(id, "ID");
-
     useEffect(() => {
         const fetchProduct = async () => {
             await dispatch(getProductById(id)).then(async () => {
@@ -260,9 +258,7 @@ const ClientProductDetail = () => {
                                     alt: 'Smart Watch',
                                     width: 500, // fixed width
                                     height: 500, // fixed height
-                                    // src: images[currentImage],
                                     src: `https://www.googleapis.com/drive/v3/files/${allImages[currentImage]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`
-                                    // sizes: '100vw',
                                 },
                                 largeImage: {
                                     src: `https://www.googleapis.com/drive/v3/files/${allImages[currentImage]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`,

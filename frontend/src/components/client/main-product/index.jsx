@@ -45,7 +45,7 @@ const MainProduct = ({ product }) => {
     const imageURL = useMemo(
         () =>
             `https://www.googleapis.com/drive/v3/files/${product?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`,
-        [product?.productPhoto]
+        [product?.productPhoto, ]
     );
 
     const renderedSizeChips = useMemo(
@@ -123,7 +123,7 @@ const MainProduct = ({ product }) => {
         product?.productDescription,
         dispatch,
     ]);
-
+    
     return (
         <Box
             component="div"
@@ -186,41 +186,40 @@ const MainProduct = ({ product }) => {
                         justifyContent: 'center', // ✅ centers horizontally & vertically
                     }}
                 >
-                    <ReactImageMagnify
-                        {...{
-                            smallImage: {
-                                alt: product?.productName,
-                                width: 500, // fixed width
-                                height: 500, // fixed height
-                                src: imageURL,
-                                // sizes: '100vw',
-                            },
-                            largeImage: {
-                                src: `https://www.googleapis.com/drive/v3/files/${product?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`,
-                                width: 1200,
-                                height: 1200,
-                            },
-                            lensStyle: { backgroundColor: 'rgba(0,0,0,.2)' },
-                            enlargedImageContainerDimensions: {
-                                width: '200%', // how large the zoom view is
-                                height: '100%',
-                            },
-                            enlargedImagePosition: 'over', // or 'beside'
-                            imageStyle: {
-                                borderRadius: '20px',
-                                objectFit: 'cover',
-                                width: '100%',
-                                height: '100%',
-                            },
-                            style: {
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            },
-                        }}
-                    />
+                        <ReactImageMagnify
+                            {...{
+                                smallImage: {
+                                    alt: product?.productName,
+                                    width: 500, // fixed width
+                                    height: 500, // fixed height
+                                    src: imageURL,
+                                },
+                                largeImage: {
+                                    src: `https://www.googleapis.com/drive/v3/files/${product?.productPhoto?.[0]?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`,
+                                    width: 1200,
+                                    height: 1200,
+                                },
+                                lensStyle: { backgroundColor: 'rgba(0,0,0,.2)' },
+                                enlargedImageContainerDimensions: {
+                                    width: '200%', // how large the zoom view is
+                                    height: '100%',
+                                },
+                                enlargedImagePosition: 'over', // or 'beside'
+                                imageStyle: {
+                                    borderRadius: '20px',
+                                    objectFit: 'cover',
+                                    width: '100%',
+                                    height: '100%',
+                                },
+                                style: {
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                },
+                            }}
+                        />
                 </Box>
 
                 {/* Product Text Section */}

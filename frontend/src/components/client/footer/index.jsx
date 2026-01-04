@@ -36,7 +36,6 @@ const Footer = ({ data }) => {
       ),
     ];
   }, [products]);
-  console.log(data, "data in footer");
   return (
     <Box
       component="footer"

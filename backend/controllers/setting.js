@@ -128,7 +128,7 @@ const updateSiteSettings = asyncHandler(async (req, res) => {
         {
             ...(logoData && { "site.logo": logoData }),
             ...(name && { "site.name": name }),
-            ...(headline && { "site.headline": headline }),
+            ...(headline && { "": headline }),
             ...(description && { "site.description": description }),
             ...(keywords && { "site.keywords": keywords }),
             ...(address && { "site.address": address }),

@@ -21,7 +21,6 @@ const Banner = ({ data }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  console.log(site?.headline, "site.headline");
   return (
     <Box
       sx={{

@@ -5,7 +5,7 @@ import { AddPackage, AddProduct, AllPackages, AllProducts, AllSetting, Dashboard
 import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, ContactUs, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
 import { AboutUs, CancellationPolicy, NotFound, PrivacyPolicy, RefundPolicy, ReturnPolicy, TermsConditions, UnAuth } from './pages/common'
-import { ResetPassword } from './components/common'
+import { AdminRoute, CheckAuth, ClientRoute, ResetPassword } from './components/common'
 
 function App() {
   const location = useLocation();
@@ -30,12 +30,20 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<ClientLayout />}>
+        <Route path='/' element={
+          <ClientRoute>
+            <ClientLayout />
+          </ClientRoute>
+
+        }>
           <Route index element={<Home />} />
           <Route path='collections/all' element={<Catalog />} />
           <Route path='collections/:id' element={<ClientProductDetail />} />
           <Route path='account/orders' element={<Account />} />
-          <Route path='account/profile' element={<ClientProfile />} />
+          <Route path='account/profile' element={
+
+            <ClientProfile />
+          } />
           <Route path='categories' element={<Category />} />
           <Route path="categories/:categorySlug" element={<ProductsByCategory />} />
           <Route path='categories/:categorySlug/:id' element={<ClientProductDetail />} />
@@ -44,30 +52,34 @@ function App() {
           <Route path='package/product/:id' element={<ClientProductDetail />} />
           <Route path='contact' element={<ContactUs />} />
         </Route>
-        <Route path='/admin' element={<AdminLayout />} >
-          <Route index element={<Dashboard />} />
-          {/* Products */}
-          <Route path='products' element={<Products />}>
-            <Route index element={<AllProducts />} />
-            <Route path=':id' element={<ProductDetail />} />
-            <Route path='add-new-product' element={<AddProduct />} />
-          </Route>
 
-          {/* Orders */}
-          <Route path='orders' element={<Orders />}>
-            <Route index element={<OrderList />} />
-            <Route path=':id' element={<OrderDetail />} />
-            <Route path='product/:productId' element={<ProductDetail />} />
-          </Route>
 
-          {/* Packages */}
-          <Route path='packages' element={<Products />} >
-            <Route index element={<AllPackages />} />
-            <Route path=':id' element={<PackageDetail />} />
-            <Route path='add-new-package' element={<AddPackage />} />
-          </Route>
-          <Route path='settings' element={<Settings />}>
-            <Route index element={<AllSetting />} />
+        <Route path="/admin" element={<AdminRoute />}>
+          <Route element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            {/* Products */}
+            <Route path='products' element={<Products />}>
+              <Route index element={<AllProducts />} />
+              <Route path=':id' element={<ProductDetail />} />
+              <Route path='add-new-product' element={<AddProduct />} />
+            </Route>
+
+            {/* Orders */}
+            <Route path='orders' element={<Orders />}>
+              <Route index element={<OrderList />} />
+              <Route path=':id' element={<OrderDetail />} />
+              <Route path='product/:productId' element={<ProductDetail />} />
+            </Route>
+
+            {/* Packages */}
+            <Route path='packages' element={<Products />} >
+              <Route index element={<AllPackages />} />
+              <Route path=':id' element={<PackageDetail />} />
+              <Route path='add-new-package' element={<AddPackage />} />
+            </Route>
+            <Route path='settings' element={<Settings />}>
+              <Route index element={<AllSetting />} />
+            </Route>
           </Route>
         </Route>
         {/* <Route index element={<Home/>}/> */}
