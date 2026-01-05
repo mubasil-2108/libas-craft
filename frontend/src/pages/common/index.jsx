@@ -6,6 +6,7 @@ import RefundPolicy from "./refund-policy";
 import PrivacyPolicy from "./privacy-policy";
 import TermsConditions from "./terms-and-conditions";
 import AboutUs from "./about-us";
+import FAQs from "./faqs";
 
 export {
     NotFound,
@@ -15,5 +16,6 @@ export {
     RefundPolicy,
     PrivacyPolicy,
     TermsConditions,
-    AboutUs
+    AboutUs,
+    FAQs
 }

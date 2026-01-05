@@ -431,9 +431,14 @@ export const legalSupport = [
   },
   {
     id: 6,
+    name: 'FAQs',
+    href: '/faqs'
+  },
+  {
+    id: 7,
     name: 'About Us',
     href: '/about-us'
-  }
+  },
 ];
 
 export const dummyPackages = [

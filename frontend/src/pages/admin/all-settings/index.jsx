@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { colors } from '../../../services'
+import { colors, legalSupport } from '../../../services'
 import { Box, Button, Collapse, Icon, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
@@ -15,7 +15,7 @@ import { getUser } from '../../../store/slices/authSlice';
 import { clearSettingsState, fetchSettings, updateDealModal, updateNote, updateSiteSettings, updateSocialLinks, upsertSettings } from '../../../store/slices/settingSlice';
 import { useMemo } from 'react';
 import toast from 'react-hot-toast';
-import { Form } from 'react-router-dom';
+import { Form, useNavigate } from 'react-router-dom';
 
 const settingsList_2 = [
     { id: 1, title: 'Terms and Conditions' },
@@ -60,6 +60,7 @@ const initialState = {
 }
 
 const AllSetting = () => {
+    const navigate = useNavigate();
     const logoInputRef = useRef(null);
     const dealModalInputRef = useRef(null);
     const dispatch = useDispatch();
@@ -902,7 +903,7 @@ const AllSetting = () => {
             </Box>
 
             {/* Legal & Support */}
-            <Typography
+            {/* <Typography
                 sx={{
                     fontSize: '20px',
                     fontWeight: 700,
@@ -920,9 +921,10 @@ const AllSetting = () => {
                 flexDirection: 'column',
                 borderRadius: '20px'
             }}>
-                {settingsList_2.map((item) => (
+                {legalSupport.map((item) => (
                     <Box
                         key={item.id}
+                        onClick={() => navigate(item.href)}
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
@@ -943,13 +945,13 @@ const AllSetting = () => {
                                 color: colors.black,
                             }}
                         >
-                            {item.title}
+                            {item.name}
                         </Typography>
 
                         <ChevronRightIcon sx={{ color: colors.gray }} />
                     </Box>
                 ))}
-            </Box>
+            </Box> */}
         </Box>
     )
 }

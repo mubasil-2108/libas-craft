@@ -4,8 +4,8 @@ import { AdminLayout } from './components/admin'
 import { AddPackage, AddProduct, AllPackages, AllProducts, AllSetting, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products, Settings } from './pages/admin'
 import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, ContactUs, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
-import { AboutUs, CancellationPolicy, NotFound, PrivacyPolicy, RefundPolicy, ReturnPolicy, TermsConditions, UnAuth } from './pages/common'
-import { AdminRoute, CheckAuth, ClientRoute, ResetPassword } from './components/common'
+import { AboutUs, CancellationPolicy, FAQs, NotFound, PrivacyPolicy, RefundPolicy, ReturnPolicy, TermsConditions, UnAuth } from './pages/common'
+import { AdminRoute, ClientRoute, ResetPassword } from './components/common'
 
 function App() {
   const location = useLocation();
@@ -51,6 +51,14 @@ function App() {
           <Route path='package/:id' element={<ClientPackageDetail />} />
           <Route path='package/product/:id' element={<ClientProductDetail />} />
           <Route path='contact' element={<ContactUs />} />
+          {/* Legal & Support */}
+          <Route path='privacy-policy' element={<PrivacyPolicy />} />
+          <Route path='terms-&-conditions' element={<TermsConditions />} />
+          <Route path='refund-policy' element={<RefundPolicy />} />
+          <Route path='return-policy' element={<ReturnPolicy />} />
+          <Route path='cancellation-policy' element={<CancellationPolicy />} />
+          <Route path='about-us' element={<AboutUs />} />
+          <Route path='faqs' element={<FAQs />} />
         </Route>
 
 
@@ -84,14 +92,6 @@ function App() {
         </Route>
         {/* <Route index element={<Home/>}/> */}
         <Route path="/auth/reset-password/:resetToken" element={null} />
-
-        {/* Legal & Support */}
-        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-        <Route path='/terms-&-conditions' element={<TermsConditions />} />
-        <Route path='/refund-policy' element={<RefundPolicy />} />
-        <Route path='/return-policy' element={<ReturnPolicy />} />
-        <Route path='/cancellation-policy' element={<CancellationPolicy />} />
-        <Route path='/about-us' element={<AboutUs />} />
 
         {/* Other's Pages */}
         <Route path='/401' element={<UnAuth />} />
