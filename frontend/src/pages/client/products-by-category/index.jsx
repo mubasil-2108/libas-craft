@@ -14,12 +14,9 @@ import { getProductsByCategory } from '../../../store/slices/productSlice';
 const ProductsByCategory = () => {
     const { categorySlug } = useParams();
     const CategoryName = decodeURIComponent(categorySlug);
-    const theme = useTheme();
     const dispatch = useDispatch();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
-    const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
     console.log(categorySlug, "categorySlug");
+
     useEffect(() => {
         const fetchProducts = async () => {
             await dispatch(getProductsByCategory(CategoryName));

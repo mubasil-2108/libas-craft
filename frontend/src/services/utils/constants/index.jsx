@@ -47,6 +47,36 @@ export const adminBar = [
   }
 ];
 
+export const orderMenuItems = [
+  "All",
+  "Pending",
+  "Processing",
+  "Shipped",
+  "Completed",
+  "Cancelled",
+  "Returned"
+];
+
+export const revenueMenuItems = [
+  "All",
+  "Paid",
+  "Unpaid"
+];
+
+export const customerMenuItems = [
+  "All",
+  "New",
+  "Returning"
+];
+
+export const productMenuItems = [
+  "All",
+  "Low Stock",
+  "Out of Stock",
+  "Top Selling",
+  "Most Viewed",
+];
+
 export const ingredients = [
   {
     id: 1,

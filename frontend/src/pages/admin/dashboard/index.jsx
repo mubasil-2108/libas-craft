@@ -1,9 +1,9 @@
 import { Avatar, Box, Button, Checkbox, Divider, Grid, Icon, IconButton, Menu, MenuItem, Pagination, PaginationItem, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AdminFooter, DashboardOrderTile } from '../../../components/admin';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import { chartData, purchases } from '../../../services/utils/constants';
+import { chartData, customerMenuItems, orderMenuItems, productMenuItems, purchases, revenueMenuItems } from '../../../services/utils/constants';
 import { LineChart } from '@mui/x-charts/LineChart';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import SortByAlphaRoundedIcon from '@mui/icons-material/SortByAlphaRounded';
@@ -12,19 +12,151 @@ import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlin
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { colors } from '../../../services';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllOrders } from '../../../store/slices/orderSlice';
+import { getAllProducts } from '../../../store/slices/productSlice';
 
 const Dashboard = () => {
   const location = useLocation();
-      const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { orders } = useSelector((state) => state.order);
+  const { products } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
   const [activeRange, setActiveRange] = useState('monthly');
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setSelected] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [page, setPage] = useState(1);
-    const isSelected = (id) => selected.includes(id);
+  const isSelected = (id) => selected.includes(id);
   const rowsPerPage = 8;
 
+  useEffect(() => {
+    // Dispatch action to fetch orders
+    dispatch(getAllOrders());
+    dispatch(getAllProducts());
+  }, [dispatch]);
 
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [selectedRevenueFilter, setSelectedRevenueFilter] = useState("All");
+  const [selectedCustomerFilter, setSelectedCustomerFilter] = useState("All");
+  const [selectedProductFilter, setSelectedProductFilter] = useState("All");
+  const totalOrders = orders?.length;
+  const filteredOrders =
+    selectedStatus === "All"
+      ? orders
+      : orders?.filter(order => order?.status === selectedStatus);
+
+  const totalAmount = filteredOrders.reduce(
+    (acc, order) => acc + order?.totalAmount,
+    0
+  );
+
+  const selectedCount = filteredOrders.length;
+  let percentage = 0;
+
+  if (totalOrders > 0) {
+    percentage = ((selectedCount / totalOrders) * 100).toFixed(1);
+  }
+
+  console.log(orders, "orders in dashboard");
+
+  const revenueFilteredOrders = orders?.filter(order => {
+    if (selectedRevenueFilter === "All") return true;
+    if (selectedRevenueFilter === "Paid") return order?.isPaid === true;
+    if (selectedRevenueFilter === "Unpaid") return order?.isPaid === false;
+    return true;
+  });
+
+  // 🔹 Revenue Calculation
+  const totalRevenue = orders?.reduce(
+    (acc, order) => acc + (order?.totalAmount || 0),
+    0
+  );
+
+  const filteredRevenue = revenueFilteredOrders?.reduce(
+    (acc, order) => acc + (order?.totalAmount || 0),
+    0
+  );
+
+  // 🔹 Revenue Percentage
+  let revenuePercentage = 0;
+
+  if (totalRevenue > 0) {
+    revenuePercentage = ((filteredRevenue / totalRevenue) * 100).toFixed(1);
+  }
+
+
+  // 🔹 Get unique users from orders
+  const uniqueUsers = [...new Set(orders?.map(order => order?.user))];
+
+  const totalCustomers = uniqueUsers.length;
+
+  // Count orders per user
+  const userOrderCount = orders?.reduce((acc, order) => {
+    const userId = order?.user;
+    if (!acc[userId]) {
+      acc[userId] = 0;
+    }
+    acc[userId] += 1;
+    return acc;
+  }, {});
+
+  const newCustomers = Object.values(userOrderCount || {}).filter(
+    count => count === 1
+  ).length;
+
+  const returningCustomers = Object.values(userOrderCount || {}).filter(
+    count => count > 1
+  ).length;
+
+  let customerCount = totalCustomers;
+
+  if (selectedCustomerFilter === "New") {
+    customerCount = newCustomers;
+  }
+
+  if (selectedCustomerFilter === "Returning") {
+    customerCount = returningCustomers;
+  }
+
+  // 🔹 TOTAL PRODUCTS
+  const totalProducts = products?.length || 0;
+
+  // 🔹 LOW STOCK (example: stock <= 5 and > 0)
+  const lowStockProducts = products?.filter(
+    (product) => product?.stockQuantity > 0 && product?.stockQuantity <= 5
+  ) || [];
+
+  // 🔹 OUT OF STOCK
+  const outOfStockProducts = products?.filter(
+    (product) => product?.stockQuantity === 0
+  ) || [];
+
+  // 🔹 TOP SELLING (sorted by totalSold)
+  const topSellingProducts = [...(products || [])]
+    .sort((a, b) => (b.totalSold || 0) - (a.totalSold || 0))
+    .slice(0, 5);
+
+  // 🔹 MOST VIEWED
+  const mostViewedProducts = [...(products || [])]
+    .sort((a, b) => (b.views || 0) - (a.views || 0))
+    .slice(0, 5);
+
+
+  let productAmount = totalProducts;
+
+  if (selectedProductFilter === "Low Stock") {
+    productAmount = lowStockProducts.length;
+  }
+  if (selectedProductFilter === "Out of Stock") {
+    productAmount = outOfStockProducts.length;
+  }
+  if (selectedProductFilter === "Top Selling") {
+    productAmount = topSellingProducts.length;
+  }
+  if (selectedProductFilter === "Most Viewed") {
+    productAmount = mostViewedProducts.length;
+  }
   const path = location.pathname.trim();
 
   let breadcrumb = ["Home"];
@@ -104,21 +236,84 @@ const Dashboard = () => {
   const paginatedPurchases = sortedPurchases
 
   const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+    setPage(newPage);
+  };
 
-const handleClick = (id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
+  const handleClick = (id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
 
-        if (selectedIndex === -1) {
-            newSelected = [...selected, id];
-        } else {
-            newSelected = selected.filter((item) => item !== id);
-        }
+    if (selectedIndex === -1) {
+      newSelected = [...selected, id];
+    } else {
+      newSelected = selected.filter((item) => item !== id);
+    }
 
-        setSelected(newSelected);
-    };
+    setSelected(newSelected);
+  };
+
+  // 🔹 SALES GRAPH DATA GENERATION
+  const generateSalesData = () => {
+    if (!orders || orders.length === 0) {
+      return { xAxis: [], series: [] };
+    }
+
+    const grouped = {};
+
+    orders.forEach(order => {
+      if (!order?.createdAt) return;
+
+      const date = new Date(order.createdAt);
+
+      let key = "";
+
+      if (activeRange === "weekly") {
+        // Use full date for proper order
+        key = date.toISOString().split("T")[0];
+      }
+
+      if (activeRange === "monthly") {
+        // ✅ Include YEAR + MONTH
+        key = `${date.getFullYear()}-${date.getMonth()}`;
+      }
+
+      if (activeRange === "yearly") {
+        key = date.getFullYear().toString();
+      }
+
+      if (!grouped[key]) grouped[key] = 0;
+      grouped[key] += order.totalAmount || 0;
+    });
+
+    // ✅ Proper chronological sorting
+    const sortedKeys = Object.keys(grouped).sort((a, b) => {
+      return new Date(a) - new Date(b);
+    });
+
+    const xAxis = sortedKeys.map(key => {
+      const date = new Date(key);
+
+      if (activeRange === "weekly") {
+        return date.toLocaleDateString("default", { weekday: "short" });
+      }
+
+      if (activeRange === "monthly") {
+        return date.toLocaleDateString("default", { month: "short", year: "numeric" });
+      }
+
+      if (activeRange === "yearly") {
+        return key;
+      }
+
+      return key;
+    });
+
+    const series = sortedKeys.map(key => grouped[key]);
+
+    return { xAxis, series };
+  };
+
+  const salesData = generateSalesData();
 
   return (
     <Box
@@ -189,16 +384,58 @@ const handleClick = (id) => {
 
       {/* Dashboard Tiles */}
       <Grid container spacing={1} sx={{ mt: 2 }}>
-        {Array(4).fill(0).map((_, i) => (
-          <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
-            <DashboardOrderTile
-              title={'Total Orders'}
-              amount={'126.500'}
-              percentage={'34.7'}
-              lastMonth={'Compared to Oct 2023'}
-            />
-          </Grid>
-        ))}
+        {/* Orders */}
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <DashboardOrderTile
+            menuItems={orderMenuItems}
+            title={selectedStatus === "All" ? 'Total Orders' : `${selectedStatus} Orders`}
+            amount={totalAmount}
+            percentage={percentage}
+            lastMonth={`Total ${selectedCount} Orders`}
+            onStatusChange={setSelectedStatus}
+          />
+        </Grid>
+        {/* Revenue */}
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <DashboardOrderTile
+            menuItems={revenueMenuItems}
+            title={
+              selectedRevenueFilter === "All"
+                ? "Total Revenue"
+                : `${selectedRevenueFilter} Revenue`
+            }
+            amount={filteredRevenue}
+            percentage={revenuePercentage}
+            lastMonth={`Rs.${filteredRevenue} of Rs.${totalRevenue}`}
+            onStatusChange={setSelectedRevenueFilter}
+          />
+        </Grid>
+        {/* Customer */}
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <DashboardOrderTile
+            menuItems={customerMenuItems}
+            title={
+              selectedCustomerFilter === "All"
+                ? "Total Customers"
+                : `${selectedCustomerFilter} Customers`
+            }
+            amount={customerCount}
+            lastMonth={`${customerCount} of ${totalCustomers} Customers`}
+            onStatusChange={setSelectedCustomerFilter}
+            isCustomerTile={true}
+          />
+        </Grid>
+        {/* Product Insights */}
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <DashboardOrderTile
+            menuItems={productMenuItems}
+            title={`${selectedProductFilter} Products`}
+            amount={productAmount}
+            lastMonth={`${totalProducts} Total Products`}
+            onStatusChange={setSelectedProductFilter}
+            isProductTile={true}
+          />
+        </Grid>
       </Grid>
 
       {/* Sales Graph */}
@@ -256,7 +493,8 @@ const handleClick = (id) => {
             grid={{ horizontal: { stroke: colors.grayLight_2, strokeWidth: 1, opacity: 0.5 } }}
             xAxis={[
               {
-                data: chartData[activeRange].xAxis,
+                // data: chartData[activeRange].xAxis,
+                data: salesData.xAxis,
                 scaleType: 'band',
                 sx: {
                   '& .MuiChartsAxis-line': { stroke: colors.grayLight_2, strokeWidth: 3 },
@@ -266,17 +504,25 @@ const handleClick = (id) => {
             ]}
             yAxis={[
               {
+                width: 90,
                 min: 0,
-                max: activeRange === 'yearly' ? 5000 : activeRange === 'monthly' ? 1000 : 300,
-                tickMinStep: activeRange === 'yearly' ? 1000 : 100,
-                valueFormatter: (v) => `₹${v}`,
+                max: Math.max(...salesData.series, 0) * 1.2,
+                valueFormatter: (v) =>
+                  `Rs.${Intl.NumberFormat('en', {
+                    notation: 'compact'
+                  }).format(v)}`,
+                sx: {
+                  
+                  '& .MuiChartsAxis-tickLabel':{ fontSize: '16px !important', fontWeight: '600 !important', fill: colors.grayDark_3 },
+                }
               },
 
             ]}
             series={[
               {
                 id: 'sales',
-                data: chartData[activeRange].series,
+                // data: chartData[activeRange].series,
+                data: salesData.series,
                 curve: 'natural',
                 showMark: false,
                 color: 'url(#lineGradient)', // ⬅️ use the gradient
@@ -289,7 +535,6 @@ const handleClick = (id) => {
               // (optional) axis cosmetics you already wanted
               '& .MuiChartsAxis-line': { stroke: colors.grayLight_2, strokeWidth: 3 },
               '& .MuiChartsAxis-tick': { display: 'none' },
-              '& .MuiChartsAxis-tickLabel': { fontSize: '16px !important', fontWeight: '600 !important', fill: colors.gray },
 
               '& .MuiLineChart-legend': { display: 'none' },
             }}
@@ -298,8 +543,8 @@ const handleClick = (id) => {
             {/* ⬇️ Define the gradient INSIDE the chart */}
             <defs>
               <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor= {colors.grayLight_4} />
-                <stop offset="100%" stopColor= {colors.blue} />
+                <stop offset="0%" stopColor={colors.grayLight_4} />
+                <stop offset="100%" stopColor={colors.blue} />
               </linearGradient>
             </defs>
           </LineChart>

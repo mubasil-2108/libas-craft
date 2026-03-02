@@ -65,11 +65,13 @@ export const getProductById = createAsyncThunk(
 export const getProductsByCategory = createAsyncThunk(
     'product/get-products-by-category',
     async (category, thunkAPI) => {
+        console.log(category, 'category');
         try {
             const result = await axios.get(`http://localhost:5000/api/products/category/${category}`);
             if (result.status !== 200) {
                 throw new Error('Failed to get products by category');
             }
+            console.log(result.data, '<<<<<');
             return result.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);

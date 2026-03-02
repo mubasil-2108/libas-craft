@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Box, Button, Rating, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
 import { colors } from '../../../services';
@@ -9,6 +9,10 @@ import { fetchReviewsByProduct } from '../../../store/slices/reviewsSlice';
 
 const ProductTile = ({ item, categorySlug }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const cartItems = useSelector((state) => state.cart.cartItems);
   const productId = item?._id;
   const reviews = useSelector((state) => state.reviews.reviewsByProduct[productId] || []);
@@ -22,34 +26,57 @@ const ProductTile = ({ item, categorySlug }) => {
     }
   }, [dispatch, productId, reviews.length]);
 
-
-  const averageRating = reviews?.length
-    ? reviews?.reduce((sum, r) => sum + r.rating, 0) / reviews?.length
-    : 0;
-  const discountAmount = item?.regularPrice - item?.salePrice;
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
-
-  const isInCart = cartItems.some(i => i.id === item?._id);
+  // useEffect(() => {
+  //   if (productId && !reviews.length) {
+  //     dispatch(fetchReviewsByProduct(productId));
+  //   }
+  // }, [dispatch, productId, reviews.length]);
 
 
-  const handleCartAction = (e) => {
-    e.stopPropagation(); // prevent navigation
+  const averageRating = useMemo(() => {
+    if (!reviews.length) return 0;
+    return reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+  }, [reviews]);
+
+  const discountAmount = useMemo(() => {
+    return item?.regularPrice - item?.salePrice;
+  }, [item?.regularPrice, item?.salePrice]);
+
+  const isInCart = useMemo(() => {
+    return cartItems.some(i => i.id === item?._id);
+  }, [cartItems, item?._id]);
+
+
+  const handleCartAction = useCallback((e) => {
+    e.stopPropagation();
+
     if (isInCart) {
       dispatch(removeFromCart(item?._id));
     } else {
       dispatch(addToCart({
         id: item?._id,
         name: item?.productName,
-        price: item?.salePrice ? item?.salePrice : item?.regularPrice,
+        price: item?.salePrice ?? item?.regularPrice,
         image: item?.productPhoto[0]?.id,
         description: item?.productDescription,
         rating: averageRating,
-        quantity: 1, // initial quantity
+        quantity: 1,
       }));
     }
-  };
+  }, [
+    dispatch,
+    isInCart,
+    item,
+    averageRating
+  ]);
+
+const handleNavigate = useCallback(() => {
+    navigate(
+      categorySlug
+        ? `/categories/${categorySlug}/${item?._id}`
+        : `/collections/${item?._id}`
+    );
+  }, [navigate, categorySlug, item?._id]);
 
   return (
     <Box
@@ -62,7 +89,7 @@ const ProductTile = ({ item, categorySlug }) => {
       }}
     >
       <CardBox isMobile={isMobile}
-        onClick={() => navigate(categorySlug ? `/categories/${categorySlug}/${item?._id}` : `/collections/${item?._id}`)}
+        onClick={handleNavigate}
 
       >
         {
