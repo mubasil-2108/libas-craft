@@ -6,12 +6,14 @@ import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDown
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProducts, setCategory } from '../../../store/slices/productSlice';
 import { colors } from '../../../services';
+import { fetchSettings } from '../../../store/slices/settingSlice';
 
 const AdminSidebar = () => {
     const dispatch = useDispatch();
     const location = useLocation()
     const navigate = useNavigate();
     const { products } = useSelector((state) => state.product)
+    const { data } = useSelector(state => state.settings);
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [showCategories, setShowCategories] = useState(true)
 
@@ -21,7 +23,12 @@ const AdminSidebar = () => {
         };
         fetchProducts();
     }, [dispatch]);
-
+    useEffect(() => {
+        const fetchSettingsData = async () => {
+            await dispatch(fetchSettings());
+        }
+        fetchSettingsData();
+    }, [dispatch]);
     const categoriesWithCount = useMemo(() => {
         const counts = {}
         products.forEach((p) => {
@@ -53,13 +60,15 @@ const AdminSidebar = () => {
             backgroundColor: colors.grayLight_1,
             padding: '20px',
         }}>
-            <Box component='img' src='/logo.jpeg' onClick={() => navigate('/admin/')} sx={{
+            <Box component='img' 
+            src={`https://www.googleapis.com/drive/v3/files/${data?.site?.logo?.id}?alt=media&key=${import.meta.env.VITE_GOOGLE_API_KEY}`}
+             onClick={() => navigate('/admin/')} sx={{
                 objectFit: 'contain',
-                maxWidth: '230px',
+                maxWidth: '150px',
                 alignSelf: 'center',
                 cursor: 'pointer',
-                mb: '50px',
-                mt: '10px'
+                // mb: '50px',
+                mt: '-20px'
             }} />
             {
                 adminBar.map((item) => {

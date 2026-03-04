@@ -1,9 +1,19 @@
 import { Box, Divider, Icon, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import CopyrightIcon from '@mui/icons-material/Copyright';
 import { colors } from '../../../services';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSettings } from '../../../store/slices/settingSlice';
 
 const AdminFooter = () => {
+    const dispatch = useDispatch();
+    const { data } = useSelector(state => state.settings);
+    useEffect(() => {
+        const fetchSettingsData = async () => {
+            await dispatch(fetchSettings());
+        }
+        fetchSettingsData();
+    }, [dispatch]);
     return (
         <Box component='div' bgcolor={colors.grayLight_3}>
             <Divider variant='middle' />
@@ -14,12 +24,9 @@ const AdminFooter = () => {
                 flexDirection: 'row',
                 gap: 1
             }}>
-                <Icon component={CopyrightIcon}
-                    sx={{
-                        color: colors.iconColor_6,
-                        fontSize: '14px'
-                    }} />
-                <Typography component='span' variant='body2' fontSize={'14px'} sx={{ color: colors.textColor_3 }} >2023 All rights reserved</Typography>
+                <Typography component='span' variant='body2' fontSize={'14px'} sx={{ color: colors.textColor_3 }} >
+                    © {new Date().getFullYear()} <b>{data?.site?.name}</b>. All rights reserved.
+                </Typography>
             </Box>
         </Box>
     )

@@ -1,8 +1,11 @@
 import { Avatar, Box, Button, Checkbox, Divider, Grid, Icon, IconButton, Menu, MenuItem, Pagination, PaginationItem, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toPng, toJpeg } from "html-to-image";
 import { AdminFooter, DashboardOrderTile } from '../../../components/admin';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import CurrencyExchangeOutlinedIcon from '@mui/icons-material/CurrencyExchangeOutlined';
 import { chartData, customerMenuItems, orderMenuItems, productMenuItems, purchases, revenueMenuItems } from '../../../services/utils/constants';
 import { LineChart } from '@mui/x-charts/LineChart';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
@@ -11,16 +14,18 @@ import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import { colors } from '../../../services';
+import { colors, formatDate, stringAvatar } from '../../../services';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllOrders } from '../../../store/slices/orderSlice';
 import { getAllProducts } from '../../../store/slices/productSlice';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { orders } = useSelector((state) => state.order);
   const { products } = useSelector((state) => state.product);
+  const chartRef = useRef(null);
   const dispatch = useDispatch();
   const [activeRange, setActiveRange] = useState('monthly');
   const [anchorEl, setAnchorEl] = useState(null);
@@ -30,10 +35,24 @@ const Dashboard = () => {
   const isSelected = (id) => selected.includes(id);
   const rowsPerPage = 8;
 
+  const orderList = Array.isArray(orders) ? orders : [];
+
+  console.log(orderList, "orders in dashboard useSelector");
+
   useEffect(() => {
     // Dispatch action to fetch orders
     dispatch(getAllOrders());
     dispatch(getAllProducts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const fetchAllOrders = async () => {
+      await dispatch(getAllOrders())
+        .catch((error) => {
+          toast.error(error?.message || 'Failed to fetch orders');
+        });
+    }
+    fetchAllOrders();
   }, [dispatch]);
 
   const [selectedStatus, setSelectedStatus] = useState("All");
@@ -41,15 +60,20 @@ const Dashboard = () => {
   const [selectedCustomerFilter, setSelectedCustomerFilter] = useState("All");
   const [selectedProductFilter, setSelectedProductFilter] = useState("All");
   const totalOrders = orders?.length;
-  const filteredOrders =
-    selectedStatus === "All"
-      ? orders
-      : orders?.filter(order => order?.status === selectedStatus);
 
-  const totalAmount = filteredOrders.reduce(
-    (acc, order) => acc + order?.totalAmount,
-    0
-  );
+  const filteredOrders = useMemo(() => {
+    if (!orders) return [];
+    return selectedStatus === "All"
+      ? orders
+      : orders.filter(order => order?.status === selectedStatus);
+  }, [orders, selectedStatus]);
+
+  const totalAmount = useMemo(() => {
+    return filteredOrders.reduce(
+      (acc, order) => acc + (order?.totalAmount || 0),
+      0
+    );
+  }, [filteredOrders]);
 
   const selectedCount = filteredOrders.length;
   let percentage = 0;
@@ -58,25 +82,30 @@ const Dashboard = () => {
     percentage = ((selectedCount / totalOrders) * 100).toFixed(1);
   }
 
-  console.log(orders, "orders in dashboard");
-
-  const revenueFilteredOrders = orders?.filter(order => {
-    if (selectedRevenueFilter === "All") return true;
-    if (selectedRevenueFilter === "Paid") return order?.isPaid === true;
-    if (selectedRevenueFilter === "Unpaid") return order?.isPaid === false;
-    return true;
-  });
+  const revenueFilteredOrders = useMemo(() => {
+    if (!orders) return [];
+    if (selectedRevenueFilter === "All") return orders;
+    if (selectedRevenueFilter === "Paid")
+      return orders.filter(order => order?.isPaid === true);
+    if (selectedRevenueFilter === "Unpaid")
+      return orders.filter(order => order?.isPaid === false);
+    return orders;
+  }, [orders, selectedRevenueFilter]);
 
   // 🔹 Revenue Calculation
-  const totalRevenue = orders?.reduce(
-    (acc, order) => acc + (order?.totalAmount || 0),
-    0
-  );
+  const totalRevenue = useMemo(() => {
+    return orders?.reduce(
+      (acc, order) => acc + (order?.totalAmount || 0),
+      0
+    ) || 0;
+  }, [orders]);
 
-  const filteredRevenue = revenueFilteredOrders?.reduce(
-    (acc, order) => acc + (order?.totalAmount || 0),
-    0
-  );
+  const filteredRevenue = useMemo(() => {
+    return revenueFilteredOrders.reduce(
+      (acc, order) => acc + (order?.totalAmount || 0),
+      0
+    );
+  }, [revenueFilteredOrders]);
 
   // 🔹 Revenue Percentage
   let revenuePercentage = 0;
@@ -86,77 +115,88 @@ const Dashboard = () => {
   }
 
 
+  const customerStats = useMemo(() => {
+    if (!orders) return { total: 0, newC: 0, returning: 0 };
+
+    const userOrderCount = {};
+
+    orders.forEach(order => {
+      const userId = order?.user;
+      if (!userOrderCount[userId]) userOrderCount[userId] = 0;
+      userOrderCount[userId] += 1;
+    });
+
+    const totalCustomers = Object.keys(userOrderCount).length;
+    const newCustomers = Object.values(userOrderCount).filter(c => c === 1).length;
+    const returningCustomers = Object.values(userOrderCount).filter(c => c > 1).length;
+
+    return { total: totalCustomers, newC: newCustomers, returning: returningCustomers };
+  }, [orders]);
   // 🔹 Get unique users from orders
   const uniqueUsers = [...new Set(orders?.map(order => order?.user))];
 
   const totalCustomers = uniqueUsers.length;
 
-  // Count orders per user
-  const userOrderCount = orders?.reduce((acc, order) => {
-    const userId = order?.user;
-    if (!acc[userId]) {
-      acc[userId] = 0;
-    }
-    acc[userId] += 1;
-    return acc;
-  }, {});
-
-  const newCustomers = Object.values(userOrderCount || {}).filter(
-    count => count === 1
-  ).length;
-
-  const returningCustomers = Object.values(userOrderCount || {}).filter(
-    count => count > 1
-  ).length;
-
-  let customerCount = totalCustomers;
+  let customerCount = customerStats.total;
 
   if (selectedCustomerFilter === "New") {
-    customerCount = newCustomers;
+    customerCount = customerStats.newC;
   }
-
   if (selectedCustomerFilter === "Returning") {
-    customerCount = returningCustomers;
+    customerCount = customerStats.returning;
   }
 
   // 🔹 TOTAL PRODUCTS
   const totalProducts = products?.length || 0;
 
-  // 🔹 LOW STOCK (example: stock <= 5 and > 0)
-  const lowStockProducts = products?.filter(
-    (product) => product?.stockQuantity > 0 && product?.stockQuantity <= 5
-  ) || [];
+  const productStats = useMemo(() => {
+    if (!products) return {
+      total: 0,
+      lowStock: [],
+      outOfStock: [],
+      topSelling: [],
+      mostViewed: []
+    };
 
-  // 🔹 OUT OF STOCK
-  const outOfStockProducts = products?.filter(
-    (product) => product?.stockQuantity === 0
-  ) || [];
+    const lowStock = products.filter(
+      p => p?.stockQuantity > 0 && p?.stockQuantity <= 5
+    );
 
-  // 🔹 TOP SELLING (sorted by totalSold)
-  const topSellingProducts = [...(products || [])]
-    .sort((a, b) => (b.totalSold || 0) - (a.totalSold || 0))
-    .slice(0, 5);
+    const outOfStock = products.filter(
+      p => p?.stockQuantity === 0
+    );
 
-  // 🔹 MOST VIEWED
-  const mostViewedProducts = [...(products || [])]
-    .sort((a, b) => (b.views || 0) - (a.views || 0))
-    .slice(0, 5);
+    const topSelling = [...products]
+      .sort((a, b) => (b.totalSold || 0) - (a.totalSold || 0))
+      .slice(0, 5);
 
+    const mostViewed = [...products]
+      .sort((a, b) => (b.views || 0) - (a.views || 0))
+      .slice(0, 5);
 
-  let productAmount = totalProducts;
+    return {
+      total: products.length,
+      lowStock,
+      outOfStock,
+      topSelling,
+      mostViewed
+    };
+  }, [products]);
 
-  if (selectedProductFilter === "Low Stock") {
-    productAmount = lowStockProducts.length;
-  }
-  if (selectedProductFilter === "Out of Stock") {
-    productAmount = outOfStockProducts.length;
-  }
-  if (selectedProductFilter === "Top Selling") {
-    productAmount = topSellingProducts.length;
-  }
-  if (selectedProductFilter === "Most Viewed") {
-    productAmount = mostViewedProducts.length;
-  }
+  let productAmount = productStats.total;
+
+  if (selectedProductFilter === "Low Stock")
+    productAmount = productStats.lowStock.length;
+
+  if (selectedProductFilter === "Out of Stock")
+    productAmount = productStats.outOfStock.length;
+
+  if (selectedProductFilter === "Top Selling")
+    productAmount = productStats.topSelling.length;
+
+  if (selectedProductFilter === "Most Viewed")
+    productAmount = productStats.mostViewed.length;
+
   const path = location.pathname.trim();
 
   let breadcrumb = ["Home"];
@@ -202,58 +242,13 @@ const Dashboard = () => {
     handleSortClose();
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = purchases.map((n) => n.id);
-      setSelected(newSelected);
-    } else {
-      setSelected([]);
-    }
-  };
-
-  const sortedPurchases = [...purchases].sort((a, b) => {
-    if (!sortConfig.key) return 0;
-
-    let aValue = a[sortConfig.key];
-    let bValue = b[sortConfig.key];
-
-    // Convert amount and date for correct sorting
-    if (sortConfig.key === 'amount') {
-      aValue = parseFloat(aValue.replace(/[^\d.-]/g, ''));
-      bValue = parseFloat(bValue.replace(/[^\d.-]/g, ''));
-    }
-
-    if (sortConfig.key === 'date') {
-      aValue = new Date(aValue);
-      bValue = new Date(bValue);
-    }
-
-    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-    return 0;
-  });
-
-  const paginatedPurchases = sortedPurchases
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleClick = (id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = [...selected, id];
-    } else {
-      newSelected = selected.filter((item) => item !== id);
-    }
-
-    setSelected(newSelected);
-  };
-
   // 🔹 SALES GRAPH DATA GENERATION
-  const generateSalesData = () => {
+
+  const salesData = useMemo(() => {
     if (!orders || orders.length === 0) {
       return { xAxis: [], series: [] };
     }
@@ -264,16 +259,13 @@ const Dashboard = () => {
       if (!order?.createdAt) return;
 
       const date = new Date(order.createdAt);
-
       let key = "";
 
       if (activeRange === "weekly") {
-        // Use full date for proper order
         key = date.toISOString().split("T")[0];
       }
 
       if (activeRange === "monthly") {
-        // ✅ Include YEAR + MONTH
         key = `${date.getFullYear()}-${date.getMonth()}`;
       }
 
@@ -285,25 +277,21 @@ const Dashboard = () => {
       grouped[key] += order.totalAmount || 0;
     });
 
-    // ✅ Proper chronological sorting
-    const sortedKeys = Object.keys(grouped).sort((a, b) => {
-      return new Date(a) - new Date(b);
-    });
+    const sortedKeys = Object.keys(grouped).sort(
+      (a, b) => new Date(a) - new Date(b)
+    );
 
     const xAxis = sortedKeys.map(key => {
       const date = new Date(key);
 
-      if (activeRange === "weekly") {
+      if (activeRange === "weekly")
         return date.toLocaleDateString("default", { weekday: "short" });
-      }
 
-      if (activeRange === "monthly") {
+      if (activeRange === "monthly")
         return date.toLocaleDateString("default", { month: "short", year: "numeric" });
-      }
 
-      if (activeRange === "yearly") {
+      if (activeRange === "yearly")
         return key;
-      }
 
       return key;
     });
@@ -311,9 +299,86 @@ const Dashboard = () => {
     const series = sortedKeys.map(key => grouped[key]);
 
     return { xAxis, series };
-  };
+  }, [orders, activeRange]);
 
-  const salesData = generateSalesData();
+  const downloadChart = useCallback(async (type = "png") => {
+    if (!chartRef.current) return;
+
+    try {
+      const svgElement = chartRef.current.querySelector("svg");
+
+      const options = {
+        backgroundColor: "#ffffff",
+        cacheBust: true,
+        pixelRatio: 2,
+      };
+
+      const dataUrl =
+        type === "png"
+          ? await toPng(svgElement, options)
+          : await toJpeg(svgElement, { ...options, quality: 1 });
+
+      const link = document.createElement("a");
+      link.download = `sales-graph.${type}`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  }, []);
+
+  const filteredPurchases =
+    selectedStatus === "All"
+      ? orderList
+      : orderList.filter(p => p.status === selectedStatus);
+  const sortedPurchases = useMemo(() => {
+    const sorted = [...filteredPurchases];
+
+    if (!sortConfig.key) return sorted;
+
+    return sorted.sort((a, b) => {
+      let aValue = a[sortConfig.key];
+      let bValue = b[sortConfig.key];
+
+      if (sortConfig.key === 'amount') {
+        aValue = parseFloat(aValue);
+        bValue = parseFloat(bValue);
+      }
+
+      if (sortConfig.key === 'date') {
+        aValue = new Date(aValue);
+        bValue = new Date(bValue);
+      }
+
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [filteredPurchases, sortConfig]);
+
+  const paginatedPurchases = sortedPurchases
+
+
+  const handleSelectAllClick = useCallback((event) => {
+    if (event.target.checked) {
+      setSelected(orderList.map(n => n._id));
+    } else {
+      setSelected([]);
+    }
+  }, [orderList]);
+
+  const handleClick = useCallback((id) => {
+    setSelected(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(item => item !== id);
+      }
+      return [...prev, id];
+    });
+  }, []);
+
+  const totalPages = useMemo(() => {
+    return Math.ceil(filteredPurchases.length / rowsPerPage);
+  }, [filteredPurchases.length]);
 
   return (
     <Box
@@ -473,6 +538,9 @@ const Dashboard = () => {
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            <IconButton onClick={() => downloadChart("png")}>
+              <Icon component={FileDownloadOutlinedIcon} sx={{ color: colors.iconColor_6 }} />
+            </IconButton>
             <Button variant={activeRange === 'weekly' ? "contained" : "outlined"} onClick={() => setActiveRange('weekly')} sx={{ borderRadius: '8px', borderColor: activeRange === 'weekly' ? colors.borderColor_2 : colors.borderColor_4, color: activeRange === 'weekly' ? colors.white : colors.grayDark_1, fontSize: '12px', background: activeRange === 'weekly' ? colors.primary : colors.transparent }}>
               Weekly
             </Button>
@@ -488,9 +556,9 @@ const Dashboard = () => {
         <Divider sx={{ my: 2, background: colors.grayDark_1 }} />
 
         {/* Chart */}
-        <Box sx={{ width: '100%', height: { xs: 250, sm: 300, md: 350, lg: 400 } }}>
+        <Box ref={chartRef} component={'div'} sx={{ width: '100%', background: colors.grayLight_1, height: { xs: 250, sm: 300, md: 350, lg: 400 } }}>
           <LineChart
-            grid={{ horizontal: { stroke: colors.grayLight_2, strokeWidth: 1, opacity: 0.5 } }}
+            grid={{ horizontal: { stroke: colors.grayLight_2, strokeWidth: 1, opacity: 1 } }}
             xAxis={[
               {
                 // data: chartData[activeRange].xAxis,
@@ -512,8 +580,8 @@ const Dashboard = () => {
                     notation: 'compact'
                   }).format(v)}`,
                 sx: {
-                  
-                  '& .MuiChartsAxis-tickLabel':{ fontSize: '16px !important', fontWeight: '600 !important', fill: colors.grayDark_3 },
+                  '& .MuiChartsAxis-line': { stroke: colors.grayLight_2, strokeWidth: 3 },
+                  '& .MuiChartsAxis-tickLabel': { fontSize: '14px !important', fontWeight: '600 !important', fill: colors.grayDark_3 },
                 }
               },
 
@@ -571,36 +639,16 @@ const Dashboard = () => {
               fontSize: '20px',
               fontWeight: 600
             }}>Recent Orders</Typography>
-            <Box component='div'>
-              <IconButton onClick={handleSortClick} sx={{ color: colors.iconColor_7 }}><Icon fontSize='small' component={MoreVertRoundedIcon} /></IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleSortClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right', // menu opens to the left
-                }}
-                disableScrollLock
-                sx={{ position: 'fixed' }}
-              >
-                <MenuItem onClick={() => handleSort('product')} sx={{ gap: 1.5 }}><Icon fontSize='small' component={SortByAlphaRoundedIcon} /> Sort by Product</MenuItem>
-                <MenuItem onClick={() => handleSort('date')} sx={{ gap: 1.5 }}><Icon fontSize='small' component={DateRangeOutlinedIcon} /> Sort by Date</MenuItem>
-                <MenuItem onClick={() => handleSort('amount')} sx={{ gap: 1.5 }}><Icon fontSize='small' component={MonetizationOnOutlinedIcon} /> Sort by Amount</MenuItem>
-              </Menu>
-            </Box>
           </Box>
           <Divider />
-
           <TableContainer  >
-            <Table sx={{ minWidth: 650 }} aria-label="recent purchases table">
+            <Table sx={{ minWidth: 650 }} aria-label="recent orders table">
               <TableHead>
                 <TableRow >
                   <TableCell padding='checkbox'>
                     <Checkbox
-                      indeterminate={selected.length > 0 && selected.length < purchases.length}
-                      checked={purchases.length > 0 && selected.length === purchases.length}
+                      indeterminate={selected.length > 0 && selected.length < orderList.length}
+                      checked={orderList.length > 0 && selected.length === orderList.length}
                       onChange={handleSelectAllClick}
                       sx={{
                         color: colors.black,
@@ -609,7 +657,7 @@ const Dashboard = () => {
                         },
                       }} />
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Product</TableCell>
+                  {/* <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Product</TableCell> */}
                   <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Order ID</TableCell>
                   <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Date</TableCell>
                   <TableCell sx={{ fontWeight: 'bold', color: colors.grayDark_1, opacity: 0.8 }}>Customer Name</TableCell>
@@ -628,10 +676,14 @@ const Dashboard = () => {
                           width: 8,
                           backgroundColor:
                             status === 'Delivered'
-                              ? colors.primary // Green for Delivered
+                              ? colors.green // Green for Delivered
                               : status === 'Canceled'
-                                ? colors.yellow // Orange for Canceled
-                                : colors.grayLight_5, // Default grey
+                                ? colors.iconColor_2 // Orange for Canceled
+                                : status === 'Processing'
+                                  ? colors.grayLight_5
+                                  : status === 'Shipped'
+                                    ? colors.iconColor_8
+                                    : colors.iconColor_10, // Default grey
                           borderRadius: '50%',
                           display: 'inline-block',
                           marginRight: 8,
@@ -647,16 +699,27 @@ const Dashboard = () => {
                           fontWeight: 500,
                         }));
                         return (
-                          <TableRow key={purchase.id} sx={{
+                          <TableRow key={purchase?._id} sx={{
                             '&:last-child td, &:last-child th': { border: 0 },
                             cursor: 'pointer'
                           }}
-                            onClick={() => navigate(`/admin/orders/${purchase.id}`)}
+                            onClick={(e) => {
+                              // Prevent navigation if the click is on a checkbox or button inside the row
+                              if (
+                                e.target.closest('input[type="checkbox"]') ||
+                                e.target.closest('button')
+                              ) return;
+
+                              navigate(`/admin/orders/${purchase?._id}`);
+                            }}
                           >
                             <TableCell padding='checkbox'>
                               <Checkbox
-                                checked={isSelected(purchase.id)}
-                                onChange={() => handleClick(purchase.id)}
+                                checked={isSelected(purchase?._id)}
+                                onChange={(e) => {
+                                  e.stopPropagation(); // Prevent row click
+                                  handleClick(purchase?._id);
+                                }}
                                 sx={{
                                   color: colors.black,
                                   '&.Mui-checked': {
@@ -664,155 +727,122 @@ const Dashboard = () => {
                                   },
                                 }} />
                             </TableCell>
-                            <TableCell component='th' scope='row' sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>
-                              {purchase.product}
-                            </TableCell>
-                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black, }}>{purchase.orderId}</TableCell>
-                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>{purchase.date}</TableCell>
+                            {/* <TableCell component='th' scope='row' sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>
+                                                                  {purchase.product}
+                                                              </TableCell> */}
+                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black, }}>#{purchase?.orderId}</TableCell>
+                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }}>{formatDate(purchase?.createdAt)}</TableCell>
                             <TableCell>
-                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Avatar alt={purchase.customerName}
-                                  src={purchase.customerAvatar}
-                                  sx={{ width: 24, height: 24, mr: 1 }} />
-                                {purchase.customerName}
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                {/* <Avatar alt={purchase?.customerName}
+                                                                          src={purchase?.customerAvatar}
+                                                                          sx={{ width: 24, height: 24, mr: 1 }} /> */}
+                                <Avatar
+                                  {...stringAvatar(purchase?.shippingAddress?.firstName + " " + purchase?.shippingAddress?.lastName || "Unknown User")}
+                                  sx={{
+                                    ...stringAvatar(purchase?.shippingAddress?.firstName + " " + purchase?.shippingAddress?.lastName || "Unknown User").sx,
+                                    width: 30,
+                                    height: 30,
+                                    fontSize: '14px',
+                                  }}
+                                />
+                                {purchase?.shippingAddress?.firstName} {purchase?.shippingAddress?.lastName}
                               </Box>
                             </TableCell>
                             <TableCell>
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <StatusDot status={purchase.status} />
-                                <StatusText sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} status={purchase.status}>{purchase.status}</StatusText>
+                                <StatusDot status={purchase?.status} />
+                                <StatusText sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} status={purchase.status}>{purchase?.status}</StatusText>
                               </Box>
                             </TableCell>
-                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} align="right">{purchase.amount}</TableCell>
+                            <TableCell sx={{ fontSize: '14px', fontWeight: 600, color: colors.black }} align="right">Rs. {purchase?.totalAmount}/-</TableCell>
                           </TableRow>
                         )
                       })
                     :
-                    <Typography variant='body1' component='p' sx={{
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      color: colors.textColor_3,
-                    }}>No Purchases Found</Typography>
+                    <TableRow>
+                      <TableCell
+                        colSpan={6}
+                        align="center"
+                        sx={{
+                          fontSize: '16px',
+                          fontWeight: 600,
+                          color: colors.textColor_3,
+                          py: 3,
+                        }}
+                      >
+                        No Purchases Found
+                      </TableCell>
+                    </TableRow>
                 }
               </TableBody>
             </Table>
           </TableContainer>
         </Box>
 
-        <Box component='div' sx={{
-          display: 'flex',
-          mt: 2,
-        }}>
-          <Pagination
-            count={Math.ceil(sortedPurchases.length / rowsPerPage)}
-            page={page}
-            onChange={handleChangePage}
-            shape='rounded'
-            boundaryCount={1}
-            siblingCount={1}
-            variant='outlined'
-            renderItem={(item) => {
+        {totalPages > 1 && (
+          <Box component="div" sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handleChangePage}
+              shape="rounded"
+              boundaryCount={1}
+              siblingCount={1}
+              variant="outlined"
+              renderItem={(item) => {
+                if (item.type === "next" && page >= totalPages) return null;
+                if (item.type === "previous" && page === 1) return null;
 
-              if (item.type === 'next') {
-                if (page >= Math.ceil(sortedPurchases.length / rowsPerPage)) return null;
                 return (
                   <PaginationItem
                     {...item}
-                    sx={{
-                      minWidth: 70,
-                      height: 32,
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      border: `1px solid ${colors.borderColor_4}`,
-                      color: colors.grayDark_1,
-                      backgroundColor: colors.transparent,
-                      '&:hover': {
-                        backgroundColor: colors.transparent,
-                        color: colors.grayDark_1,
-                      },
-                    }}
-                    slots={{
-                      next: () => (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, pr: 1 }}>
-                          <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Next</Typography>
-                          <Icon component={ArrowForwardIosRoundedIcon}
-                            sx={{
-                              fontSize: '14px'
-                            }}
-                          />
-                        </Box>
-                      ),
-                    }}
-                  />
-                );
-              }
-              if (item.type === 'previous') {
-                if (page === 1) return null;
-                return (
-                  <PaginationItem
-                    {...item}
-                    sx={{
-                      minWidth: 70,
-                      height: 32,
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      border: `1px solid ${colors.borderColor_4}`,
-                      color: colors.grayDark_1,
-                      backgroundColor: colors.transparent,
-                      '&:hover': {
-                        backgroundColor: colors.transparent,
-                        color: colors.grayDark_1,
-                      },
-                    }}
                     slots={{
                       previous: () => (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1, pr: 1 }}>
-                          <Icon component={ArrowBackIosNewRoundedIcon}
-                            sx={{
-                              fontSize: '14px'
-                            }}
-                          />
-                          <Typography variant='button' component='p' sx={{ color: colors.textColor_3 }} >Prev</Typography>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, pl: 1, pr: 1 }}>
+                          <Icon component={ArrowBackIosNewRoundedIcon} sx={{ fontSize: "14px" }} />
+                          <Typography variant="button" component="p" >
+                            Prev
+                          </Typography>
+                        </Box>
+                      ),
+                      next: () => (
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, pl: 1, pr: 1 }}>
+                          <Typography variant="button" component="p">
+                            Next
+                          </Typography>
+                          <Icon component={ArrowForwardIosRoundedIcon} sx={{ fontSize: "14px" }} />
                         </Box>
                       ),
                     }}
-                  />
-                );
-              }
-
-              return (
-                <PaginationItem
-                  {...item}
-                  sx={{
-                    minWidth: 45,
-                    mr: 1,
-                    height: 32,
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: item.selected ? colors.white : colors.grayDark_1,
-                    '&.Mui-selected': {
-                      backgroundColor: colors.grayDark_1,
-                      color: colors.white,
-                      '&:hover': {
-                        backgroundColor: colors.grayDark_1,
+                    sx={{
+                      minWidth: item.type === "page" ? 45 : 70,
+                      mr: 1,
+                      height: 32,
+                      borderRadius: "8px",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: item.selected ? colors.white : colors.grayDark_1,
+                      border: `1px solid ${colors.borderColor_7}`,
+                      "&.Mui-selected": {
+                        backgroundColor: colors.greenDark_3,
+                        color: colors.white,
+                        "&:hover": {
+                          backgroundColor: colors.greenDark_1,
+                          color: colors.white,
+                        },
+                      },
+                      "&:hover": {
+                        backgroundColor: colors.greenDark_1,
                         color: colors.white,
                       },
-                    },
-                    border: `1px solid ${colors.borderColor_4}`,
-                    '&:hover': {
-                      backgroundColor: colors.grayDark_1,
-                      color: colors.white
-                    }
-                  }}
-
-                />
-              )
-            }}
-          />
-        </Box>
+                    }}
+                  />
+                );
+              }}
+            />
+          </Box>
+        )}
       </Box>
 
       <AdminFooter />
