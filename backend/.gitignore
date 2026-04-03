@@ -4,4 +4,5 @@
 /config/credentials.json
 /config/oauth2.keys.json
 /utils/token.json
+/token.json
 .DS_Store
