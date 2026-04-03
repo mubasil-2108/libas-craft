@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 // ─── Single Card ─────────────────────────────────────────────────────────────
 const BlogCard = ({
     title = 'Material UI Card',
-    description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc felis ligula.',
     buttonText,
     blog
 }) => {
