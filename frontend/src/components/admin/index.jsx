@@ -6,6 +6,7 @@ import * as Admin from "./inputs";
 import DashboardOrderTile from "./dashboard-order-tile";
 import PackageTile from "./package-tile";
 import * as Dialog from "./dialog";
+import TiptapEditor from "./tip-tap-editor";
 
 export {
     AdminLayout,
@@ -16,4 +17,5 @@ export {
     PackageTile,
     DashboardOrderTile,
     Dialog,
+    TiptapEditor
 }

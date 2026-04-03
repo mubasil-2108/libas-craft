@@ -117,7 +117,7 @@ const loginUser = asyncHandler(async (req, res) => {
         httpOnly: true,
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         sameSite: 'none',
-        secure: true, // Set to true if using HTTPS
+        secure: false, // Set to true if using HTTPS
     })
 
     if (checkUser && isPasswordMatched) {

@@ -6,53 +6,42 @@ const open = (...args) =>
   import("open").then(({ default: open }) => open(...args));
 
 
-const TOKEN_PATH = path.join(__dirname, "token.json");
-// const CREDENTIALS_PATH = path.join(__dirname, "../config/oauth2.keys.json");
-
-// Load client secrets
-// function loadCredentials() {
-//   return JSON.parse(fs.readFileSync(CREDENTIALS_PATH, "utf8"));
-// }
+const TOKEN_PATH = path.join(__dirname, "../token.json");
 
 async function authorize() {
-  // const credentials = loadCredentials();
-  // const { client_secret, client_id, redirect_uris } = credentials.installed || credentials.web;
-
   const oAuth2Client = new google.auth.OAuth2(
     googleConfig.web.client_id,
     googleConfig.web.client_secret,
     googleConfig.web.redirect_uris[0]
   );
 
-  // Check if token already exists
-  if (fs.existsSync(TOKEN_PATH)) {
-    oAuth2Client.setCredentials(JSON.parse(fs.readFileSync(TOKEN_PATH)));
-    return oAuth2Client;
+  if (!fs.existsSync(TOKEN_PATH)) {
+    throw new Error("❌ No token found. Please authenticate via /auth/google");
   }
 
-  // Get new token
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: "offline",
-    scope: ["https://www.googleapis.com/auth/drive.file"],
+  const tokens = JSON.parse(fs.readFileSync(TOKEN_PATH));
+  // oAuth2Client.setCredentials(tokens);
+
+  // return oAuth2Client;
+  // ✅ Guard: catch missing refresh_token early
+  if (!tokens.refresh_token) {
+    throw new Error(
+      "❌ No refresh_token in token.json. Delete token.json and re-authenticate via /auth/google"
+    );
+  }
+
+  oAuth2Client.setCredentials(tokens);
+
+  // ✅ Auto-save updated tokens whenever they get refreshed
+  oAuth2Client.on("tokens", (newTokens) => {
+    const updated = { ...tokens, ...newTokens };
+    fs.writeFileSync(TOKEN_PATH, JSON.stringify(updated, null, 2));
+    console.log("🔄 Tokens refreshed and saved.");
   });
 
-  console.log("Authorize this app by visiting this url:", authUrl);
-  await open(authUrl);
-
-  return new Promise((resolve) => {
-    console.log("Paste the code from that page here:");
-    process.stdin.resume();
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("data", async (code) => {
-      const { tokens } = await oAuth2Client.getToken(code.trim());
-      oAuth2Client.setCredentials(tokens);
-      fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
-      console.log("Token stored to", TOKEN_PATH);
-      resolve(oAuth2Client);
-      process.stdin.pause();
-    });
-  });
+  return oAuth2Client;
 }
+
 
 async function uploadFile(filePath, folderName) {
   const auth = await authorize();
@@ -68,7 +57,9 @@ async function uploadFile(filePath, folderName) {
           [process.env.GOOGLE_DRIVE_SITELOGO_FOLDER_ID] :
           folderName === 'newDealImage' ?
             [process.env.GOOGLE_DRIVE_DEALIMAGE_FOLDER_ID] :
-            [process.env.GOOGLE_DRIVE_FOLDER_ID],
+            folderName === 'blogImages' ?
+              [process.env.GOOGLE_DRIVE_BLOGIMAGE_FOLDER_ID] :
+              [process.env.GOOGLE_DRIVE_FOLDER_ID],
   };
   const media = {
     body: fs.createReadStream(filePath),

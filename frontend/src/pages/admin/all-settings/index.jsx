@@ -60,7 +60,6 @@ const initialState = {
 }
 
 const AllSetting = () => {
-    const navigate = useNavigate();
     const logoInputRef = useRef(null);
     const dealModalInputRef = useRef(null);
     const dispatch = useDispatch();

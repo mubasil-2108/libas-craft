@@ -156,7 +156,7 @@ const Footer = ({ data }) => {
             >
               Contact
             </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+            <Typography variant="body2" sx={{width: '250px', opacity: 0.8 }}>
               Email: <a href={`mailto:${data?.site?.email}`} style={{textDecoration: 'none', color: colors.textColor_5 }}>{data?.site?.email}</a>
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.8 }}>

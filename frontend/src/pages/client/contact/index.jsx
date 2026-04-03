@@ -51,11 +51,13 @@ const ContactUs = () => {
 
   return (
     <Box
-      component="div"
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: colors.grayLight_3,
+        backgroundImage: 'url(/background-1.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         px: { xs: 2, sm: 4, md: 10 },
         py: { xs: 4, sm: 6, md: 10 },
       }}
@@ -78,7 +80,7 @@ const ContactUs = () => {
         <Typography
           variant="body2"
           align="center"
-          sx={{ mb: 4, opacity: 0.7 }}
+          sx={{ mb: 4, fontFamily: 'roboto-bold', }}
         >
           Have a question or need assistance? Fill out the form and your message
           will be sent directly to our WhatsApp for a quick response.

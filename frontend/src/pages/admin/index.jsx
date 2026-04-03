@@ -12,6 +12,10 @@ import AllPackages from "./all-packages";
 import PackageDetail from "./package-detail";
 import Settings from "./settings";
 import AllSetting from "./all-settings";
+import Blogs from "./blogs";
+import AdminBlog from "./add-new-blog";
+import AllBlogs from "./all-blogs";
+import BlogDetail from "./blog-detail";
 
 export {
     Dashboard,
@@ -27,5 +31,9 @@ export {
     AllPackages,
     PackageDetail,
     Settings,
-    AllSetting
+    AllSetting,
+    Blogs,
+    AdminBlog,
+    AllBlogs,
+    BlogDetail,
 }

@@ -51,7 +51,6 @@ export const upsertSettings = createAsyncThunk(
 export const updateSiteSettings = createAsyncThunk(
     "setting/updateSiteSettings",
     async (formData, thunkAPI) => {
-        console.log(formData, "formData in updateSiteSettings");
         try {
             const result = await axios.patch(
                 `${API_URL}/site-settings`,

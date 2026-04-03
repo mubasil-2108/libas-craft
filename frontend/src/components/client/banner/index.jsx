@@ -147,12 +147,14 @@ const Banner = ({ data }) => {
               fontWeight: isMobile ? 700 : 100,
             }}
           >
-            {site?.headline.split(",").map((line, index) => (
-              <span key={index}>
-                {line}
-                <br />
-              </span>
-            ))}
+            {site?.headline
+              ? site.headline.split(",").map((line, index) => (
+                <span key={index}>
+                  {line}
+                  <br />
+                </span>
+              ))
+              : null}
             {/* Nourish Your Hair,
             <br /> Radiate Beauty */}
           </Typography>
@@ -165,7 +167,7 @@ const Banner = ({ data }) => {
               maxWidth: isMobile ? "100%" : "500px",
             }}
           >
-           {site?.description}
+            {site?.description}
           </Typography>
 
           <Button

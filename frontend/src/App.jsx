@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useParams } from 'react-router-dom'
 import { AdminLayout } from './components/admin'
-import { AddPackage, AddProduct, AllPackages, AllProducts, AllSetting, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products, Settings } from './pages/admin'
+import { AddPackage, AddProduct, AdminBlog, AllBlogs, AllPackages, AllProducts, AllSetting, BlogDetail, Blogs, Dashboard, OrderDetail, OrderList, Orders, PackageDetail, Packages, ProductDetail, Products, Settings } from './pages/admin'
 import { Account, Catalog, Category, ClientPackageDetail, ClientProductDetail, ClientProfile, ContactUs, Home, ProductsByCategory } from './pages/client'
 import { ClientLayout } from './components/client'
 import { AboutUs, CancellationPolicy, FAQs, NotFound, PrivacyPolicy, RefundPolicy, ReturnPolicy, TermsConditions, UnAuth } from './pages/common'
@@ -87,6 +87,13 @@ function App() {
             </Route>
             <Route path='settings' element={<Settings />}>
               <Route index element={<AllSetting />} />
+            </Route>
+
+            {/* Blogs */}
+            <Route path='blogs' element={<Blogs />} >
+              <Route index element={<AllBlogs />} />
+              <Route path=':id' element={<AdminBlog />} />
+              <Route path='add-new-blog' element={<AdminBlog />} />
             </Route>
           </Route>
         </Route>

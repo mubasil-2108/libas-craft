@@ -7,6 +7,7 @@ import likesReducer from './slices/likesSlice';
 import packageReducer from './slices/packageSlice';
 import authReducer from './slices/authSlice';
 import settingReducer from './slices/settingSlice';
+import blogReducer from './slices/blogSlice';
 
 const store = configureStore({
     reducer: {
@@ -17,7 +18,8 @@ const store = configureStore({
         reviews: reviewsReducer,
         likes: likesReducer,
         packages: packageReducer,
-        settings: settingReducer
+        settings: settingReducer,
+        blog: blogReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

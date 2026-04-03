@@ -98,37 +98,37 @@ const updateSiteSettings = asyncHandler(async (req, res) => {
     // }
 
     if (req.file) {
-    const filePath = req.file.path;
+        const filePath = req.file.path;
 
-    try {
-        const uploaded = await uploadWithRetry(filePath, "siteLogo");
-        // get existing settings only if needed
+        try {
+            const uploaded = await uploadWithRetry(filePath, "siteLogo");
+            // get existing settings only if needed
             const existingSettings = await Setting.findOne();
             if (existingSettings?.site?.logo?.id) {
                 await deleteFileFromDrive(existingSettings.site.logo.id);
             }
-        logoData = {
-            id: uploaded.id,
-            name: uploaded.name,
-            webContentLink: uploaded.webContentLink,
-            webViewLink: uploaded.webViewLink,
-        };
+            logoData = {
+                id: uploaded.id,
+                name: uploaded.name,
+                webContentLink: uploaded.webContentLink,
+                webViewLink: uploaded.webViewLink,
+            };
 
-        // Delete temp file
-        await fs.promises.unlink(filePath);
-    } catch (err) {
-        console.error("Image upload error:", err);
-        return res
-            .status(500)
-            .json({ message: "Failed to upload site logo" });
+            // Delete temp file
+            await fs.promises.unlink(filePath);
+        } catch (err) {
+            console.error("Image upload error:", err);
+            return res
+                .status(500)
+                .json({ message: "Failed to upload site logo" });
+        }
     }
-   }
     const settings = await Setting.findOneAndUpdate(
         {},
         {
             ...(logoData && { "site.logo": logoData }),
             ...(name && { "site.name": name }),
-            ...(headline && { "": headline }),
+            ...(headline && { "site.headline": headline }),
             ...(description && { "site.description": description }),
             ...(keywords && { "site.keywords": keywords }),
             ...(address && { "site.address": address }),
